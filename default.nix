@@ -6,15 +6,20 @@
   quickshell,
   material-symbols,
   nerd-fonts,
+  librebarcode-fonts,
   makeFontsConf,
+  rembg,
   ...
 }: let
-  runtimeDeps = [];
+  runtimeDeps = [
+    rembg
+  ];
 
   fontconfig = makeFontsConf {
     fontDirectories = [
       material-symbols
       nerd-fonts.symbols-only
+      librebarcode-fonts
     ];
   };
 in
@@ -39,6 +44,7 @@ in
       description = "Shiny Shell | @PZeide";
       homepage = "https://github.com/pzeide/shiny-shell";
       license = lib.licenses.mit;
+      platforms = lib.platforms.linux;
       mainProgram = "shiny-shell";
     };
   }

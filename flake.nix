@@ -22,26 +22,21 @@
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
 
-        quickshellPackage = quickshell.packages.${system}.default;
-
-        qtDependencies = with pkgs.qt6; [
-          qtbase
-          qtdeclarative
-        ];
-
-        dependencies = with pkgs; [
-          quickshellPackage
-          rembg
-        ];
+        quickshell-package = quickshell.packages.${system}.default;
+        librebarcode-fonts = pkgs.callPackage ./librebarcode-fonts.nix {};
       in {
         devShells.default = pkgs.mkShellNoCC {
-          buildInputs = [quickshellPackage] ++ qtDependencies ++ dependencies;
+          buildInputs = with pkgs; [
+            quickshell-package
+            rembg
+          ];
         };
 
         packages = rec {
           shiny-shell = pkgs.callPackage ./default.nix {
+            inherit librebarcode-fonts;
             rev = self.rev or self.dirtyRev;
-            quickshell = quickshellPackage.override {
+            quickshell = quickshell-package.override {
               withX11 = false;
               withI3 = false;
             };

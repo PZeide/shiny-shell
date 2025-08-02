@@ -1,0 +1,64 @@
+import QtQuick
+import Quickshell.Io
+
+JsonObject {
+  property Color color: Color {}
+  property FontConfig font: FontConfig {}
+  property Rounding rounding: Rounding {}
+  property AnimConfig anim: AnimConfig {}
+
+  component Color: JsonObject {
+    property color bgPrimary: Qt.alpha("#211b11", 0.75)
+
+    property color fgPrimary: "#e6e2d6"
+  }
+
+  component FontConfig: JsonObject {
+    property FontFamily family: FontFamily {}
+    property FontSize size: FontSize {}
+  }
+
+  component FontFamily: JsonObject {
+    property string sans: "Jost"
+    property string mono: "Iosevka"
+    property string iconNerd: "Symbols Nerd Font"
+    property string iconMaterial: "Material Symbols Rounded"
+  }
+
+  component FontSize: JsonObject {
+    property int xs: 11
+    property int sm: 12
+    property int md: 13
+    property int lg: 15
+    property int xl: 18
+    property int xxl: 28
+  }
+
+  component Rounding: JsonObject {
+    property int sm: 12
+    property int md: 17
+    property int lg: 25
+    property int full: 1000
+  }
+
+  component AnimConfig: JsonObject {
+    property AnimCurves curves: AnimCurves {}
+    property AnimDurations durations: AnimDurations {}
+  }
+
+  component AnimCurves: JsonObject {
+    property list<real> emphasized: [0.05, 0, 2 / 15, 0.06, 1 / 6, 0.4, 5 / 24, 0.82, 0.25, 1, 1, 1]
+    property list<real> emphasizedAccel: [0.3, 0, 0.8, 0.15, 1, 1]
+    property list<real> emphasizedDecel: [0.05, 0.7, 0.1, 1, 1, 1]
+    property list<real> standard: [0.2, 0, 0, 1, 1, 1]
+    property list<real> standardAccel: [0.3, 0, 1, 1, 1, 1]
+    property list<real> standardDecel: [0, 0, 0, 1, 1, 1]
+  }
+
+  component AnimDurations: JsonObject {
+    property int sm: 200
+    property int md: 400
+    property int lg: 600
+    property int xl: 1000
+  }
+}
