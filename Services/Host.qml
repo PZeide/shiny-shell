@@ -6,11 +6,6 @@ import Quickshell.Io
 Singleton {
   id: root
 
-  property string osId
-  property string osName
-  property string osPrettyName
-  property string osIcon
-
   readonly property string _fallbackOsIcon: ""
   readonly property var _idToOsIcons: ({
       "almalinux": "",
@@ -57,6 +52,10 @@ Singleton {
       "void": "",
       "zorin": ""
     })
+  property string osId
+  property string osName
+  property string osPrettyName
+  property string osIcon
 
   FileView {
     path: "/etc/os-release"

@@ -7,10 +7,10 @@ import Qt.labs.platform
 Singleton {
   id: root
 
-  readonly property string app_suffix: "/shiny-shell"
+  readonly property string appSufix: "/shiny-shell"
   readonly property url homeUrl: StandardPaths.writableLocation(StandardPaths.HomeLocation)
-  readonly property url cacheUrl: StandardPaths.writableLocation(StandardPaths.GenericCacheLocation) + app_suffix
-  readonly property url configUrl: StandardPaths.writableLocation(StandardPaths.GenericConfigLocation) + app_suffix
+  readonly property url cacheUrl: StandardPaths.writableLocation(StandardPaths.GenericCacheLocation) + appSufix
+  readonly property url configUrl: StandardPaths.writableLocation(StandardPaths.GenericConfigLocation) + appSufix
 
   function scriptUrl(path) {
     return Qt.resolvedUrl(`../Scripts/${path}`);

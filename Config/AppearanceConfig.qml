@@ -9,8 +9,13 @@ JsonObject {
 
   component Color: JsonObject {
     property color bgPrimary: Qt.alpha("#211b11", 0.75)
-
     property color fgPrimary: "#e6e2d6"
+
+    property color basePrimary: "#574537"
+    property color accentPrimary: "#d36f81"
+
+    property color bgError: Qt.alpha("#ef4444", 0.85)
+    property color bgWarning: Qt.alpha("#efb100", 0.85)
   }
 
   component FontConfig: JsonObject {
@@ -26,8 +31,8 @@ JsonObject {
   }
 
   component FontSize: JsonObject {
-    property int xs: 11
-    property int sm: 12
+    property int xs: 10
+    property int sm: 11
     property int md: 13
     property int lg: 15
     property int xl: 18

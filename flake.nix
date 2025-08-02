@@ -24,12 +24,24 @@
 
         quickshell-package = quickshell.packages.${system}.default;
         librebarcode-fonts = pkgs.callPackage ./librebarcode-fonts.nix {};
+
+        fontconfig = pkgs.makeFontsConf {
+          fontDirectories = with pkgs; [
+            material-symbols
+            nerd-fonts.symbols-only
+            librebarcode-fonts
+          ];
+        };
       in {
         devShells.default = pkgs.mkShellNoCC {
           buildInputs = with pkgs; [
             quickshell-package
             rembg
           ];
+
+          shellHook = ''
+            export FONTCONFIG_FILE="${fontconfig}"
+          '';
         };
 
         packages = rec {

@@ -11,7 +11,6 @@ Item {
 
   required property ShellScreen screen
   readonly property HyprlandMonitor monitor: Hyprland.monitorFor(screen)
-
   property list<HyprlandWorkspace> workspaces: []
 
   function updateWorkspaces() {
@@ -20,6 +19,7 @@ Item {
   }
 
   Component.onCompleted: updateWorkspaces()
+
   Connections {
     target: Hyprland.workspaces
     function onValuesChanged() {

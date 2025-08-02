@@ -14,7 +14,6 @@ Item {
   ShinyWindow {
     name: "bar"
     screen: root.screen
-
     anchors.top: true
     anchors.left: true
     anchors.right: true
@@ -28,7 +27,6 @@ Item {
       anchors.bottomMargin: Config.bar.bottomMargin
       anchors.leftMargin: Config.bar.horizontalMargin
       anchors.rightMargin: Config.bar.horizontalMargin
-
       implicitHeight: Config.bar.height
 
       ShinyRectangle {
@@ -40,7 +38,7 @@ Item {
         Row {
           anchors.verticalCenter: parent.verticalCenter
           anchors.left: parent.left
-          anchors.leftMargin: 5
+          anchors.leftMargin: 7
           spacing: Config.bar.moduleSpacing
 
           OsIcon {}
@@ -48,8 +46,18 @@ Item {
 
         Row {
           anchors.verticalCenter: parent.verticalCenter
+          anchors.horizontalCenter: parent.horizontalCenter
+          spacing: Config.bar.moduleSpacing
+
+          Time {
+            id: timeModule
+          }
+        }
+
+        Row {
+          anchors.verticalCenter: parent.verticalCenter
           anchors.right: parent.right
-          anchors.rightMargin: 5
+          anchors.rightMargin: 7
           spacing: Config.bar.moduleSpacing
         }
       }

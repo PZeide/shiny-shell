@@ -10,7 +10,7 @@ Singleton {
   id: root
 
   property bool canShow: false
-  property string path
+  property string path: ""
 
   function init() {
     if (Config.wallpaper.enabled && Config.wallpaper.foreground) {
@@ -53,7 +53,7 @@ Singleton {
         foregroundExtractor.running = true;
       } else {
         root.canShow = false;
-        root.path = undefined;
+        root.path = "";
       }
     }
 
@@ -68,7 +68,7 @@ Singleton {
         foregroundExtractor.running = true;
       } else {
         root.canShow = false;
-        root.path = undefined;
+        root.path = "";
       }
     }
 
@@ -80,7 +80,7 @@ Singleton {
         root.canShow = true;
       } else {
         root.canShow = false;
-        root.path = undefined;
+        root.path = "";
 
         if (Config.wallpaper.enabled && Config.wallpaper.foreground) {
           foregroundExtractor.running = true;
