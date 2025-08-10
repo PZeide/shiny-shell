@@ -41,6 +41,7 @@
 
           shellHook = ''
             export FONTCONFIG_FILE="${fontconfig}"
+            export QS_ENVIRONMENT="dev"
           '';
         };
 

@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
+import Quickshell.Wayland
 import qs.Widgets
 import qs.Config
 import qs.Layers.Bar.Modules
@@ -18,6 +19,8 @@ Item {
     anchors.left: true
     anchors.right: true
     implicitHeight: Config.bar.height + Config.bar.topMargin + Config.bar.bottomMargin
+    exclusionMode: ExclusionMode.Auto
+    WlrLayershell.layer: WlrLayer.Top
 
     Item {
       anchors.top: parent.top
@@ -60,6 +63,27 @@ Item {
           anchors.rightMargin: 7
           spacing: Config.bar.moduleSpacing
         }
+      }
+    }
+  }
+
+  LazyLoader {
+    loading: PanelsHandler.calendarState !== PanelsHandler.PanelState.Collapsed
+
+    ShinyWindow {
+      name: "calendar-panel"
+      screen: root.screen
+      anchors.top: timeModule.bottom
+      margins.top: -Config.bar.bottomMargin
+      exclusionMode: ExclusionMode.Normal
+      width: 100
+      height: 300
+
+      ShinyRectangle {
+        implicitWidth: 100
+        implicitHeight: 300
+
+        color: "red"
       }
     }
   }

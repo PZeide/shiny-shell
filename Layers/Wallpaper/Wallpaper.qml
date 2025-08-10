@@ -12,14 +12,13 @@ ShinyWindow {
   required property ShellScreen modelData
 
   name: "wallpaper"
+  screen: modelData
   anchors.bottom: true
   anchors.left: true
   anchors.right: true
   anchors.top: true
   focusable: false
-  screen: modelData
-
-  WlrLayershell.exclusionMode: ExclusionMode.Ignore
+  exclusionMode: ExclusionMode.Ignore
   WlrLayershell.layer: WlrLayer.Background
 
   Image {
