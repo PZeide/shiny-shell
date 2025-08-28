@@ -24,7 +24,7 @@ TextInput {
 
   onFocusChanged: {
     if (!focus) {
-      focus = true;
+      forceActiveFocus();
     }
   }
 

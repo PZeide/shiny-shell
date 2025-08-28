@@ -4,11 +4,14 @@ import QtQuick
 import Quickshell
 import qs.Config
 import qs.Services
+import qs.Utils
 import qs.Layers.Bar
 import qs.Layers.LockScreen
 import qs.Layers.Wallpaper
 
 ShellRoot {
+  settings.watchFiles: Env.isDev
+
   Variants {
     model: Quickshell.screens
 
