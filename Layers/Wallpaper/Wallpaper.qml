@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
-import qs.Config
 import qs.Widgets
 
 ShinyWindow {
@@ -21,20 +20,10 @@ ShinyWindow {
   exclusionMode: ExclusionMode.Ignore
   WlrLayershell.layer: WlrLayer.Background
 
-  Image {
+  WallpaperImage {
     id: wallpaper
 
-    anchors.fill: parent
-    antialiasing: true
     asynchronous: true
-    cache: true
-    mipmap: true
-    retainWhileLoading: true
-    layer.enabled: true
-    fillMode: Image.PreserveAspectCrop
-    source: Config.wallpaper.path
-    horizontalAlignment: Config.wallpaper.horizontalAlignement
-    verticalAlignment: Config.wallpaper.verticalAlignement
 
     onStatusChanged: {
       if (wallpaper.status === Image.Ready) {

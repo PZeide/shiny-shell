@@ -1,9 +1,10 @@
+pragma ComponentBehavior: Bound
 pragma Singleton
 
 import Quickshell
 
 Singleton {
-  property alias date: sysClock.date
+  readonly property alias date: sysClock.date
 
   SystemClock {
     id: sysClock

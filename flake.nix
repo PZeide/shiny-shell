@@ -23,7 +23,7 @@
         pkgs = nixpkgs.legacyPackages.${system};
 
         quickshell-package = quickshell.packages.${system}.default;
-        librebarcode-fonts = pkgs.callPackage ./librebarcode-fonts.nix {};
+        librebarcode-fonts = pkgs.callPackage ./nix/librebarcode-fonts.nix {};
 
         fontconfig = pkgs.makeFontsConf {
           fontDirectories = with pkgs; [
@@ -37,6 +37,8 @@
           buildInputs = with pkgs; [
             quickshell-package
             rembg
+            curl
+            jq
           ];
 
           shellHook = ''
@@ -46,7 +48,7 @@
         };
 
         packages = rec {
-          shiny-shell = pkgs.callPackage ./default.nix {
+          shiny-shell = pkgs.callPackage ./nix/default.nix {
             inherit librebarcode-fonts;
             rev = self.rev or self.dirtyRev;
             quickshell = quickshell-package.override {

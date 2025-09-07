@@ -9,10 +9,14 @@
   librebarcode-fonts,
   makeFontsConf,
   rembg,
+  curl,
+  jq,
   ...
 }: let
   runtimeDeps = [
     rembg
+    curl
+    jq
   ];
 
   fontconfig = makeFontsConf {

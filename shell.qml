@@ -12,6 +12,12 @@ import qs.Layers.Wallpaper
 ShellRoot {
   settings.watchFiles: Env.isDev
 
+  Loader {
+    active: Config.lockScreen.enabled
+
+    sourceComponent: LockScreen {}
+  }
+
   Variants {
     model: Quickshell.screens
 
@@ -21,27 +27,21 @@ ShellRoot {
       property var modelData
 
       Loader {
-        active: Config.bar.enabled
-
-        sourceComponent: Bar {
-          screen: scope.modelData
-        }
-      }
-
-      Loader {
         active: Config.wallpaper.enabled
 
         sourceComponent: Wallpaper {
           modelData: scope.modelData
         }
       }
+
+      Loader {
+        active: Config.bar.enabled
+
+        sourceComponent: Bar {
+          screen: scope.modelData
+        }
+      }
     }
-  }
-
-  Loader {
-    active: Config.lockScreen.enabled
-
-    sourceComponent: LockScreen {}
   }
 
   Connections {
@@ -57,6 +57,9 @@ ShellRoot {
   }
 
   Component.onCompleted: {
-    Foreground.init();
+    // Services that needs to be initialized early for seamless usage (disable if dev)
+    Foreground;
+    Location;
+    Weather;
   }
 }

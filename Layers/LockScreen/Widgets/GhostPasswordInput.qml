@@ -22,22 +22,19 @@ TextInput {
     }
   }
 
-  onFocusChanged: {
-    if (!focus) {
+  onActiveFocusChanged: {
+    if (!activeFocus)
       forceActiveFocus();
-    }
   }
 
   onOverwriteModeChanged: {
-    if (overwriteMode) {
+    if (overwriteMode)
       overwriteMode = false;
-    }
   }
 
   onCursorPositionChanged: {
-    if (cursorPosition !== text.length) {
+    if (cursorPosition !== text.length)
       cursorPosition = text.length;
-    }
   }
 
   Component.onDestruction: {

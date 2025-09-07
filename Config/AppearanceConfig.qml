@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import Quickshell.Io
 
@@ -8,14 +10,17 @@ JsonObject {
   property AnimConfig anim: AnimConfig {}
 
   component Color: JsonObject {
-    property color bgPrimary: Qt.alpha("#211b11", 0.75)
-    property color fgPrimary: "#e6e2d6"
+    property color bgPrimary: "#1a1111"
+    property color bgSecondary: "#271d1d"
+    property color bgTertiary: "#3d3232"
 
-    property color basePrimary: "#574537"
-    property color accentPrimary: "#d36f81"
+    property color fgPrimary: "#f0dede"
 
-    property color bgError: Qt.alpha("#ef4444", 0.85)
-    property color bgWarning: Qt.alpha("#efb100", 0.85)
+    property color accentPrimary: "#ffb4ab"
+    property color accentSecondary: "#e6c18d"
+
+    property color bgError: "#ef4444"
+    property color bgWarning: "#efb100"
   }
 
   component FontConfig: JsonObject {

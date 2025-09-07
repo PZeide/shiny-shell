@@ -1,20 +1,33 @@
+pragma ComponentBehavior: Bound
 pragma Singleton
 
 import QtQuick
 import Quickshell
 import Qt.labs.platform
 
-Singleton {
+QtObject {
   readonly property string appSufix: "/shiny-shell"
   readonly property url homeUrl: StandardPaths.writableLocation(StandardPaths.HomeLocation)
   readonly property url cacheUrl: StandardPaths.writableLocation(StandardPaths.GenericCacheLocation) + appSufix
   readonly property url configUrl: StandardPaths.writableLocation(StandardPaths.GenericConfigLocation) + appSufix
 
-  function scriptUrl(path) {
-    return Qt.resolvedUrl(`../Scripts/${path}`);
+  function assetPath(path: string): string {
+    return Quickshell.shellPath(`Assets/${path}`);
   }
 
-  function fromUrl(url) {
+  function assetUrl(path: string): url {
+    return Qt.resolvedUrl(assetPath(path));
+  }
+
+  function scriptPath(path: string): url {
+    return Quickshell.shellPath(`Scripts/${path}`);
+  }
+
+  function scriptUrl(path: string): url {
+    return Qt.resolvedUrl(scriptPath(path));
+  }
+
+  function toPlain(url: url): string {
     return url.toString().replace("file://", "");
   }
 }

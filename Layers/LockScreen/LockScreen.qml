@@ -31,8 +31,8 @@ Scope {
   }
 
   Component.onCompleted: {
-    if (!Env.isDev && Config.lockScreen.lockOnStart) {
-      console.info("Auto-lock on start!");
+    if (Config.lockScreen.lockOnStart && !Env.isDev) {
+      console.info("Locking on start");
       sessionLock.locked = true;
     }
   }

@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 pragma Singleton
 
 import QtQuick
@@ -9,27 +10,27 @@ import qs.Utils
 Singleton {
   id: root
 
-  property bool canShow: false
+  readonly property bool isAvailable: path !== ""
   property string path: ""
 
-  function init() {
-    if (Config.wallpaper.enabled && Config.wallpaper.foreground) {
-      console.info("Starting initial foreground setup");
-      foregroundExtractor.running = true;
-    }
+  function reload() {
+    // First set running to false if alreay running
+    if (foregroundScript.running)
+      foregroundScript.running = false;
+
+    foregroundScript.running = true;
   }
 
   Process {
-    id: foregroundExtractor
+    id: foregroundScript
 
-    command: ["bash", Paths.fromUrl(Paths.scriptUrl("extract-foreground.sh")), Paths.fromUrl(Config.wallpaper.path), Paths.fromUrl(Paths.cacheUrl)]
+    command: ["bash", Paths.scriptPath("extract-foreground.sh"), Paths.toPlain(Config.wallpaper.path), Paths.toPlain(Paths.cacheUrl)]
 
     stdout: StdioCollector {
       onStreamFinished: {
         const result = this.text.trim();
         if (result) {
           console.info(`Received foreground ${result} from extractor script`);
-          root.canShow = true;
           root.path = result;
         }
       }
@@ -38,9 +39,8 @@ Singleton {
     stderr: StdioCollector {
       onStreamFinished: {
         const error = this.text.trim();
-        if (error) {
+        if (error)
           console.error(`Failed to extract foreground: ${error}`);
-        }
       }
     }
   }
@@ -50,24 +50,22 @@ Singleton {
 
     function onEnabledChanged() {
       if (Config.wallpaper.enabled && Config.wallpaper.foreground) {
-        foregroundExtractor.running = true;
+        root.reload();
       } else {
-        root.canShow = false;
+        foregroundScript.running = false;
         root.path = "";
       }
     }
 
     function onPathChanged() {
-      if (Config.wallpaper.enabled && Config.wallpaper.foreground) {
-        foregroundExtractor.running = true;
-      }
+      if (Config.wallpaper.enabled && Config.wallpaper.foreground)
+        root.reload();
     }
 
     function onForegroundChanged() {
       if (Config.wallpaper.enabled && Config.wallpaper.foreground) {
-        foregroundExtractor.running = true;
+        root.reload();
       } else {
-        root.canShow = false;
         root.path = "";
       }
     }
@@ -75,17 +73,20 @@ Singleton {
     function onCustomForegroundPathChanged() {
       const path = Config.wallpaper.customForegroundPath;
       if (Config.wallpaper.customForegroundPath) {
+        foregroundScript.running = false;
         console.info(`Custom foreground path is set to ${path}`);
         root.path = path;
-        root.canShow = true;
       } else {
-        root.canShow = false;
         root.path = "";
 
-        if (Config.wallpaper.enabled && Config.wallpaper.foreground) {
-          foregroundExtractor.running = true;
-        }
+        if (Config.wallpaper.enabled && Config.wallpaper.foreground)
+          root.reload();
       }
     }
+  }
+
+  Component.onCompleted: {
+    if (Config.wallpaper.enabled && Config.wallpaper.foreground)
+      root.reload();
   }
 }

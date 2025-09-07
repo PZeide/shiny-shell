@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 pragma Singleton
 
 import Quickshell
@@ -96,9 +97,8 @@ Singleton {
         icon = root._idToOsIcons[id];
       } else if (idLike) {
         for (const candidate of idLike.split(" ")) {
-          if (root._idToOsIcons.hasOwnProperty(candidate)) {
+          if (root._idToOsIcons.hasOwnProperty(candidate))
             icon = root._idToOsIcons[candidate];
-          }
         }
       }
 

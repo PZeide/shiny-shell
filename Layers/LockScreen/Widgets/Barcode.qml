@@ -13,7 +13,6 @@ Item {
 
   implicitHeight: barcodeText.contentHeight
   implicitWidth: barcodeText.contentWidth
-  anchors.centerIn: parent
   clip: true
 
   Rectangle {
@@ -24,12 +23,12 @@ Item {
 
     gradient: Gradient {
       GradientStop {
-        color: Config.appearance.color.basePrimary
+        color: Config.appearance.color.accentPrimary
         position: 0.0
       }
 
       GradientStop {
-        color: Config.appearance.color.accentPrimary
+        color: Config.appearance.color.accentSecondary
         position: 1.0
       }
     }
@@ -42,7 +41,7 @@ Item {
     visible: false
     font.bold: true
     font.family: "Libre Barcode 128"
-    font.pointSize: 400
+    font.pointSize: 300
     layer.enabled: true
     renderType: Text.NativeRendering
     text: root.barcodeBuffer
