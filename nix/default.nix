@@ -31,7 +31,7 @@ in
     pname = "shiny-version";
     version = "${rev}";
 
-    src = ./.;
+    src = ../.;
 
     nativeBuildInputs = [makeWrapper];
     buildInputs = [quickshell];
