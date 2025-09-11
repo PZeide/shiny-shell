@@ -8,15 +8,13 @@
   nerd-fonts,
   librebarcode-fonts,
   makeFontsConf,
+  nushell,
   rembg,
-  curl,
-  jq,
   ...
 }: let
   runtimeDeps = [
+    nushell
     rembg
-    curl
-    jq
   ];
 
   fontconfig = makeFontsConf {
@@ -31,7 +29,7 @@ in
     pname = "shiny-version";
     version = "${rev}";
 
-    src = ../.;
+    src = ./..;
 
     nativeBuildInputs = [makeWrapper];
     buildInputs = [quickshell];
@@ -41,7 +39,7 @@ in
       makeWrapper ${quickshell}/bin/qs $out/bin/shiny-shell \
       	--prefix PATH : "${lib.makeBinPath runtimeDeps}" \
       	--set FONTCONFIG_FILE "${fontconfig}" \
-      	--add-flags '-p ${./.}'
+      	--add-flags '-p ${./..}'
     '';
 
     meta = {

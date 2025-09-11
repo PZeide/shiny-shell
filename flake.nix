@@ -36,9 +36,8 @@
         devShells.default = pkgs.mkShellNoCC {
           buildInputs = with pkgs; [
             quickshell-package
+            nushell
             rembg
-            curl
-            jq
           ];
 
           shellHook = ''
