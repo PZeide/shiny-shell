@@ -7,6 +7,7 @@ import Quickshell.Services.Pam
 import qs.config
 import qs.services
 import qs.widgets
+import qs.utils
 import qs.layers.wallpaper
 import qs.layers.corner
 import qs.layers.lockscreen.widgets
@@ -15,13 +16,11 @@ WlSessionLockSurface {
   id: root
 
   required property WlSessionLock sessionLock
-  readonly property int fadeDuration: Config.appearance.anim.durations.lg
-  readonly property int animateDuration: Config.appearance.anim.durations.lg
   readonly property bool unlocking: handler.state === "animateOut" || handler.state === "fadeOut"
   readonly property int errorDuration: 5000
   property int error: PamResult.Success
-  property real opacity: 0
-  property bool ready: false
+  property real opacityFactor: 0
+  property real readinessFactor: 0
 
   color: "transparent"
 
@@ -30,62 +29,24 @@ WlSessionLockSurface {
     handler.state = "animateOut";
   }
 
-  component FadeFullAnimation: NumberAnimation {
-    duration: root.fadeDuration
-    easing.type: Easing.BezierSpline
-    easing.bezierCurve: Config.appearance.anim.curves.standard
-  }
-
-  component FadeFastAnimation: NumberAnimation {
-    duration: root.fadeDuration / 2
-    easing.type: Easing.BezierSpline
-    easing.bezierCurve: Config.appearance.anim.curves.standard
-  }
-
-  component ReadyAnimation: NumberAnimation {
-    duration: root.animateDuration
-    easing.type: Easing.BezierSpline
-    easing.bezierCurve: Config.appearance.anim.curves.standard
-  }
-
   Item {
     id: handler
 
     states: [
       State {
         name: "fadeIn"
-        PropertyChanges {
-          restoreEntryValues: false
-          target: root
-          opacity: 1
-        }
       },
       State {
         name: "animateIn"
-        PropertyChanges {
-          restoreEntryValues: false
-          target: root
-          ready: true
-        }
       },
       State {
         name: "idle"
       },
       State {
         name: "animateOut"
-        PropertyChanges {
-          restoreEntryValues: false
-          target: root
-          ready: false
-        }
       },
       State {
         name: "fadeOut"
-        PropertyChanges {
-          restoreEntryValues: false
-          target: root
-          opacity: 0
-        }
       }
     ]
 
@@ -93,9 +54,15 @@ WlSessionLockSurface {
       Transition {
         to: "fadeIn"
         SequentialAnimation {
-          PauseAnimation {
-            duration: root.fadeDuration
+          NumberAnimation {
+            target: root
+            property: "opacityFactor"
+            to: 1
+            duration: Animations.expressive.duration
+            easing.type: Animations.expressive.type
+            easing.bezierCurve: Animations.expressive.curve
           }
+
           ScriptAction {
             script: handler.state = "animateIn"
           }
@@ -105,9 +72,15 @@ WlSessionLockSurface {
         from: "fadeIn"
         to: "animateIn"
         SequentialAnimation {
-          PauseAnimation {
-            duration: root.animateDuration
+          NumberAnimation {
+            target: root
+            property: "readinessFactor"
+            to: 1
+            duration: Animations.moveEnterSlow.duration
+            easing.type: Animations.moveEnterSlow.type
+            easing.bezierCurve: Animations.moveEnterSlow.curve
           }
+
           ScriptAction {
             script: handler.state = "idle"
           }
@@ -117,9 +90,15 @@ WlSessionLockSurface {
         from: "idle"
         to: "animateOut"
         SequentialAnimation {
-          PauseAnimation {
-            duration: root.animateDuration
+          NumberAnimation {
+            target: root
+            property: "readinessFactor"
+            to: 0
+            duration: Animations.moveExitSlow.duration
+            easing.type: Animations.moveExitSlow.type
+            easing.bezierCurve: Animations.moveExitSlow.curve
           }
+
           ScriptAction {
             script: handler.state = "fadeOut"
           }
@@ -129,9 +108,15 @@ WlSessionLockSurface {
         from: "animateOut"
         to: "fadeOut"
         SequentialAnimation {
-          PauseAnimation {
-            duration: root.fadeDuration
+          NumberAnimation {
+            target: root
+            property: "opacityFactor"
+            to: 0
+            duration: Animations.expressive.duration
+            easing.type: Animations.expressive.type
+            easing.bezierCurve: Animations.expressive.curve
           }
+
           ScriptAction {
             script: root.sessionLock.locked = false
           }
@@ -154,20 +139,12 @@ WlSessionLockSurface {
       id: background
 
       source: Config.wallpaper.path
-      opacity: root.opacity
+      opacity: root.opacityFactor
       layer.effect: MultiEffect {
         autoPaddingEnabled: false
         blurEnabled: true
-        blur: root.ready ? 0.65 : 0
+        blur: 0.65 * root.readinessFactor
         blurMax: 48
-
-        Behavior on blur {
-          ReadyAnimation {}
-        }
-      }
-
-      Behavior on opacity {
-        FadeFullAnimation {}
       }
     }
   }
@@ -175,11 +152,7 @@ WlSessionLockSurface {
   Barcode {
     anchors.centerIn: parent
     passwordBuffer: input.text
-    opacity: root.opacity
-
-    Behavior on opacity {
-      FadeFastAnimation {}
-    }
+    opacity: Math.pow(root.opacityFactor, 2)
   }
 
   Loader {
@@ -190,11 +163,7 @@ WlSessionLockSurface {
       id: foreground
 
       source: Foreground.path
-      opacity: root.opacity
-
-      Behavior on opacity {
-        FadeFullAnimation {}
-      }
+      opacity: root.opacityFactor
     }
   }
 
@@ -204,7 +173,7 @@ WlSessionLockSurface {
     anchors.bottom: parent.bottom
     anchors.left: parent.left
     anchors.right: parent.right
-    anchors.bottomMargin: root.ready ? 0 : -(bottomRectangle.height)
+    anchors.bottomMargin: -bottomRectangle.height * (1 - root.readinessFactor)
     implicitHeight: Math.max(bottomBar.height, bottomClock.height, bottomMusic.height)
 
     BottomBar {
@@ -254,34 +223,21 @@ WlSessionLockSurface {
       anchors.right: bottomMusic.left
       type: RoundedCorner.Type.BottomRight
     }
-
-    Behavior on anchors.bottomMargin {
-      NumberAnimation {
-        duration: root.animateDuration
-        easing.type: Easing.BezierSpline
-        easing.bezierCurve: Config.appearance.anim.curves.standard
-      }
-    }
   }
 
   LockIndicator {
     id: lockIndicator
 
+    property real errorTopMargin: root.error === PamResult.Success ? -errorHeight : 0
+
     anchors.top: parent.top
     anchors.horizontalCenter: parent.horizontalCenter
-    anchors.topMargin: {
-      if (!root.ready) {
-        return -(lockHeight + errorHeight);
-      }
-
-      return root.error === PamResult.Success ? -errorHeight : 0;
-    }
-
+    anchors.topMargin: errorTopMargin - lockHeight * (1 - root.readinessFactor)
     processing: root.unlocking || pam.active
     error: root.error
 
-    Behavior on anchors.topMargin {
-      ReadyAnimation {}
+    Behavior on errorTopMargin {
+      animation: Animations.effects.createNumber(this)
     }
   }
 

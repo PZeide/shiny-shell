@@ -39,6 +39,12 @@ QtObject {
     }
   }
 
+  readonly property AnimationFactory expressive: AnimationFactory {
+    duration: Config.appearance.anim.durations.expressiveDefaultSpatial
+    type: Easing.BezierSpline
+    curve: Config.appearance.anim.curves.expressiveDefaultSpatial
+  }
+
   readonly property AnimationFactory effects: AnimationFactory {
     duration: Config.appearance.anim.durations.expressiveEffects
     type: Easing.BezierSpline
@@ -61,9 +67,21 @@ QtObject {
     curve: Config.appearance.anim.curves.emphasizedDecel
   }
 
+  readonly property AnimationFactory moveEnterSlow: AnimationFactory {
+    duration: Config.appearance.anim.durations.lg
+    type: Easing.BezierSpline
+    curve: Config.appearance.anim.curves.standardDecel
+  }
+
   readonly property AnimationFactory moveExit: AnimationFactory {
     duration: Config.appearance.anim.durations.sm
     type: Easing.BezierSpline
     curve: Config.appearance.anim.curves.emphasizedAccel
+  }
+
+  readonly property AnimationFactory moveExitSlow: AnimationFactory {
+    duration: Config.appearance.anim.durations.md
+    type: Easing.BezierSpline
+    curve: Config.appearance.anim.curves.standardAccel
   }
 }
