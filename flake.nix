@@ -22,40 +22,47 @@
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
 
-        quickshell-package = quickshell.packages.${system}.default;
         librebarcode-fonts = pkgs.callPackage ./nix/librebarcode-fonts.nix {};
 
-        fontconfig = pkgs.makeFontsConf {
-          fontDirectories = with pkgs; [
-            material-symbols
-            nerd-fonts.symbols-only
-            librebarcode-fonts
-          ];
+        shiny-shell = pkgs.callPackage ./nix/default.nix {
+          rev = self.rev or self.dirtyRev;
+
+          quickshell = quickshell.packages.${system}.default.override {
+            withX11 = false;
+            withI3 = false;
+          };
+
+          inherit librebarcode-fonts;
         };
       in {
-        devShells.default = pkgs.mkShellNoCC {
-          buildInputs = with pkgs; [
-            quickshell-package
-            nushell
-            rembg
-          ];
+        devShells.default = pkgs.mkShell {
+          inputsFrom = [shiny-shell shiny-shell.plugin];
 
-          shellHook = ''
+          shellHook = let
+            fontconfig = pkgs.makeFontsConf {
+              fontDirectories = with pkgs; [
+                material-symbols
+                nerd-fonts.symbols-only
+                librebarcode-fonts
+              ];
+            };
+          in ''
+            # Required to allow meson to find some qtdeclarative binaries
+            export PATH=${pkgs.qt6.qtdeclarative}/libexec:$PATH
+
+            meson setup builddir
+            ninja -C builddir
+
+            # Add our plugin to the QML path
+            export QML2_IMPORT_PATH="$PWD/builddir/plugin/qml:''${QML2_IMPORT_PATH:-}"
+
             export FONTCONFIG_FILE="${fontconfig}"
             export QS_ENVIRONMENT="dev"
           '';
         };
 
         packages = rec {
-          shiny-shell = pkgs.callPackage ./nix/default.nix {
-            inherit librebarcode-fonts;
-            rev = self.rev or self.dirtyRev;
-            quickshell = quickshell-package.override {
-              withX11 = false;
-              withI3 = false;
-            };
-          };
-
+          inherit shiny-shell;
           default = shiny-shell;
         };
       }

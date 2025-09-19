@@ -10,6 +10,7 @@ Singleton {
 
   property alias appearance: adapter.appearance
   property alias bar: adapter.bar
+  property alias launcher: adapter.launcher
   property alias locale: adapter.locale
   property alias location: adapter.location
   property alias lockScreen: adapter.lockScreen
@@ -27,6 +28,7 @@ Singleton {
 
       property AppearanceConfig appearance: AppearanceConfig {}
       property BarConfig bar: BarConfig {}
+      property LauncherConfig launcher: LauncherConfig {}
       property LocaleConfig locale: LocaleConfig {}
       property LocationConfig location: LocationConfig {}
       property LockScreenConfig lockScreen: LockScreenConfig {}

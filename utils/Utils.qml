@@ -2,8 +2,9 @@ pragma ComponentBehavior: Bound
 pragma Singleton
 
 import QtQuick
+import Quickshell
 
-QtObject {
+Singleton {
   function scriptCommand(script: string, ...args): list<string> {
     return ["nu", "-n", Paths.scriptPath(script), ...args];
   }

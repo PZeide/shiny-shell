@@ -2,9 +2,10 @@ pragma ComponentBehavior: Bound
 pragma Singleton
 
 import QtQuick
+import Quickshell
 import qs.config
 
-QtObject {
+Singleton {
   id: root
 
   component AnimationFactory: QtObject {

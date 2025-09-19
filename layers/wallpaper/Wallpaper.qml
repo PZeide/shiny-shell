@@ -4,15 +4,14 @@ import QtQuick
 import Quickshell
 import Quickshell.Wayland
 import qs.widgets
-import qs.utils
 
 ShinyWindow {
   id: root
 
-  required property ShellScreen modelData
+  required property ShellScreen screen
 
   name: "wallpaper"
-  screen: modelData
+  screen: screen
   anchors.bottom: true
   anchors.left: true
   anchors.right: true

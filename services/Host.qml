@@ -7,8 +7,8 @@ import Quickshell.Io
 Singleton {
   id: root
 
-  readonly property string _fallbackOsIcon: ""
-  readonly property var _idToOsIcons: ({
+  readonly property string fallbackOsIcon: ""
+  readonly property var idToOsIcons: ({
       "almalinux": "",
       "alpine": "",
       "arch": "",
@@ -93,19 +93,19 @@ Singleton {
         }
       }
 
-      if (id && root._idToOsIcons.hasOwnProperty(id)) {
-        icon = root._idToOsIcons[id];
+      if (id && root.idToOsIcons.hasOwnProperty(id)) {
+        icon = root.idToOsIcons[id];
       } else if (idLike) {
         for (const candidate of idLike.split(" ")) {
-          if (root._idToOsIcons.hasOwnProperty(candidate))
-            icon = root._idToOsIcons[candidate];
+          if (root.idToOsIcons.hasOwnProperty(candidate))
+            icon = root.idToOsIcons[candidate];
         }
       }
 
       root.osId = id ?? "linux";
       root.osName = name ?? "Linux";
       root.osPrettyName = prettyName ?? "Linux";
-      root.osIcon = icon ?? root._fallbackOsIcon;
+      root.osIcon = icon ?? root.fallbackOsIcon;
     }
   }
 }

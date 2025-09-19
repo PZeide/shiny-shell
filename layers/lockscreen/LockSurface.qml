@@ -152,7 +152,7 @@ WlSessionLockSurface {
   Barcode {
     anchors.centerIn: parent
     passwordBuffer: input.text
-    opacity: Math.pow(root.opacityFactor, 2)
+    opacity: Math.max(0, 2 * root.opacityFactor - 1)
   }
 
   Loader {

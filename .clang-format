@@ -1,0 +1,16 @@
+---
+Language: Cpp
+BasedOnStyle: LLVM
+
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortEnumsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Empty
+AlwaysBreakAfterDefinitionReturnType: None
+BreakBeforeTernaryOperators: false
+ColumnLimit: 120
+IndentCaseLabels: true
+IndentWidth: 2
+NamespaceIndentation: All
+PointerAlignment: Left
+SortIncludes: Never
+SortUsingDeclarations: Never

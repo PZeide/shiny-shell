@@ -1,0 +1,6 @@
+option(
+  'plugin-install-dir',
+  type: 'string',
+  value: '',
+  description: 'Installation directory of the plugin',
+)

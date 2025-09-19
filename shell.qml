@@ -8,6 +8,7 @@ import qs.utils
 import qs.layers.lockscreen
 import qs.layers.corner
 import qs.layers.wallpaper
+import qs.layers.launcher
 
 ShellRoot {
   settings.watchFiles: Environment.isDev
@@ -34,7 +35,15 @@ ShellRoot {
         active: Config.wallpaper.enabled
 
         sourceComponent: Wallpaper {
-          modelData: scope.modelData
+          screen: scope.modelData
+        }
+      }
+
+      Loader {
+        active: Config.launcher.enabled
+
+        sourceComponent: Launcher {
+          screen: scope.modelData
         }
       }
     }

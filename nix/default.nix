@@ -1,8 +1,13 @@
 {
   lib,
   rev,
+  stdenv,
   stdenvNoCC,
   makeWrapper,
+  meson,
+  ninja,
+  pkg-config,
+  qt6,
   quickshell,
   material-symbols,
   nerd-fonts,
@@ -10,11 +15,33 @@
   makeFontsConf,
   nushell,
   rembg,
+  libqalculate,
   ...
 }: let
+  plugin = stdenv.mkDerivation {
+    name = "shiny-shell-plugin";
+    src = lib.fileset.toSource {
+      root = ./..;
+      fileset = lib.fileset.union ./../meson.build ./../plugin;
+    };
+
+    nativeBuildInputs = [meson ninja pkg-config];
+    buildInputs = [qt6.qtbase qt6.qtdeclarative];
+    dontWrapQtApps = true;
+
+    mesonFlags = [
+      "-Dplugin-install-dir=${qt6.qtbase.qtQmlPrefix}"
+    ];
+
+    preConfigure = ''
+      export PATH=${qt6.qtdeclarative}/libexec:$PATH
+    '';
+  };
+
   runtimeDeps = [
     nushell
     rembg
+    libqalculate
   ];
 
   fontconfig = makeFontsConf {
@@ -32,7 +59,7 @@ in
     src = ./..;
 
     nativeBuildInputs = [makeWrapper];
-    buildInputs = [quickshell];
+    buildInputs = [quickshell plugin];
     propagatedBuildInputs = runtimeDeps;
 
     installPhase = ''
@@ -41,6 +68,10 @@ in
       	--set FONTCONFIG_FILE "${fontconfig}" \
       	--add-flags '-p ${./..}'
     '';
+
+    passthru = {
+      inherit plugin;
+    };
 
     meta = {
       description = "Shiny Shell | @PZeide";

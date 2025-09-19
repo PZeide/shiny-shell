@@ -36,9 +36,4 @@ TextInput {
     if (cursorPosition !== text.length)
       cursorPosition = text.length;
   }
-
-  Component.onDestruction: {
-    // I have no clue why but disabling before destruction remove the warning 'Try to enable surface x with focusing surface y'
-    enabled = false;
-  }
 }
