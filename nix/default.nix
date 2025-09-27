@@ -15,7 +15,6 @@
   nushell,
   rembg,
   rapidfuzz-cpp,
-  libqalculate,
   ...
 }: let
   plugin = stdenv.mkDerivation {
@@ -25,8 +24,18 @@
       fileset = lib.fileset.union ./../CMakeLists.txt ./../plugin;
     };
 
-    nativeBuildInputs = [cmake ninja pkg-config];
-    buildInputs = [qt6.qtbase qt6.qtdeclarative];
+    nativeBuildInputs = [
+      cmake
+      ninja
+      pkg-config
+    ];
+
+    buildInputs = [
+      qt6.qtbase
+      qt6.qtdeclarative
+      rapidfuzz-cpp
+    ];
+
     dontWrapQtApps = true;
 
     cmakeFlags = [
@@ -38,8 +47,6 @@
   runtimeDeps = [
     nushell
     rembg
-    rapidfuzz-cpp
-    libqalculate
   ];
 
   fontconfig = makeFontsConf {
