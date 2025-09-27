@@ -10,6 +10,6 @@ LauncherPlugin {
   prefix: ""
 
   function filter(input: string): list<LauncherItemDescriptor> {
-    return Fuzzy;
+    return [];
   }
 }

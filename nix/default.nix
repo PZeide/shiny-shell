@@ -2,9 +2,8 @@
   lib,
   rev,
   stdenv,
-  stdenvNoCC,
   makeWrapper,
-  meson,
+  cmake,
   ninja,
   pkg-config,
   qt6,
@@ -15,32 +14,31 @@
   makeFontsConf,
   nushell,
   rembg,
+  rapidfuzz-cpp,
   libqalculate,
   ...
 }: let
   plugin = stdenv.mkDerivation {
-    name = "shiny-shell-plugin";
+    name = "shiny-plugin";
     src = lib.fileset.toSource {
       root = ./..;
-      fileset = lib.fileset.union ./../meson.build ./../plugin;
+      fileset = lib.fileset.union ./../CMakeLists.txt ./../plugin;
     };
 
-    nativeBuildInputs = [meson ninja pkg-config];
+    nativeBuildInputs = [cmake ninja pkg-config];
     buildInputs = [qt6.qtbase qt6.qtdeclarative];
     dontWrapQtApps = true;
 
-    mesonFlags = [
-      "-Dplugin-install-dir=${qt6.qtbase.qtQmlPrefix}"
+    cmakeFlags = [
+      (lib.cmakeFeature "ENABLE_MODULES" "plugin")
+      (lib.cmakeFeature "INSTALL_PLUGIN" qt6.qtbase.qtQmlPrefix)
     ];
-
-    preConfigure = ''
-      export PATH=${qt6.qtdeclarative}/libexec:$PATH
-    '';
   };
 
   runtimeDeps = [
     nushell
     rembg
+    rapidfuzz-cpp
     libqalculate
   ];
 
@@ -52,21 +50,25 @@
     ];
   };
 in
-  stdenvNoCC.mkDerivation {
+  stdenv.mkDerivation {
     pname = "shiny-version";
     version = "${rev}";
-
     src = ./..;
 
-    nativeBuildInputs = [makeWrapper];
-    buildInputs = [quickshell plugin];
+    nativeBuildInputs = [cmake ninja makeWrapper qt6.wrapQtAppsHook];
+    buildInputs = [quickshell plugin qt6.qtbase];
     propagatedBuildInputs = runtimeDeps;
 
-    installPhase = ''
+    cmakeFlags = [
+      (lib.cmakeFeature "ENABLE_MODULES" "shell")
+      (lib.cmakeFeature "INSTALL_SHELL" "${placeholder "out"}/share/shiny-shell")
+    ];
+
+    postInstall = ''
       makeWrapper ${quickshell}/bin/qs $out/bin/shiny-shell \
       	--prefix PATH : "${lib.makeBinPath runtimeDeps}" \
       	--set FONTCONFIG_FILE "${fontconfig}" \
-      	--add-flags '-p ${./..}'
+      	--add-flags "-p $out/share/shiny-shell"
     '';
 
     passthru = {

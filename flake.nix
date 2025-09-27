@@ -37,26 +37,16 @@
       in {
         devShells.default = pkgs.mkShell {
           inputsFrom = [shiny-shell shiny-shell.plugin];
+          packages = with pkgs; [
+            material-symbols
+            nerd-fonts.symbols-only
+            librebarcode-fonts
+          ];
 
-          shellHook = let
-            fontconfig = pkgs.makeFontsConf {
-              fontDirectories = with pkgs; [
-                material-symbols
-                nerd-fonts.symbols-only
-                librebarcode-fonts
-              ];
-            };
-          in ''
-            # Required to allow meson to find some qtdeclarative binaries
-            export PATH=${pkgs.qt6.qtdeclarative}/libexec:$PATH
-
-            meson setup builddir
-            ninja -C builddir
-
+          shellHook = ''
             # Add our plugin to the QML path
-            export QML2_IMPORT_PATH="$PWD/builddir/plugin/qml:''${QML2_IMPORT_PATH:-}"
+            export QML2_IMPORT_PATH="$PWD/build/qml:''${QML2_IMPORT_PATH:-}"
 
-            export FONTCONFIG_FILE="${fontconfig}"
             export QS_ENVIRONMENT="dev"
           '';
         };

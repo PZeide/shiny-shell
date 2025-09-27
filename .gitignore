@@ -1,2 +1,4 @@
-.direnv
-.qmlls.ini
+.cache/
+.direnv/
+build/
+/.qmlls.ini
