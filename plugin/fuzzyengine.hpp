@@ -1,3 +1,5 @@
+#pragma once
+
 #include <limits>
 #include <qcontainerfwd.h>
 #include <qlist.h>

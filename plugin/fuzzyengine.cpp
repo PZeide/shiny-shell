@@ -33,6 +33,8 @@ namespace Shiny {
       qreal scoreSum = 0;
 
       for (auto& definition : definitions) {
+        totalWeight += definition.weight;
+
         QVariant property = choice->property(definition.property.toStdString().c_str());
 
         if (!property.isValid())
@@ -43,7 +45,6 @@ namespace Shiny {
           continue;
 
         double score = scorer.normalized_similarity(value.toUtf8());
-        totalWeight += definition.weight;
         scoreSum += score * definition.weight;
       }
 

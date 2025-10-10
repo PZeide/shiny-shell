@@ -13,4 +13,8 @@ QtObject {
   function exec(item: LauncherItemDescriptor) {
     throw new Error("exec() of LauncherPlugin is not implemented");
   }
+
+  property Component descriptorFactory: Component {
+    LauncherItemDescriptor {}
+  }
 }

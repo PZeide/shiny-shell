@@ -2,12 +2,12 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell.Widgets
-import qs.utils
+import qs.utils.animations
 
 ClippingRectangle {
   color: "transparent"
 
   Behavior on color {
-    animation: Animations.effects.createColor(this)
+    EffectColorAnimation {}
   }
 }

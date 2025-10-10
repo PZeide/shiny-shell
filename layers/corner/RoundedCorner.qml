@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Shapes
 import qs.config
-import qs.utils
+import qs.utils.animations
 
 Item {
   id: root
@@ -23,7 +23,7 @@ Item {
   implicitHeight: implicitSize
 
   Behavior on color {
-    animation: Animations.effects.createColor(this)
+    EffectColorAnimation {}
   }
 
   Shape {

@@ -19,14 +19,6 @@ Singleton {
     return Qt.resolvedUrl(assetPath(path));
   }
 
-  function scriptPath(path: string): url {
-    return Quickshell.shellPath(`scripts/${path}`);
-  }
-
-  function scriptUrl(path: string): url {
-    return Qt.resolvedUrl(scriptPath(path));
-  }
-
   function toPlain(url: url): string {
     return url.toString().replace("file://", "");
   }

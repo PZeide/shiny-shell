@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.config
-import qs.utils
+import qs.utils.animations
 
 Text {
   id: root
@@ -18,7 +18,7 @@ Text {
   font.pointSize: Config.appearance.font.size.md
 
   Behavior on color {
-    animation: Animations.effects.createColor(this)
+    EffectColorAnimation {}
   }
 
   Behavior on text {
@@ -33,19 +33,23 @@ Text {
       alwaysRunToEnd: true
 
       ParallelAnimation {
-        animations: [Animations.sineEnter.createNumber(this, {
-            target: root,
-            property: "x",
-            to: textAnimationBehavior.originalX - root.animationDistanceX
-          }), Animations.sineEnter.createNumber(this, {
-            target: root,
-            property: "y",
-            to: textAnimationBehavior.originalY - root.animationDistanceY
-          }), Animations.sineEnter.createNumber(this, {
-            target: root,
-            property: "opacity",
-            to: 0
-          })]
+        SineEnterNumberAnimation {
+          target: root
+          property: "x"
+          to: textAnimationBehavior.originalX - root.animationDistanceX
+        }
+
+        SineEnterNumberAnimation {
+          target: root
+          property: "y"
+          to: textAnimationBehavior.originalY - root.animationDistanceY
+        }
+
+        SineEnterNumberAnimation {
+          target: root
+          property: "opacity"
+          to: 0
+        }
       }
       PropertyAction {} // Tie the text update to this point (we don't want it to happen during the first slide+fade)
       PropertyAction {
@@ -59,19 +63,23 @@ Text {
         value: textAnimationBehavior.originalY + root.animationDistanceY
       }
       ParallelAnimation {
-        animations: [Animations.sineLeave.createNumber(this, {
-            target: root,
-            property: "x",
-            to: textAnimationBehavior.originalX
-          }), Animations.sineLeave.createNumber(this, {
-            target: root,
-            property: "y",
-            to: textAnimationBehavior.originalY
-          }), Animations.sineLeave.createNumber(this, {
-            target: root,
-            property: "opacity",
-            to: 1
-          })]
+        SineLeaveNumberAnimation {
+          target: root
+          property: "x"
+          to: textAnimationBehavior.originalX
+        }
+
+        SineLeaveNumberAnimation {
+          target: root
+          property: "y"
+          to: textAnimationBehavior.originalY
+        }
+
+        SineLeaveNumberAnimation {
+          target: root
+          property: "opacity"
+          to: 1
+        }
       }
     }
   }

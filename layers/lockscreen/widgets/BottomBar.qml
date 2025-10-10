@@ -6,6 +6,7 @@ import qs.widgets
 import qs.config
 import qs.services
 import qs.utils
+import qs.utils.animations
 
 ShinyRectangle {
   id: root
@@ -65,13 +66,13 @@ ShinyRectangle {
           anchors.leftMargin: 8
 
           ShinyIcon {
-            icon: Weather.current.icon
+            icon: Weather.now.icon
             fill: 1
             font.pointSize: Config.appearance.font.size.xl
           }
 
           ShinyText {
-            text: Weather.current.formattedTemperature
+            text: Formatting.temperature(Weather.now.temperature)
           }
         }
       }
@@ -121,7 +122,7 @@ ShinyRectangle {
             color: Battery.isLow ? Config.appearance.color.bgError : Config.appearance.color.fgPrimary
 
             Behavior on width {
-              animation: Animations.effects.createNumber(this)
+              EffectNumberAnimation {}
             }
 
             RowLayout {

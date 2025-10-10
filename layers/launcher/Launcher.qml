@@ -21,6 +21,7 @@ Item {
   readonly property var availablePlugins: ({
       "calculator": CalculatorPlugin
     })
+
   property LauncherPlugin activePlugin: defaultPlugin
   property var extraPlugins: {
     const activePlugins = [];
@@ -39,7 +40,7 @@ Item {
   }
 
   property int selectedItemIndex
-  property list<LauncherItemDescriptor> shownItems: []
+  property ListModel shownItems: ListModel {}
 
   function filter(input: string) {
     selectedItemIndex = 0;
@@ -47,13 +48,20 @@ Item {
     for (const candidatePlugin of extraPlugins) {
       if (input.startsWith(candidatePlugin.prefix)) {
         activePlugin = candidatePlugin;
-        shownItems = candidatePlugin.filter(input);
+        setItems(candidatePlugin.filter(input));
         return;
       }
     }
 
     activePlugin = defaultPlugin;
-    shownItems = defaultPlugin.filter(input);
+    setItems(defaultPlugin.filter(input));
+  }
+
+  function setItems(items: var) {
+    shownItems.clear();
+    for (const item of items) {
+      shownItems.append(item);
+    }
   }
 
   LazyLoader {
@@ -101,7 +109,7 @@ Item {
         id: container
 
         implicitWidth: root.screen.width * 0.35
-        implicitHeight: itemsLayout.implicitHeight + searchField.implicitHeight + searchField.anchors.margins * 2
+        implicitHeight: itemsColumn.implicitHeight + searchField.implicitHeight + searchField.anchors.margins * 2
         color: Config.appearance.color.bgPrimary
         radius: Config.appearance.rounding.md
 
@@ -112,8 +120,20 @@ Item {
           }
         }
 
-        ColumnLayout {
-          id: itemsLayout
+        Column {
+          id: itemsColumn
+
+          spacing: 6
+
+          Repeater {
+            model: root.shownItems
+
+            delegate: ShinyRectangle {
+              color: "red"
+              height: 30
+              width: 20
+            }
+          }
         }
 
         ShinyTextField {

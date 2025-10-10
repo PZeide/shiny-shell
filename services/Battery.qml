@@ -3,7 +3,6 @@ pragma Singleton
 
 import Quickshell
 import Quickshell.Services.UPower
-import qs.utils
 
 Singleton {
   readonly property bool isAvailable: UPower.displayDevice.ready && UPower.displayDevice.isLaptopBattery
@@ -35,8 +34,8 @@ Singleton {
     }
   }
 
-  readonly property string formattedTimeToEmpty: Utils.prettyDuration(UPower.displayDevice.timeToEmpty)
-  readonly property string formattedTimeToFull: Utils.prettyDuration(UPower.displayDevice.timeToFull)
+  readonly property string timeToEmpty: UPower.displayDevice.timeToEmpty
+  readonly property string timeToFull: UPower.displayDevice.timeToFull
   readonly property bool isHealthSupported: UPower.displayDevice.healthSupported
   readonly property real healthPercentage: UPower.displayDevice.healthPercentage
 }

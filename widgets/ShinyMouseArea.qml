@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.config
-import qs.utils
+import qs.utils.animations
 
 MouseArea {
   id: root
@@ -31,7 +31,7 @@ MouseArea {
     radius: root.layerRadius
 
     Behavior on opacity {
-      animation: Animations.effects.createNumber(this)
+      EffectNumberAnimation {}
     }
   }
 }

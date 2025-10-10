@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Controls
 import qs.config
 import qs.utils
+import qs.utils.animations
 
 TextField {
   id: root
@@ -37,15 +38,19 @@ TextField {
       running: root.activeFocus && root.cursorVisible && cursor.shouldBlink
       loops: Animation.Infinite
 
-      animations: [Animations.sineEnter.createNumber(this, {
-          from: 1,
-          to: 0,
-          duration: 800
-        }), Animations.sineLeave.createNumber(this, {
-          from: 0,
-          to: 1,
-          duration: 800
-        })]
+      MoveExitNumberAnimation {
+        from: 1
+        to: 0
+      }
+
+      PauseAnimation {
+        duration: 200
+      }
+
+      MoveEnterNumberAnimation {
+        from: 0
+        to: 1
+      }
     }
 
     Timer {

@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.config
-import qs.utils
+import qs.utils.animations
 
 ShinyText {
   required property string icon
@@ -20,6 +20,6 @@ ShinyText {
   }
 
   Behavior on fill {
-    animation: Animations.effects.createNumber(this)
+    EffectNumberAnimation {}
   }
 }

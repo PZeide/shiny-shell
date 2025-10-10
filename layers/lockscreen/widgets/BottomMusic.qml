@@ -7,6 +7,7 @@ import qs.widgets
 import qs.config
 import qs.services
 import qs.utils
+import qs.utils.animations
 
 ShinyRectangle {
   id: root
@@ -121,7 +122,7 @@ ShinyRectangle {
 
             ShinyText {
               visible: Player.preferred.positionSupported
-              text: Player.preferred.lengthSupported ? `${Utils.shortDuration(Player.preferred.position)} / ${Utils.shortDuration(Player.preferred.length)}` : Utils.shortDuration(Player.preferred.position)
+              text: Player.preferred.lengthSupported ? `${Formatting.numericDuration(Player.preferred.position)} / ${Formatting.numericDuration(Player.preferred.length)}` : Formatting.numericDuration(Player.preferred.position)
               font.pointSize: Config.appearance.font.size.sm
             }
           }
@@ -141,6 +142,6 @@ ShinyRectangle {
   }
 
   Behavior on implicitWidth {
-    animation: Animations.effects.createNumber(this)
+    EffectNumberAnimation {}
   }
 }

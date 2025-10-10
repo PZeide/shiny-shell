@@ -62,10 +62,9 @@ ShellRoot {
   }
 
   Component.onCompleted: {
-    // Services that needs to be initialized early for seamless usage (disable if dev)
-    Foreground;
     Location;
-    Player;
     Weather;
+    Foreground;
+    Player;
   }
 }

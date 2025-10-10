@@ -7,7 +7,7 @@ import Quickshell.Services.Pam
 import qs.config
 import qs.services
 import qs.widgets
-import qs.utils
+import qs.utils.animations
 import qs.layers.wallpaper
 import qs.layers.corner
 import qs.layers.lockscreen.widgets
@@ -54,13 +54,10 @@ WlSessionLockSurface {
       Transition {
         to: "fadeIn"
         SequentialAnimation {
-          NumberAnimation {
+          ExpressiveNumberAnimation {
             target: root
             property: "opacityFactor"
             to: 1
-            duration: Animations.expressive.duration
-            easing.type: Animations.expressive.type
-            easing.bezierCurve: Animations.expressive.curve
           }
 
           ScriptAction {
@@ -72,13 +69,10 @@ WlSessionLockSurface {
         from: "fadeIn"
         to: "animateIn"
         SequentialAnimation {
-          NumberAnimation {
+          MoveEnterSlowNumberAnimation {
             target: root
             property: "readinessFactor"
             to: 1
-            duration: Animations.moveEnterSlow.duration
-            easing.type: Animations.moveEnterSlow.type
-            easing.bezierCurve: Animations.moveEnterSlow.curve
           }
 
           ScriptAction {
@@ -90,13 +84,10 @@ WlSessionLockSurface {
         from: "idle"
         to: "animateOut"
         SequentialAnimation {
-          NumberAnimation {
+          MoveExitSlowNumberAnimation {
             target: root
             property: "readinessFactor"
             to: 0
-            duration: Animations.moveExitSlow.duration
-            easing.type: Animations.moveExitSlow.type
-            easing.bezierCurve: Animations.moveExitSlow.curve
           }
 
           ScriptAction {
@@ -108,13 +99,10 @@ WlSessionLockSurface {
         from: "animateOut"
         to: "fadeOut"
         SequentialAnimation {
-          NumberAnimation {
+          ExpressiveNumberAnimation {
             target: root
             property: "opacityFactor"
             to: 0
-            duration: Animations.expressive.duration
-            easing.type: Animations.expressive.type
-            easing.bezierCurve: Animations.expressive.curve
           }
 
           ScriptAction {
@@ -237,7 +225,7 @@ WlSessionLockSurface {
     error: root.error
 
     Behavior on errorTopMargin {
-      animation: Animations.effects.createNumber(this)
+      EffectNumberAnimation {}
     }
   }
 

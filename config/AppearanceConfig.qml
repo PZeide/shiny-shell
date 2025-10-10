@@ -68,7 +68,7 @@ JsonObject {
     property list<real> standardDecel: [0, 0, 0, 1, 1, 1]
     property list<real> expressiveFastSpatial: [0.42, 1.67, 0.21, 0.9, 1, 1]
     property list<real> expressiveDefaultSpatial: [0.38, 1.21, 0.22, 1, 1, 1]
-    property list<real> expressiveEffects: [0.34, 0.8, 0.34, 1, 1, 1]
+    property list<real> expressiveEffect: [0.34, 0.8, 0.34, 1, 1, 1]
   }
 
   component AnimDurations: JsonObject {
@@ -78,6 +78,6 @@ JsonObject {
     property int xl: 1000
     property int expressiveFastSpatial: 350
     property int expressiveDefaultSpatial: 500
-    property int expressiveEffects: 200
+    property int expressiveEffect: 200
   }
 }

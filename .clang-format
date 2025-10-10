@@ -3,7 +3,7 @@ Language: Cpp
 BasedOnStyle: LLVM
 
 AllowShortCaseLabelsOnASingleLine: true
-AllowShortEnumsOnASingleLine: false
+AllowShortEnumsOnASingleLine: true
 AllowShortFunctionsOnASingleLine: Empty
 AlwaysBreakAfterDefinitionReturnType: None
 BreakBeforeTernaryOperators: false
@@ -12,5 +12,3 @@ IndentCaseLabels: true
 IndentWidth: 2
 NamespaceIndentation: All
 PointerAlignment: Left
-SortIncludes: Never
-SortUsingDeclarations: Never

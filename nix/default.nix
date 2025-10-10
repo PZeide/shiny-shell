@@ -33,6 +33,7 @@
     buildInputs = [
       qt6.qtbase
       qt6.qtdeclarative
+      qt6.qtpositioning
       rapidfuzz-cpp
     ];
 

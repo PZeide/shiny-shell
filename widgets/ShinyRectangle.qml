@@ -1,12 +1,12 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import qs.utils
+import qs.utils.animations
 
 Rectangle {
   color: "transparent"
 
   Behavior on color {
-    animation: Animations.effects.createColor(this)
+    EffectColorAnimation {}
   }
 }

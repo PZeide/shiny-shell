@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 import qs.config
-import qs.utils
+import qs.utils.animations
 
 Slider {
   id: root
@@ -32,7 +32,7 @@ Slider {
     color: Config.appearance.color.accentPrimary
 
     Behavior on width {
-      animation: Animations.effects.createNumber(this)
+      EffectNumberAnimation {}
     }
   }
 
@@ -46,7 +46,7 @@ Slider {
     anchors.rightMargin: fontInfo.pixelSize / 3
 
     Behavior on x {
-      animation: Animations.effects.createNumber(this)
+      EffectNumberAnimation {}
     }
   }
 }

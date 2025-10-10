@@ -4,81 +4,27 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import Shiny.Services.Location
 import qs.config
-import qs.utils
-import qs.services.models
 
 Singleton {
   id: root
 
   readonly property bool isAvailable: current !== null
-  property LocationData current: null
+  readonly property alias current: provider.current
 
-  function reload() {
-    // First set running to false if alreay running
-    if (locationScript.running)
-      locationScript.running = false;
-
-    locationScript.running = true;
+  function refresh() {
+    provider.refresh();
   }
 
-  Process {
-    id: locationScript
+  LocationProvider {
+    id: provider
 
-    command: Utils.scriptCommand("find-location.nu", Config.location.provider)
+    enabled: Config.location.enabled
+    refreshInterval: Config.location.refreshInterval
 
-    stdout: StdioCollector {
-      onStreamFinished: {
-        const result = this.text.trim();
-        if (result !== "") {
-          const newLocationObj = JSON.parse(result);
-          const newLocationData = locationDataFactory.createObject(root, newLocationObj);
-
-          if (!Utils.deepEquals(newLocationData, root.current)) {
-            console.info(`Updating location to '${result}'`);
-            root.current = newLocationData;
-          }
-        }
-      }
-    }
-
-    stderr: StdioCollector {
-      onStreamFinished: {
-        const fullError = this.text.trim();
-        if (fullError !== "") {
-          const error = Utils.extractNuError(fullError);
-          console.error(`Failed to find location: ${error}`);
-        }
-      }
-    }
-  }
-
-  Timer {
-    id: refreshLocationTimer
-
-    running: Config.location.enabled
-    repeat: true
-    interval: Config.location.refreshInterval
-
-    // Use running instead of exec to avoid restarting if process is already running
-    onTriggered: locationScript.running = true
-  }
-
-  Connections {
-    target: Config.location
-
-    function onEnabledChanged() {
-      if (Config.location.enabled) {
-        root.reload();
-      } else {
-        locationScript.running = false;
-        root.current = null;
-      }
-    }
-
-    function onProviderChanged() {
-      if (Config.location.enabled)
-        root.reload();
+    onCurrentChanged: {
+      console.info(`Location updated to '${current.city}, ${current.countryName}'`);
     }
   }
 
@@ -87,17 +33,14 @@ Singleton {
 
     function refresh() {
       console.info("Refreshing location from IPC");
-      root.reload();
+      root.refresh();
     }
   }
 
   Component.onCompleted: {
-    if (Config.location.enabled)
-      root.reload();
-  }
-
-  Component {
-    id: locationDataFactory
-    LocationData {}
+    // Initial Location fetch
+    if (Config.location.enabled) {
+      refresh();
+    }
   }
 }
