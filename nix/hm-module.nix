@@ -39,7 +39,7 @@ in {
 
       Service = {
         Type = "simple";
-        ExecStart = "${cfg.package}/bin/caelestia-shell";
+        ExecStart = "${cfg.package}/bin/shiny-shell";
         Restart = "on-failure";
         Slice = "session.slice";
       };
