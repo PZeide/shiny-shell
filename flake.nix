@@ -55,6 +55,8 @@
           inherit shiny-shell;
           default = shiny-shell;
         };
+
+        homeManagerModules.default = import ./nix/hm-module.nix self;
       }
     );
 }
