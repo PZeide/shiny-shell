@@ -22,7 +22,6 @@ Singleton {
     watchChanges: true
     onFileChanged: reload()
     onAdapterUpdated: writeAdapter()
-    blockLoading: true
 
     JsonAdapter {
       id: adapter

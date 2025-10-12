@@ -13,10 +13,10 @@ import qs.layers.launcher
 ShellRoot {
   settings.watchFiles: Environment.isDev
 
-  Loader {
-    active: Config.lockScreen.enabled
+  LazyLoader {
+    activeAsync: Config.lockScreen.enabled
 
-    sourceComponent: LockScreen {}
+    LockScreen {}
   }
 
   Variants {
@@ -31,18 +31,18 @@ ShellRoot {
         screen: scope.modelData
       }
 
-      Loader {
-        active: Config.wallpaper.enabled
+      LazyLoader {
+        activeAsync: Config.wallpaper.enabled
 
-        sourceComponent: Wallpaper {
+        Wallpaper {
           screen: scope.modelData
         }
       }
 
-      Loader {
-        active: Config.launcher.enabled
+      LazyLoader {
+        activeAsync: Config.launcher.enabled
 
-        sourceComponent: Launcher {
+        Launcher {
           screen: scope.modelData
         }
       }

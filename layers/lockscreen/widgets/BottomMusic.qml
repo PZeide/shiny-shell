@@ -20,8 +20,6 @@ ShinyRectangle {
   topLeftRadius: Config.appearance.rounding.lg
 
   Loader {
-    id: musicLoader
-
     active: root.showMusic
     anchors.fill: parent
 
