@@ -37,7 +37,6 @@
     buildInputs = [
       qt6.qtbase
       qt6.qtdeclarative
-      rembg
       rapidfuzz-cpp
       libqalculate
     ];
@@ -51,6 +50,7 @@
   };
 
   runtimeDeps = [
+    rembg
     app2unit
     xdg-terminal-exec
   ];
