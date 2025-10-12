@@ -1,16 +1,16 @@
-find_package(Qt6 REQUIRED COMPONENTS Core Qml Sql Network)
-find_package(rapidfuzz REQUIRED)
+find_package(Qt6 REQUIRED COMPONENTS Core Qml Gui Sql Network)
 
 set(QT_QML_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/qml")
 qt_standard_project_setup(REQUIRES 6.9)
 
 function(qml_module arg_TARGET)
-    cmake_parse_arguments(PARSE_ARGV 1 arg "" "URI" "SOURCES;LIBRARIES")
+    cmake_parse_arguments(PARSE_ARGV 1 arg "" "URI" "SOURCES;LIBRARIES;DEPENDENCIES")
 
     qt_add_qml_module(${arg_TARGET}
         URI ${arg_URI}
         VERSION ${CMAKE_PROJECT_VERSION}
         SOURCES ${arg_SOURCES}
+        DEPENDENCIES ${arg_DEPENDENCIES}
     )
 
     qt_query_qml_module(${arg_TARGET}
@@ -29,16 +29,9 @@ function(qml_module arg_TARGET)
     install(FILES "${module_qmldir}" DESTINATION "${module_dir}")
     install(FILES "${module_typeinfo}" DESTINATION "${module_dir}")
 
-    target_link_libraries(${arg_TARGET} PRIVATE Qt::Core Qt::Qml ${arg_LIBRARIES})
+    target_link_libraries(${arg_TARGET} PRIVATE Qt::Core Qt::Gui Qt::Qml ${arg_LIBRARIES})
 endfunction()
 
-qml_module(shiny
-    URI Shiny
-    SOURCES
-        fuzzyengine.hpp fuzzyengine.cpp
-    LIBRARIES
-        Qt::Sql
-        rapidfuzz::rapidfuzz
-)
 
+add_subdirectory(launcher)
 add_subdirectory(services)

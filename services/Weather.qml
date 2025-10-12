@@ -6,6 +6,7 @@ import Quickshell
 import Quickshell.Io
 import Shiny.Services.Weather
 import qs.config
+import qs.services
 
 Singleton {
   id: root

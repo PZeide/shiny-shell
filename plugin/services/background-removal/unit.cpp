@@ -1,12 +1,10 @@
 #include "unit.hpp"
-
-#include <QCryptographicHash>
-#include <QDebug>
-#include <QFileInfo>
-#include <QProcess>
-#include <QStringList>
-#include <memory>
-#include <qprocess.h>
+#include <qbytearray.h>
+#include <qcontainerfwd.h>
+#include <qcryptographichash.h>
+#include <qdir.h>
+#include <qfile.h>
+#include <qlogging.h>
 
 namespace Shiny::Services::BackgroundRemoval {
   BackgroundRemovalUnit::BackgroundRemovalUnit(QObject* parent) : QObject(parent) {}
@@ -21,7 +19,8 @@ namespace Shiny::Services::BackgroundRemoval {
 
     QFileInfo newCacheDirectory(cacheDirectory);
     if (!newCacheDirectory.isDir() || !newCacheDirectory.isWritable()) {
-      qWarning() << "Cache directory is either missing, not a directory or is not writable";
+      qWarning() << "Cache directory is either missing, not a directory or is "
+                    "not writable";
       return;
     }
 
@@ -40,7 +39,7 @@ namespace Shiny::Services::BackgroundRemoval {
     if ((!m_source && source.isEmpty()) || (m_source && m_source->filePath() == source))
       return;
 
-    // Empty string is kinda like null
+    // Treat empty string as "null"
     if (source.isEmpty()) {
       m_source = nullptr;
       emit sourceChanged();
@@ -76,6 +75,7 @@ namespace Shiny::Services::BackgroundRemoval {
 
     m_source = std::make_unique<QFileInfo>(newSourceFile);
     emit sourceChanged();
+
     m_result = std::make_unique<QFileInfo>(m_cacheDirectory, resultFileName);
     emit resultChanged();
 
@@ -127,11 +127,24 @@ namespace Shiny::Services::BackgroundRemoval {
     }
 
     m_runningProcess = std::make_unique<QProcess>();
-    connect(m_runningProcess.get(), &QProcess::finished, this, &BackgroundRemovalUnit::processFinished);
-    connect(m_runningProcess.get(), &QProcess::errorOccurred, this, &BackgroundRemovalUnit::processError);
+
+    connect(
+      m_runningProcess.get(),
+      &QProcess::finished,
+      this,
+      &BackgroundRemovalUnit::processFinished
+    );
+
+    connect(
+      m_runningProcess.get(),
+      &QProcess::errorOccurred,
+      this,
+      &BackgroundRemovalUnit::processError
+    );
 
     QStringList arguments;
-    arguments << "i" << "-m" << "birefnet-general" << m_source->absoluteFilePath() << m_result->absoluteFilePath();
+    arguments << "i" << "-m" << "birefnet-general" << m_source->absoluteFilePath()
+              << m_result->absoluteFilePath();
     m_runningProcess->start("rembg", arguments);
 
     m_processing = true;

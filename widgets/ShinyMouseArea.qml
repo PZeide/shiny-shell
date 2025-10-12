@@ -14,13 +14,8 @@ MouseArea {
 
   hoverEnabled: true
 
-  onContainsMouseChanged: {
-    layer.opacity = (root.containsMouse) ? root.hoverOpacity : 0;
-  }
-
-  onContainsPressChanged: {
-    layer.opacity = (root.containsPress) ? root.clickOpacity : root.hoverOpacity;
-  }
+  onContainsMouseChanged: layer.opacity = (root.containsMouse) ? root.hoverOpacity : 0
+  onContainsPressChanged: layer.opacity = (root.containsPress) ? root.clickOpacity : root.hoverOpacity
 
   Rectangle {
     id: layer

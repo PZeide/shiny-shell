@@ -23,9 +23,7 @@ Singleton {
     enabled: Config.location.enabled
     refreshInterval: Config.location.refreshInterval
 
-    onCurrentChanged: {
-      console.info(`Location updated to '${current.city}, ${current.countryName}'`);
-    }
+    onCurrentChanged: console.info(`Location updated to '${current.city}, ${current.countryName}'`)
   }
 
   IpcHandler {

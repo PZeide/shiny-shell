@@ -1,24 +1,32 @@
 #pragma once
 
-#include <QObject>
-#include <QString>
-#include <QtQmlIntegration>
-#include <QtTypes>
-
+#include <qobject.h>
+#include <qqmlintegration.h>
+#include <qstring.h>
+#include <qtmetamacros.h>
+#include <qtypes.h>
 namespace Shiny::Services::Location {
   class LocationData : public QObject {
     Q_OBJECT
     QML_ANONYMOUS
 
+    // clang-format off
     Q_PROPERTY(qreal latitude READ latitude CONSTANT)
     Q_PROPERTY(qreal longitude READ longitude CONSTANT)
     Q_PROPERTY(QString countryCode READ countryCode CONSTANT)
     Q_PROPERTY(QString countryName READ countryName CONSTANT)
     Q_PROPERTY(QString city READ city CONSTANT)
+    // clang-format on
 
   public:
-    explicit LocationData(qreal latitude, qreal longitude, QString countryCode, QString countryName, QString city,
-                          QObject* parent = nullptr);
+    explicit LocationData(
+      qreal latitude,
+      qreal longitude,
+      QString countryCode,
+      QString countryName,
+      QString city,
+      QObject* parent = nullptr
+    );
 
     qreal latitude() const;
     qreal longitude() const;

@@ -53,6 +53,7 @@ WlSessionLockSurface {
     transitions: [
       Transition {
         to: "fadeIn"
+
         SequentialAnimation {
           ExpressiveNumberAnimation {
             target: root
@@ -68,6 +69,7 @@ WlSessionLockSurface {
       Transition {
         from: "fadeIn"
         to: "animateIn"
+
         SequentialAnimation {
           MoveEnterSlowNumberAnimation {
             target: root
@@ -83,6 +85,7 @@ WlSessionLockSurface {
       Transition {
         from: "idle"
         to: "animateOut"
+
         SequentialAnimation {
           MoveExitSlowNumberAnimation {
             target: root
@@ -98,6 +101,7 @@ WlSessionLockSurface {
       Transition {
         from: "animateOut"
         to: "fadeOut"
+
         SequentialAnimation {
           ExpressiveNumberAnimation {
             target: root

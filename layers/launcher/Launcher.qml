@@ -1,67 +1,52 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Hyprland
 import qs.widgets
-import qs.config
-import qs.layers.launcher.models
-import qs.layers.launcher.plugins
+import qs.utils.animations
 
 Item {
   id: root
 
   required property ShellScreen screen
+
   property bool opened: false
+  property string input: ""
+  property int selectedItemIndex: 0
 
-  readonly property LauncherPlugin defaultPlugin: ApplicationsPlugin
-  readonly property var availablePlugins: ({
-      "calculator": CalculatorPlugin
-    })
-
-  property LauncherPlugin activePlugin: defaultPlugin
-  property var extraPlugins: {
-    const activePlugins = [];
-
-    for (const pluginName of Config.launcher.plugins) {
-      const plugin = availablePlugins[pluginName];
-      if (!plugin) {
-        console.warn(`Missing launcher plugin ${pluginName}`);
-        continue;
-      }
-
-      activePlugins.push(plugin);
+  function tryDecrementSelectedIndex(shouldLoop = false) {
+    if (selectedItemIndex > 0) {
+      selectedItemIndex--;
+    } else if (shouldLoop) {
+      selectedItemIndex = backend.result.rowCount() - 1;
     }
-
-    return activePlugins;
   }
 
-  property int selectedItemIndex
-  property ListModel shownItems: ListModel {}
-
-  function filter(input: string) {
-    selectedItemIndex = 0;
-
-    for (const candidatePlugin of extraPlugins) {
-      if (input.startsWith(candidatePlugin.prefix)) {
-        activePlugin = candidatePlugin;
-        setItems(candidatePlugin.filter(input));
-        return;
-      }
+  function tryIncrementSelectedIndex(shouldLoop = false) {
+    if (backend.result.rowCount() > selectedItemIndex + 1) {
+      selectedItemIndex++;
+    } else if (shouldLoop) {
+      selectedItemIndex = 0;
     }
-
-    activePlugin = defaultPlugin;
-    setItems(defaultPlugin.filter(input));
   }
 
-  function setItems(items: var) {
-    shownItems.clear();
-    for (const item of items) {
-      shownItems.append(item);
-    }
+  function invokeElement(index: int) {
+    if (backend.result.rowCount() <= index)
+      return;
+
+    backend.result.invoke(index);
+    opened = false;
+  }
+
+  LauncherBackend {
+    id: backend
+
+    input: root.input
+
+    onResultChanged: root.selectedItemIndex = 0
   }
 
   LazyLoader {
@@ -73,27 +58,21 @@ Item {
       name: "launcher"
       screen: root.screen
       anchors.bottom: true
-      margins.bottom: 8
-      implicitWidth: container.implicitWidth
-      implicitHeight: container.implicitHeight
+      implicitWidth: root.screen.width * 0.35
+      implicitHeight: screen.height
       exclusionMode: ExclusionMode.Ignore
       WlrLayershell.layer: WlrLayer.Overlay
       WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
 
-      onVisibleChanged: {
-        if (visible) {
-          grab.active = true;
-          searchField.focus = true;
-        }
-      }
-
       Component.onCompleted: {
-        // Initial filtering
-        root.filter("");
+        root.input = "";
+        root.selectedItemIndex = 0;
       }
 
       HyprlandFocusGrab {
         id: grab
+
+        active: true
         windows: [window]
       }
 
@@ -105,50 +84,25 @@ Item {
         }
       }
 
-      ShinyRectangle {
-        id: container
+      LauncherDrawer {
+        id: drawer
 
-        implicitWidth: root.screen.width * 0.35
-        implicitHeight: itemsColumn.implicitHeight + searchField.implicitHeight + searchField.anchors.margins * 2
-        color: Config.appearance.color.bgPrimary
-        radius: Config.appearance.rounding.md
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 8
+        items: backend.result
+        selectedIndex: root.selectedItemIndex
 
-        Keys.onPressed: event => {
-          if (event.key === Qt.Key_Escape) {
-            event.accepted = true;
-            root.opened = false;
-          }
-        }
+        onInputChanged: root.input = input
+        onItemClicked: index => root.invokeElement(index)
+        onItemEntered: index => root.selectedItemIndex = index
+        Keys.onEscapePressed: root.opened = false
+        Keys.onReturnPressed: root.invokeElement(root.selectedItemIndex)
+        Keys.onUpPressed: root.tryDecrementSelectedIndex()
+        Keys.onDownPressed: root.tryIncrementSelectedIndex()
+        Keys.onTabPressed: root.tryIncrementSelectedIndex(true)
 
-        Column {
-          id: itemsColumn
-
-          spacing: 6
-
-          Repeater {
-            model: root.shownItems
-
-            delegate: ShinyRectangle {
-              color: "red"
-              height: 30
-              width: 20
-            }
-          }
-        }
-
-        ShinyTextField {
-          id: searchField
-
-          anchors.bottom: parent.bottom
-          anchors.left: parent.left
-          anchors.right: parent.right
-          anchors.margins: 8
-          placeholderText: "Search..."
-          icon: "search"
-
-          onTextChanged: {
-            root.filter(text);
-          }
+        Behavior on anchors.bottomMargin {
+          ExpressiveNumberAnimation {}
         }
       }
     }

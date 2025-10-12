@@ -1,24 +1,26 @@
 #pragma once
 
-#include <QDir>
-#include <QFileInfo>
-#include <QObject>
-#include <QProcess>
-#include <QString>
-#include <QUrl>
-#include <QtQmlIntegration>
 #include <memory>
+#include <qdir.h>
+#include <qfileinfo.h>
+#include <qobject.h>
+#include <qprocess.h>
+#include <qqmlintegration.h>
+#include <qstring.h>
+#include <qtmetamacros.h>
 
 namespace Shiny::Services::BackgroundRemoval {
   class BackgroundRemovalUnit : public QObject {
     Q_OBJECT
     QML_ELEMENT
 
+    // clang-format off
     Q_PROPERTY(QString cacheDirectory READ cacheDirectory WRITE setCacheDirectory NOTIFY cacheDirectoryChanged)
-    Q_PROPERTY(QString source READ source WRITE setSource NOTIFY sourceChanged)
+    Q_PROPERTY(QString source READ source WRITE setSource NOTIFY sourceChanged REQUIRED)
     Q_PROPERTY(bool processing READ processing NOTIFY processingChanged)
     Q_PROPERTY(bool available READ available NOTIFY availableChanged)
     Q_PROPERTY(QString result READ result NOTIFY resultChanged)
+    // clang-format on
 
   public:
     explicit BackgroundRemovalUnit(QObject* parent = nullptr);
@@ -53,8 +55,9 @@ namespace Shiny::Services::BackgroundRemoval {
     QDir m_cacheDirectory = QDir::temp();
     std::unique_ptr<QFileInfo> m_source;
     bool m_processing = false;
-    std::unique_ptr<QProcess> m_runningProcess;
     bool m_available = false;
     std::unique_ptr<QFileInfo> m_result;
+
+    std::unique_ptr<QProcess> m_runningProcess;
   };
 } // namespace Shiny::Services::BackgroundRemoval

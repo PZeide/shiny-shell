@@ -4,12 +4,12 @@ import QtQuick
 import Quickshell.Io
 
 JsonObject {
-  property Color color: Color {}
+  property ColorConfig color: ColorConfig {}
   property FontConfig font: FontConfig {}
-  property Rounding rounding: Rounding {}
+  property RoundingConfig rounding: RoundingConfig {}
   property AnimConfig anim: AnimConfig {}
 
-  component Color: JsonObject {
+  component ColorConfig: JsonObject {
     property color bgPrimary: "#1a1111"
     property color bgSecondary: "#271d1d"
     property color bgSelection: "#3d3232"
@@ -25,18 +25,18 @@ JsonObject {
   }
 
   component FontConfig: JsonObject {
-    property FontFamily family: FontFamily {}
-    property FontSize size: FontSize {}
+    property FontFamilyConfig family: FontFamilyConfig {}
+    property FontSizeConfig size: FontSizeConfig {}
   }
 
-  component FontFamily: JsonObject {
+  component FontFamilyConfig: JsonObject {
     property string sans: "Jost"
     property string mono: "Iosevka"
     property string iconNerd: "Symbols Nerd Font"
     property string iconMaterial: "Material Symbols Rounded"
   }
 
-  component FontSize: JsonObject {
+  component FontSizeConfig: JsonObject {
     property int xs: 10
     property int sm: 11
     property int md: 13
@@ -45,7 +45,7 @@ JsonObject {
     property int xxl: 28
   }
 
-  component Rounding: JsonObject {
+  component RoundingConfig: JsonObject {
     property int xs: 9
     property int sm: 12
     property int md: 17
@@ -55,11 +55,11 @@ JsonObject {
   }
 
   component AnimConfig: JsonObject {
-    property AnimCurves curves: AnimCurves {}
-    property AnimDurations durations: AnimDurations {}
+    property AnimCurvesConfig curves: AnimCurvesConfig {}
+    property AnimDurationsConfig durations: AnimDurationsConfig {}
   }
 
-  component AnimCurves: JsonObject {
+  component AnimCurvesConfig: JsonObject {
     property list<real> emphasized: [0.05, 0, 2 / 15, 0.06, 1 / 6, 0.4, 5 / 24, 0.82, 0.25, 1, 1, 1]
     property list<real> emphasizedAccel: [0.3, 0, 0.8, 0.15, 1, 1]
     property list<real> emphasizedDecel: [0.05, 0.7, 0.1, 1, 1, 1]
@@ -71,7 +71,7 @@ JsonObject {
     property list<real> expressiveEffect: [0.34, 0.8, 0.34, 1, 1, 1]
   }
 
-  component AnimDurations: JsonObject {
+  component AnimDurationsConfig: JsonObject {
     property int sm: 200
     property int md: 400
     property int lg: 600

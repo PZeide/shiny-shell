@@ -13,6 +13,7 @@ TextField {
   property string icon: ""
   property color iconColor: Config.appearance.color.fgSecondary
   property real iconSize: Config.appearance.font.size.lg
+  property real radius: Config.appearance.rounding.sm
 
   color: Config.appearance.color.fgSecondary
   selectionColor: Config.appearance.color.bgSelection
@@ -79,7 +80,7 @@ TextField {
   }
 
   background: ShinyRectangle {
-    radius: Config.appearance.rounding.xs
+    radius: root.radius
     color: Config.appearance.color.bgSecondary
   }
 

@@ -1,12 +1,13 @@
 #pragma once
 
 #include "data.hpp"
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
-#include <QObject>
-#include <QTimer>
-#include <QtQmlIntegration>
 #include <memory>
+#include <qnetworkaccessmanager.h>
+#include <qnetworkreply.h>
+#include <qobject.h>
+#include <qqmlintegration.h>
+#include <qtimer.h>
+#include <qtmetamacros.h>
 
 // ipinfo has a limit of 1000 requests per day so this is a safe interval
 constexpr int DEFAULT_REFRESH_INTERVAL_MSECS = 5 * 60 * 1000;
@@ -16,9 +17,11 @@ namespace Shiny::Services::Location {
     Q_OBJECT
     QML_ELEMENT
 
+    // clang-format off
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(int refreshInterval READ refreshInterval WRITE setRefreshInterval NOTIFY refreshIntervalChanged)
     Q_PROPERTY(Shiny::Services::Location::LocationData* current READ current NOTIFY currentChanged)
+    // clang-format on
 
   public:
     explicit LocationProvider(QObject* parent = nullptr);
@@ -44,9 +47,10 @@ namespace Shiny::Services::Location {
 
   private:
     bool m_enabled = false;
-    QNetworkAccessManager m_networkManager = QNetworkAccessManager(this);
+    std::unique_ptr<LocationData> m_current;
+
+    QNetworkAccessManager m_networkManager;
     quint64 m_requestTracker = 0;
     QTimer m_refreshTimer;
-    std::unique_ptr<LocationData> m_current;
   };
 } // namespace Shiny::Services::Location

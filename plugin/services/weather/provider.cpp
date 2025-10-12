@@ -1,19 +1,11 @@
 #include "provider.hpp"
-
-#include <QByteArray>
-#include <QDebug>
-#include <QFuture>
-#include <QFutureWatcher>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QLocale>
-#include <QNetworkReply>
-#include <QNetworkRequest>
-#include <QUrl>
-#include <QtNumeric>
-#include <QtTypes>
-#include <memory>
-#include <qtypes.h>
+#include <qbytearray.h>
+#include <qjsondocument.h>
+#include <qjsonobject.h>
+#include <qlogging.h>
+#include <qobject.h>
+#include <qurlquery.h>
+#include <qvariant.h>
 
 namespace Shiny::Services::Weather {
   WeatherProvider::WeatherProvider(QObject* parent) : QObject(parent) {
@@ -94,9 +86,14 @@ namespace Shiny::Services::Weather {
     if (!m_enabled)
       return;
 
-    QString urlTemplate = "https://api.open-meteo.com/v1/"
-                          "forecast?latitude=%1&longitude=%2&current=temperature_2m,weather_code,is_day";
-    QUrl url(urlTemplate.arg(m_latitude).arg(m_longitude));
+    QUrlQuery query;
+    query.addQueryItem("latitude", QString::number(m_latitude));
+    query.addQueryItem("longitude", QString::number(m_longitude));
+    query.addQueryItem("current", "temperature_2m,weather_code,is_day");
+
+    QUrl url("https://api.open-meteo.com/v1/forecast");
+    url.setQuery(query);
+
     QNetworkRequest request(url);
     QNetworkReply* reply = m_networkManager.get(request);
     reply->setProperty("tracker", ++m_requestTracker);
@@ -216,7 +213,9 @@ namespace Shiny::Services::Weather {
         icon = "thunderstorm";
         break;
 
-      default: qWarning() << "Failed to fetch weather: invalid wheather code" << weatherCode; return;
+      default:
+        qWarning() << "Failed to fetch weather: invalid wheather code" << weatherCode;
+        return;
     }
 
     m_now = std::make_unique<WeatherData>(condition, icon, temperature, isDay);

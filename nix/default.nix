@@ -12,9 +12,11 @@
   nerd-fonts,
   librebarcode-fonts,
   makeFontsConf,
-  nushell,
   rembg,
   rapidfuzz-cpp,
+  libqalculate,
+  app2unit,
+  xdg-terminal-exec,
   ...
 }: let
   plugin = stdenv.mkDerivation {
@@ -33,8 +35,11 @@
     buildInputs = [
       qt6.qtbase
       qt6.qtdeclarative
-      qt6.qtpositioning
+      rembg
       rapidfuzz-cpp
+      libqalculate
+      app2unit
+      xdg-terminal-exec
     ];
 
     dontWrapQtApps = true;
@@ -45,10 +50,7 @@
     ];
   };
 
-  runtimeDeps = [
-    nushell
-    rembg
-  ];
+  runtimeDeps = [];
 
   fontconfig = makeFontsConf {
     fontDirectories = [

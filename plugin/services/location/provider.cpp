@@ -1,16 +1,13 @@
 #include "provider.hpp"
-
-#include <QByteArray>
-#include <QDebug>
-#include <QFuture>
-#include <QFutureWatcher>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QLocale>
-#include <QNetworkRequest>
-#include <QUrl>
-#include <QtTypes>
 #include <memory>
+#include <qbytearray.h>
+#include <qcontainerfwd.h>
+#include <qjsondocument.h>
+#include <qjsonobject.h>
+#include <qlocale.h>
+#include <qlogging.h>
+#include <qnetworkrequest.h>
+#include <qurl.h>
 
 namespace Shiny::Services::Location {
   LocationProvider::LocationProvider(QObject* parent) : QObject(parent) {
