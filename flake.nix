@@ -38,6 +38,8 @@
         devShells.default = pkgs.mkShell {
           inputsFrom = [shiny-shell shiny-shell.plugin];
           packages = with pkgs; [
+            jost
+            iosevka
             material-symbols
             nerd-fonts.symbols-only
             librebarcode-fonts

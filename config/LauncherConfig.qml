@@ -23,6 +23,6 @@ JsonObject {
 
   component WebSearchConfig: JsonObject {
     property bool enabled: true
-    property string url: "https://kagi.com/search?q=%s"
+    property string url: "https://google.com/search?q=%s"
   }
 }
