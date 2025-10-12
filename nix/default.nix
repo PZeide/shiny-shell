@@ -58,8 +58,8 @@
   fontconfig = makeFontsConf {
     # Default fonts
     fontDirectories = [
-      jost
-      iosevka
+      #jost
+      #iosevka
       material-symbols
       nerd-fonts.symbols-only
       librebarcode-fonts
@@ -83,10 +83,9 @@ in
     postInstall = ''
       makeWrapper ${quickshell}/bin/qs $out/bin/shiny-shell \
       	--prefix PATH : "${lib.makeBinPath runtimeDeps}" \
+        --set FONTCONFIG_FILE "${fontconfig}" \
       	--add-flags "-p $out/share/shiny-shell"
     '';
-
-    #	--set FONTCONFIG_FILE "${fontconfig}" \
 
     passthru = {
       inherit plugin;
