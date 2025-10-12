@@ -18,7 +18,7 @@
     quickshell,
     ...
   }:
-    flake-utils.lib.eachSystem ["x86_64-linux" "aarch64-linux"] (
+    (flake-utils.lib.eachSystem ["x86_64-linux" "aarch64-linux"] (
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
 
@@ -55,8 +55,9 @@
           inherit shiny-shell;
           default = shiny-shell;
         };
-
-        homeManagerModules.default = import ./nix/hm-module.nix self;
       }
-    );
+    ))
+    // {
+      homeManagerModules.default = import ./nix/hm-module.nix self;
+    };
 }

@@ -9,7 +9,7 @@ self: {
   cfg = config.programs.shiny-shell;
 in {
   options = with lib; {
-    programs.caelestia = {
+    programs.shiny-shell = {
       enable = mkEnableOption "shiny-shell";
 
       package = mkOption {
