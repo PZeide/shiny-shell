@@ -58,8 +58,8 @@
   fontconfig = makeFontsConf {
     # Default fonts
     fontDirectories = [
-      #jost
-      #iosevka
+      jost
+      iosevka
       material-symbols
       nerd-fonts.symbols-only
       librebarcode-fonts

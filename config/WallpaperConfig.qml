@@ -9,6 +9,6 @@ JsonObject {
   property string path: Paths.assetPath("images/default_wallpaper.jpg")
   property string horizontalAlignement: "center"
   property string verticalAlignement: "top"
-  property bool foreground: true
+  property bool foreground: false
   property string customForegroundPath
 }
