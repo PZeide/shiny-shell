@@ -8,14 +8,26 @@ import Quickshell.Hyprland
 import qs.widgets
 import qs.utils.animations
 
-Item {
+ShinyAnimatedLayer {
   id: root
 
-  required property ShellScreen screen
-
-  property bool opened: false
   property string input: ""
   property int selectedItemIndex: 0
+  property real animationFactor: 0
+
+  animationIn: ExpressiveNumberAnimation {
+    target: root
+    property: "animationFactor"
+    from: 0
+    to: 1
+  }
+
+  animationOut: ExpressiveNumberAnimation {
+    target: root
+    property: "animationFactor"
+    from: 1
+    to: 0
+  }
 
   function tryDecrementSelectedIndex(shouldLoop = false) {
     if (selectedItemIndex > 0) {
@@ -38,7 +50,7 @@ Item {
       return;
 
     backend.result.invoke(index);
-    opened = false;
+    root.closeLayer();
   }
 
   LauncherBackend {
@@ -50,6 +62,8 @@ Item {
   }
 
   LazyLoader {
+    id: windowLoader
+
     activeAsync: root.opened
 
     ShinyWindow {
@@ -59,7 +73,7 @@ Item {
       screen: root.screen
       anchors.bottom: true
       implicitWidth: root.screen.width * 0.35
-      implicitHeight: screen.height
+      implicitHeight: root.screen.height * 0.5
       exclusionMode: ExclusionMode.Ignore
       WlrLayershell.layer: WlrLayer.Overlay
       WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
@@ -80,7 +94,7 @@ Item {
         target: grab
         function onActiveChanged() {
           if (!grab.active)
-            root.opened = false;
+            root.closeLayer();
         }
       }
 
@@ -88,22 +102,18 @@ Item {
         id: drawer
 
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 8
+        anchors.bottomMargin: -height + root.animationFactor * (8 + height)
         items: backend.result
-        selectedIndex: root.selectedItemIndex
+        selectedIndex: -root.selectedItemIndex
 
         onInputChanged: root.input = input
         onItemClicked: index => root.invokeElement(index)
         onItemEntered: index => root.selectedItemIndex = index
-        Keys.onEscapePressed: root.opened = false
+        Keys.onEscapePressed: root.closeLayer()
         Keys.onReturnPressed: root.invokeElement(root.selectedItemIndex)
         Keys.onUpPressed: root.tryDecrementSelectedIndex()
         Keys.onDownPressed: root.tryIncrementSelectedIndex()
         Keys.onTabPressed: root.tryIncrementSelectedIndex(true)
-
-        Behavior on anchors.bottomMargin {
-          ExpressiveNumberAnimation {}
-        }
       }
     }
   }
@@ -113,17 +123,17 @@ Item {
 
     function toggle() {
       console.info("Received launcher toggle from IPC");
-      root.opened = !root.opened;
+      root.toggleLayer();
     }
 
     function open() {
       console.info("Received launcher open from IPC");
-      root.opened = true;
+      root.openLayer();
     }
 
     function close() {
       console.info("Received launcher close from IPC");
-      root.opened = false;
+      root.closeLayer();
     }
   }
 }
