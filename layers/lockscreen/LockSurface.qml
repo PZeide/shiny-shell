@@ -55,7 +55,7 @@ WlSessionLockSurface {
         to: "fadeIn"
 
         SequentialAnimation {
-          ExpressiveNumberAnimation {
+          MoveEnterNumberAnimation {
             target: root
             property: "opacityFactor"
             to: 1
@@ -103,7 +103,7 @@ WlSessionLockSurface {
         to: "fadeOut"
 
         SequentialAnimation {
-          ExpressiveNumberAnimation {
+          MoveExitNumberAnimation {
             target: root
             property: "opacityFactor"
             to: 0
@@ -144,7 +144,8 @@ WlSessionLockSurface {
   Barcode {
     anchors.centerIn: parent
     passwordBuffer: input.text
-    opacity: Math.max(0, 2 * root.opacityFactor - 1)
+    // use readinessFactor to make it fade before the foreground
+    opacity: root.readinessFactor
   }
 
   Loader {
