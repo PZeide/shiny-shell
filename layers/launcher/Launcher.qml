@@ -62,8 +62,6 @@ ShinyAnimatedLayer {
   }
 
   LazyLoader {
-    id: windowLoader
-
     activeAsync: root.opened
 
     ShinyWindow {
@@ -73,7 +71,7 @@ ShinyAnimatedLayer {
       screen: root.screen
       anchors.bottom: true
       implicitWidth: root.screen.width * 0.35
-      implicitHeight: root.screen.height * 0.5
+      implicitHeight: root.screen.height
       exclusionMode: ExclusionMode.Ignore
       WlrLayershell.layer: WlrLayer.Overlay
       WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive

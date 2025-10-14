@@ -27,7 +27,7 @@ ShinyRectangle {
     anchors.fill: parent
     hoverEnabled: true
 
-    onClicked: root.itemClicked()
+    onPressed: root.itemClicked()
     onEntered: root.itemEntered()
   }
 

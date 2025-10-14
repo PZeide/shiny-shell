@@ -9,8 +9,8 @@ MouseArea {
 
   property color layerColor: Config.appearance.color.accentPrimary
   property int layerRadius: Config.appearance.rounding.md
-  property real clickOpacity: 0.3
-  property real hoverOpacity: 0.14
+  property real clickOpacity: 0.18
+  property real hoverOpacity: 0.08
 
   hoverEnabled: true
 

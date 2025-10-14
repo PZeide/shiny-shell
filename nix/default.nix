@@ -67,7 +67,7 @@
   };
 in
   stdenv.mkDerivation {
-    pname = "shiny-version";
+    pname = "shiny";
     version = "${rev}";
     src = ./..;
 

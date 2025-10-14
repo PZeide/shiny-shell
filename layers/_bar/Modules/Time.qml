@@ -18,5 +18,5 @@ ShinyMouseArea {
     text: Qt.formatDateTime(Clock.date, "h:mm AP")
   }
 
-  onClicked: {}
+  onPressed: {}
 }

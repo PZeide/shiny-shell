@@ -2,7 +2,7 @@
   description = "Shiny Shell | @PZeide";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/staging-next";
     flake-utils.url = "github:numtide/flake-utils";
 
     quickshell = {
@@ -37,6 +37,7 @@
       in {
         devShells.default = pkgs.mkShell {
           inputsFrom = [shiny-shell shiny-shell.plugin];
+
           packages = with pkgs; [
             jost
             iosevka

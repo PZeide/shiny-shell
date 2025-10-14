@@ -1,7 +1,7 @@
 find_package(Qt6 REQUIRED COMPONENTS Core Qml Gui Sql Network)
 
 set(QT_QML_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/qml")
-qt_standard_project_setup(REQUIRES 6.9)
+qt_standard_project_setup(REQUIRES 6.10)
 
 function(qml_module arg_TARGET)
     cmake_parse_arguments(PARSE_ARGV 1 arg "" "URI" "SOURCES;LIBRARIES;DEPENDENCIES")
