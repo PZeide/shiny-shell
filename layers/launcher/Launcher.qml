@@ -102,7 +102,7 @@ ShinyAnimatedLayer {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: -height + root.animationFactor * (8 + height)
         items: backend.result
-        selectedIndex: -root.selectedItemIndex
+        selectedIndex: root.selectedItemIndex
 
         onInputChanged: root.input = input
         onItemClicked: index => root.invokeElement(index)

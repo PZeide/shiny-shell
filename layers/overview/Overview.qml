@@ -28,7 +28,7 @@ ShinyAnimatedLayer {
   }
 
   LazyLoader {
-    active: root.opened
+    activeAsync: root.opened
 
     ShinyWindow {
       id: window
@@ -41,6 +41,10 @@ ShinyAnimatedLayer {
       exclusionMode: ExclusionMode.Ignore
       WlrLayershell.layer: WlrLayer.Overlay
       WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
+
+      mask: Region {
+        item: drawer
+      }
 
       HyprlandFocusGrab {
         id: grab
