@@ -36,9 +36,8 @@ ShinyAnimatedLayer {
       name: "overview"
       screen: root.screen
       anchors.top: true
-      margins.top: -implicitHeight + root.animationFactor * (80 + implicitHeight)
-      implicitWidth: drawer.implicitWidth
-      implicitHeight: drawer.implicitHeight
+      implicitWidth: screen.width
+      implicitHeight: screen.height
       exclusionMode: ExclusionMode.Ignore
       WlrLayershell.layer: WlrLayer.Overlay
       WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
@@ -61,6 +60,9 @@ ShinyAnimatedLayer {
       OverviewDrawer {
         id: drawer
 
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: parent.top
+        anchors.topMargin: -implicitHeight + root.animationFactor * (80 + implicitHeight)
         focus: true
         screen: root.screen
 
