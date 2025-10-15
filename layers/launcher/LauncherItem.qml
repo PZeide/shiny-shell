@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import Quickshell.Widgets
 import qs.widgets
 import qs.config
 
@@ -48,22 +49,26 @@ ShinyRectangle {
       implicitHeight: iconSize
       radius: Config.appearance.rounding.sm
 
-      Image {
+      Loader {
+        active: root.isSystemIcon
+
         anchors.fill: parent
-        visible: root.isSystemIcon
-        asynchronous: true
-        fillMode: Image.PreserveAspectCrop
-        retainWhileLoading: true
-        sourceSize.width: itemIcon.iconSize
-        sourceSize.height: itemIcon.iconSize
-        source: Quickshell.iconPath(root.icon, true)
+
+        sourceComponent: IconImage {
+          anchors.fill: parent
+          implicitSize: itemIcon.iconSize
+          source: Quickshell.iconPath(root.icon)
+        }
       }
 
-      ShinyIcon {
-        anchors.fill: parent
-        visible: !root.isSystemIcon
-        icon: root.icon
-        font.pointSize: Config.appearance.font.size.xxl
+      Loader {
+        active: !root.isSystemIcon
+
+        sourceComponent: ShinyIcon {
+          anchors.fill: parent
+          icon: root.icon
+          font.pointSize: Config.appearance.font.size.xxl
+        }
       }
     }
 

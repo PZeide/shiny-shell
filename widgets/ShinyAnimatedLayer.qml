@@ -2,13 +2,28 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
+import qs.utils.animations
 
 Item {
   id: root
 
   required property ShellScreen screen
-  required property PropertyAnimation animationIn
-  required property PropertyAnimation animationOut
+
+  property real animationFactor: 0
+
+  property PropertyAnimation animationIn: ExpressiveNumberAnimation {
+    target: root
+    property: "animationFactor"
+    from: 0
+    to: 1
+  }
+
+  property PropertyAnimation animationOut: ExpressiveNumberAnimation {
+    target: root
+    property: "animationFactor"
+    from: 1
+    to: 0
+  }
 
   readonly property bool opened: state !== "closed"
 

@@ -30,7 +30,6 @@ Singleton {
     target: "location"
 
     function refresh() {
-      console.info("Refreshing location from IPC");
       root.refresh();
     }
   }

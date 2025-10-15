@@ -6,6 +6,7 @@ import Quickshell.Io
 import Quickshell.Wayland
 import qs.utils
 import qs.config
+import qs.widgets
 
 Scope {
   WlSessionLock {
@@ -17,17 +18,29 @@ Scope {
   }
 
   IpcHandler {
+    id: ipc
+
     target: "lockscreen"
 
     function lock() {
-      console.info("Received lock request from IPC");
       sessionLock.locked = true;
     }
 
     function unlock() {
-      console.info("Received unlock request from IPC");
       sessionLock.locked = false;
     }
+  }
+
+  ShinyShortcut {
+    name: "lockscreen-lock"
+    description: "Lock session"
+    onPressed: ipc.lock()
+  }
+
+  ShinyShortcut {
+    name: "lockscreen-unlock"
+    description: "Unlock session"
+    onPressed: ipc.unlock()
   }
 
   Component.onCompleted: {

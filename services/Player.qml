@@ -6,6 +6,7 @@ import Quickshell.Io
 import Quickshell.Services.Mpris
 import qs.config
 import qs.utils
+import qs.widgets
 
 Singleton {
   id: root
@@ -45,6 +46,8 @@ Singleton {
   }
 
   IpcHandler {
+    id: ipc
+
     target: "player"
 
     function play() {
@@ -59,16 +62,14 @@ Singleton {
       }
     }
 
-    function togglePlaying() {
+    function playPause() {
       if (root.preferred !== null && root.preferred.canTogglePlaying) {
         root.preferred.togglePlaying();
       }
     }
 
     function stop() {
-      if (root.preferred !== null && root.preferred.stop) {
-        root.preferred.stop();
-      }
+      root.preferred.stop();
     }
 
     function next() {
@@ -82,5 +83,41 @@ Singleton {
         root.preferred.previous();
       }
     }
+  }
+
+  ShinyShortcut {
+    name: "player-play"
+    description: "Start playback on the preferred player"
+    onPressed: ipc.play()
+  }
+
+  ShinyShortcut {
+    name: "player-pause"
+    description: "Pause playback on the preferred player"
+    onPressed: ipc.pause()
+  }
+
+  ShinyShortcut {
+    name: "player-playpause"
+    description: "Toggle playback on the preferred player"
+    onPressed: ipc.playPause()
+  }
+
+  ShinyShortcut {
+    name: "player-stop"
+    description: "Stop playback on the preferred player"
+    onPressed: ipc.stop()
+  }
+
+  ShinyShortcut {
+    name: "player-next"
+    description: "Go to the next track on the preferred player"
+    onPressed: ipc.next()
+  }
+
+  ShinyShortcut {
+    name: "player-previous"
+    description: "Go to the previous track on the preferred player"
+    onPressed: ipc.previous()
   }
 }

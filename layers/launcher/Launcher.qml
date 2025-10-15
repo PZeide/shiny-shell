@@ -13,21 +13,6 @@ ShinyAnimatedLayer {
 
   property string input: ""
   property int selectedItemIndex: 0
-  property real animationFactor: 0
-
-  animationIn: ExpressiveNumberAnimation {
-    target: root
-    property: "animationFactor"
-    from: 0
-    to: 1
-  }
-
-  animationOut: ExpressiveNumberAnimation {
-    target: root
-    property: "animationFactor"
-    from: 1
-    to: 0
-  }
 
   function tryDecrementSelectedIndex(shouldLoop = false) {
     if (selectedItemIndex > 0) {
@@ -74,7 +59,7 @@ ShinyAnimatedLayer {
       implicitHeight: root.screen.height
       exclusionMode: ExclusionMode.Ignore
       WlrLayershell.layer: WlrLayer.Overlay
-      WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
+      WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
 
       Component.onCompleted: {
         root.input = "";
@@ -86,6 +71,7 @@ ShinyAnimatedLayer {
 
         active: true
         windows: [window]
+        onCleared: root.closeLayer()
       }
 
       Connections {
@@ -117,21 +103,38 @@ ShinyAnimatedLayer {
   }
 
   IpcHandler {
+    id: ipc
+
     target: "launcher"
 
     function toggle() {
-      console.info("Received launcher toggle from IPC");
       root.toggleLayer();
     }
 
     function open() {
-      console.info("Received launcher open from IPC");
       root.openLayer();
     }
 
     function close() {
-      console.info("Received launcher close from IPC");
       root.closeLayer();
     }
+  }
+
+  ShinyShortcut {
+    name: "launcher-open"
+    description: "Open launcher"
+    onPressed: ipc.open()
+  }
+
+  ShinyShortcut {
+    name: "launcher-close"
+    description: "Close launcher"
+    onPressed: ipc.close()
+  }
+
+  ShinyShortcut {
+    name: "launcher-toggle"
+    description: "Toggle launcher"
+    onPressed: ipc.toggle()
   }
 }

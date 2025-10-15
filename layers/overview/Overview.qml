@@ -6,26 +6,9 @@ import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Hyprland
 import qs.widgets
-import qs.utils.animations
 
 ShinyAnimatedLayer {
   id: root
-
-  property real animationFactor: 0
-
-  animationIn: ExpressiveNumberAnimation {
-    target: root
-    property: "animationFactor"
-    from: 0
-    to: 1
-  }
-
-  animationOut: ExpressiveNumberAnimation {
-    target: root
-    property: "animationFactor"
-    from: 1
-    to: 0
-  }
 
   LazyLoader {
     activeAsync: root.opened
@@ -40,7 +23,7 @@ ShinyAnimatedLayer {
       implicitHeight: screen.height
       exclusionMode: ExclusionMode.Ignore
       WlrLayershell.layer: WlrLayer.Overlay
-      WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
+      WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
 
       mask: Region {
         item: drawer
@@ -51,14 +34,7 @@ ShinyAnimatedLayer {
 
         active: true
         windows: [window]
-      }
-
-      Connections {
-        target: grab
-        function onActiveChanged() {
-          if (!grab.active)
-            root.closeLayer();
-        }
+        onCleared: root.closeLayer()
       }
 
       OverviewDrawer {
@@ -77,21 +53,38 @@ ShinyAnimatedLayer {
   }
 
   IpcHandler {
+    id: ipc
+
     target: "overview"
 
     function toggle() {
-      console.info("Received overview toggle from IPC");
       root.toggleLayer();
     }
 
     function open() {
-      console.info("Received overview open from IPC");
       root.openLayer();
     }
 
     function close() {
-      console.info("Received overview close from IPC");
       root.closeLayer();
     }
+  }
+
+  ShinyShortcut {
+    name: "overview-open"
+    description: "Open overview"
+    onPressed: ipc.open()
+  }
+
+  ShinyShortcut {
+    name: "overview-close"
+    description: "Close overview"
+    onPressed: ipc.close()
+  }
+
+  ShinyShortcut {
+    name: "overview-toggle"
+    description: "Toggle overview"
+    onPressed: ipc.toggle()
   }
 }

@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell.Wayland
 import Quickshell.Hyprland
+import Quickshell.Widgets
 import qs.widgets
 import qs.config
 import qs.utils
@@ -56,14 +57,10 @@ ShinyRectangle {
       captureSource: root.window?.wayland ?? null
       live: true
 
-      Image {
-        property real iconSize: Math.min(root.implicitWidth, root.implicitHeight) * 0.4
-
+      IconImage {
         anchors.centerIn: parent
         source: root.windowIconPath
-        width: iconSize
-        height: iconSize
-        sourceSize: Qt.size(iconSize, iconSize)
+        implicitSize: Math.min(root.implicitWidth, root.implicitHeight) * 0.4
       }
     }
   }

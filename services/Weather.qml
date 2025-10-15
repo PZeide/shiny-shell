@@ -39,7 +39,6 @@ Singleton {
     target: "weather"
 
     function refresh() {
-      console.info("Refreshing weather from IPC");
       root.reload();
     }
   }
