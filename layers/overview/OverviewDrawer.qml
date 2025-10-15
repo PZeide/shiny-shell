@@ -4,7 +4,6 @@ import QtQuick
 import QtQml.Models
 import Quickshell
 import Quickshell.Hyprland
-import Quickshell.Wayland
 import qs.widgets
 import qs.config
 
