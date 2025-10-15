@@ -23,7 +23,6 @@ ShinyRectangle {
     const source = dropArea.drag.source as OverviewWindow;
     return source.window.workspace?.id !== workspaceId;
   }
-  // Those two values are here to compute move position on drop
 
   signal workspaceClicked
   signal receiveWindow(window: HyprlandToplevel)

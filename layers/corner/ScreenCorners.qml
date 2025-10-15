@@ -17,7 +17,7 @@ Item {
     anchors.left: true
     implicitWidth: cornerTopLeft.implicitWidth
     implicitHeight: cornerTopLeft.implicitHeight
-    exclusionMode: ExclusionMode.Ignore
+    exclusionMode: ExclusionMode.Normal
     WlrLayershell.layer: WlrLayer.Top
 
     RoundedCorner {

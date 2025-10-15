@@ -17,7 +17,7 @@ ShinyRectangle {
   readonly property int monitorTransform: monitor.lastIpcObject.transform ?? 0
   readonly property real monitorTransformedWidth: monitorTransform % 2 === 0 ? monitor.width : monitor.height
   readonly property real monitorTransformedHeight: monitorTransform % 2 === 0 ? monitor.height : monitor.width
-  // Amount of scale claimed and reserved by layers
+  // Amount of space claimed and reserved by layers
   readonly property list<int> monitorReserved: monitor.lastIpcObject.reserved ?? [0, 0, 0, 0]
   readonly property int horizontalReserved: monitorReserved[0] + monitorReserved[2]
   readonly property int verticalReserved: monitorReserved[1] + monitorReserved[3]

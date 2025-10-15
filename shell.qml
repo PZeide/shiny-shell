@@ -8,6 +8,7 @@ import qs.services
 import qs.utils
 import qs.layers.lockscreen
 import qs.layers.corner
+import qs.layers.bar
 import qs.layers.wallpaper
 import qs.layers.launcher
 import qs.layers.overview
@@ -37,6 +38,14 @@ ShellRoot {
         activeAsync: Config.wallpaper.enabled
 
         Wallpaper {
+          screen: scope.modelData
+        }
+      }
+
+      LazyLoader {
+        activeAsync: Config.bar.enabled
+
+        Bar {
           screen: scope.modelData
         }
       }
