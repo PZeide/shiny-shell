@@ -55,7 +55,7 @@ WlSessionLockSurface {
         to: "fadeIn"
 
         SequentialAnimation {
-          MoveEnterNumberAnimation {
+          MoveEnterSlowNumberAnimation {
             target: root
             property: "opacityFactor"
             to: 1
