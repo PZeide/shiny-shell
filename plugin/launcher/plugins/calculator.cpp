@@ -104,4 +104,4 @@ namespace Shiny::Launcher::Plugins {
     QClipboard* clipboard = QGuiApplication::clipboard();
     clipboard->setText(result);
   }
-} // namespace Shiny::Launcher::Plugins
+}

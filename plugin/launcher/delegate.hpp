@@ -4,6 +4,7 @@
 #include "plugin.hpp"
 #include <limits>
 #include <qlist.h>
+#include <qloggingcategory.h>
 #include <qobject.h>
 #include <qqmlintegration.h>
 #include <qqmllist.h>
@@ -12,6 +13,8 @@
 #include <qtypes.h>
 
 namespace Shiny::Launcher {
+  Q_DECLARE_LOGGING_CATEGORY(logLauncher)
+
   class LauncherDelegate : public QObject {
     Q_OBJECT
     QML_ELEMENT
@@ -67,4 +70,4 @@ namespace Shiny::Launcher {
     );
     static void pluginsRemoveLast(QQmlListProperty<LauncherPlugin>* property);
   };
-} // namespace Shiny::Launcher
+}

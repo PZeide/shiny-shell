@@ -3,7 +3,7 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
-import Shiny.Services.BackgroundRemoval
+import Shiny.Services
 import qs.config
 import qs.utils
 
@@ -16,20 +16,17 @@ Singleton {
 
   BackgroundRemovalUnit {
     id: foregroundUnit
-
-    cacheDirectory: Paths.toPlain(Paths.cacheUrl)
+    cacheDirectory: Paths.fromUrl(Paths.cacheUrl)
     source: root.unitEnabled ? Config.wallpaper.path : ""
 
     onProcessingChanged: {
-      if (processing) {
+      if (processing)
         console.info(`Started processing foreground for path ${Config.wallpaper.path}`);
-      }
     }
 
     onAvailableChanged: {
-      if (available) {
+      if (available)
         console.info(`Foreground available at ${result}`);
-      }
     }
   }
 }

@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell.Hyprland
-import qs.widgets
+import qs.components
 import qs.config
 import qs.utils
 import qs.utils.animations
@@ -37,7 +37,7 @@ ShinyRectangle {
   }
 
   Behavior on border.color {
-    MoveEnterSlowColorAnimation {}
+    EffectColorAnimation {}
   }
 
   ShinyText {
@@ -52,7 +52,6 @@ ShinyRectangle {
 
   ShinyMouseArea {
     id: mouseArea
-
     visible: !root.isActive
     layerRadius: root.radius
     anchors.fill: parent
@@ -63,7 +62,6 @@ ShinyRectangle {
 
   DropArea {
     id: dropArea
-
     anchors.fill: parent
     keys: ["window"]
 

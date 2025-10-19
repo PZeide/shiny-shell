@@ -3,44 +3,48 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
-import qs.widgets
+import qs.components
 import qs.config
 import qs.layers.bar.modules
 
-ShinyWindow {
-  id: root
+Variants {
+  model: Quickshell.screens
 
-  required property ShellScreen screen
+  ShinyWindow {
+    id: root
 
-  name: "bar"
-  screen: root.screen
-  anchors.top: true
-  anchors.left: true
-  anchors.right: true
-  implicitHeight: Config.bar.height
-  color: Config.appearance.color.bgPrimary
-  WlrLayershell.layer: WlrLayer.Top
-  WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
+    required property ShellScreen modelData
 
-  Row {
-    anchors.verticalCenter: parent.verticalCenter
-    anchors.left: parent.left
-    anchors.leftMargin: 7
-    spacing: Config.bar.moduleSpacing
+    name: "bar"
+    screen: modelData
+    anchors.top: true
+    anchors.left: true
+    anchors.right: true
+    implicitHeight: Config.bar.height
+    color: Config.appearance.color.bgPrimary
+    WlrLayershell.layer: WlrLayer.Top
+    WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
 
-    HostIcon {}
-  }
+    Row {
+      anchors.verticalCenter: parent.verticalCenter
+      anchors.left: parent.left
+      anchors.leftMargin: 7
+      spacing: Config.bar.moduleSpacing
 
-  Row {
-    anchors.verticalCenter: parent.verticalCenter
-    anchors.horizontalCenter: parent.horizontalCenter
-    spacing: Config.bar.moduleSpacing
-  }
+      HostIcon {}
+    }
 
-  Row {
-    anchors.verticalCenter: parent.verticalCenter
-    anchors.right: parent.right
-    anchors.rightMargin: 7
-    spacing: Config.bar.moduleSpacing
+    Row {
+      anchors.verticalCenter: parent.verticalCenter
+      anchors.horizontalCenter: parent.horizontalCenter
+      spacing: Config.bar.moduleSpacing
+    }
+
+    Row {
+      anchors.verticalCenter: parent.verticalCenter
+      anchors.right: parent.right
+      anchors.rightMargin: 7
+      spacing: Config.bar.moduleSpacing
+    }
   }
 }

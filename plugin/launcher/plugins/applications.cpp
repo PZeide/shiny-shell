@@ -1,4 +1,5 @@
 #include "applications.hpp"
+#include "../delegate.hpp"
 #include <rapidfuzz/distance/JaroWinkler.hpp>
 #include <qlogging.h>
 #include <qnumeric.h>
@@ -124,7 +125,7 @@ namespace Shiny::Launcher::Plugins {
       return;
 
     if (scoreThreshold < 0 || scoreThreshold > 1) {
-      qWarning() << "Score threshold should be between 0.0 and 1.0";
+      qCWarning(logLauncher) << "Score threshold should be between 0.0 and 1.0";
       return;
     }
 
@@ -141,7 +142,7 @@ namespace Shiny::Launcher::Plugins {
       return;
 
     if (scorePrefixBoost < 0 || scorePrefixBoost > 0.25) {
-      qWarning() << "Score threshold should be between 0.0 and 0.25";
+      qCWarning(logLauncher) << "Score threshold should be between 0.0 and 0.25";
       return;
     }
 
@@ -151,7 +152,7 @@ namespace Shiny::Launcher::Plugins {
 
   void ApplicationsPlugin::invoke(const ApplicationEntry& entry) const {
     if (entry.command.isEmpty()) {
-      qWarning() << "Cannot invoke application because command is empty";
+      qCWarning(logLauncher) << "Cannot invoke application because command is empty";
       return;
     }
 
@@ -200,4 +201,4 @@ namespace Shiny::Launcher::Plugins {
 
     process.startDetached();
   }
-} // namespace Shiny::Launcher::Plugins
+}

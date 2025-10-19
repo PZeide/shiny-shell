@@ -40,4 +40,4 @@ namespace Shiny::Launcher::Plugins {
 
     void invoke(const QString& result) const;
   };
-} // namespace Shiny::Launcher::Plugins
+}

@@ -38,7 +38,7 @@ namespace Shiny::Launcher {
     QString name() const;
     QString description() const;
 
-    [[nodiscard]] bool operator==(const LauncherItem& other) const;
+    bool operator==(const LauncherItem& other) const;
 
   public slots:
     Q_INVOKABLE void invoke() const;
@@ -70,4 +70,4 @@ namespace Shiny::Launcher {
   private:
     QList<Shiny::Launcher::LauncherItem> m_items;
   };
-} // namespace Shiny::Launcher
+}

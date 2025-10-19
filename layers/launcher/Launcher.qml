@@ -5,99 +5,113 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Hyprland
-import qs.widgets
-import qs.utils.animations
+import qs.components
 
-ShinyAnimatedLayer {
+Item {
   id: root
 
-  property string input: ""
-  property int selectedItemIndex: 0
-
-  function tryDecrementSelectedIndex(shouldLoop = false) {
-    if (selectedItemIndex > 0) {
-      selectedItemIndex--;
-    } else if (shouldLoop) {
-      selectedItemIndex = backend.result.rowCount() - 1;
-    }
+  function getActive(): ShinyLayerWrapper {
+    return variant.instances.find(instance => instance.screen.name === Hyprland.focusedMonitor?.name);
   }
 
-  function tryIncrementSelectedIndex(shouldLoop = false) {
-    if (backend.result.rowCount() > selectedItemIndex + 1) {
-      selectedItemIndex++;
-    } else if (shouldLoop) {
-      selectedItemIndex = 0;
-    }
-  }
+  Variants {
+    id: variant
 
-  function invokeElement(index: int) {
-    if (backend.result.rowCount() <= index)
-      return;
+    model: Quickshell.screens
 
-    backend.result.invoke(index);
-    root.closeLayer();
-  }
+    delegate: ShinyLayerWrapper {
+      id: layer
 
-  LauncherBackend {
-    id: backend
+      required property ShellScreen modelData
 
-    input: root.input
+      property string input: ""
+      property int selectedItemIndex: 0
 
-    onResultChanged: root.selectedItemIndex = 0
-  }
+      screen: modelData
 
-  LazyLoader {
-    activeAsync: root.opened
-
-    ShinyWindow {
-      id: window
-
-      name: "launcher"
-      screen: root.screen
-      anchors.bottom: true
-      implicitWidth: root.screen.width * 0.35
-      implicitHeight: root.screen.height
-      exclusionMode: ExclusionMode.Ignore
-      WlrLayershell.layer: WlrLayer.Overlay
-      WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
-
-      Component.onCompleted: {
-        root.input = "";
-        root.selectedItemIndex = 0;
-      }
-
-      HyprlandFocusGrab {
-        id: grab
-
-        active: true
-        windows: [window]
-        onCleared: root.closeLayer()
-      }
-
-      Connections {
-        target: grab
-        function onActiveChanged() {
-          if (!grab.active)
-            root.closeLayer();
+      function tryDecrementSelectedIndex(shouldLoop = false) {
+        if (selectedItemIndex > 0) {
+          selectedItemIndex--;
+        } else if (shouldLoop) {
+          selectedItemIndex = backend.result.rowCount() - 1;
         }
       }
 
-      LauncherDrawer {
-        id: drawer
+      function tryIncrementSelectedIndex(shouldLoop = false) {
+        if (backend.result.rowCount() > selectedItemIndex + 1) {
+          selectedItemIndex++;
+        } else if (shouldLoop) {
+          selectedItemIndex = 0;
+        }
+      }
 
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: -height + root.animationFactor * (8 + height)
-        items: backend.result
-        selectedIndex: root.selectedItemIndex
+      function invokeElement(index: int) {
+        if (backend.result.rowCount() <= index)
+          return;
 
-        onInputChanged: root.input = input
-        onItemClicked: index => root.invokeElement(index)
-        onItemEntered: index => root.selectedItemIndex = index
-        Keys.onEscapePressed: root.closeLayer()
-        Keys.onReturnPressed: root.invokeElement(root.selectedItemIndex)
-        Keys.onUpPressed: root.tryDecrementSelectedIndex()
-        Keys.onDownPressed: root.tryIncrementSelectedIndex()
-        Keys.onTabPressed: root.tryIncrementSelectedIndex(true)
+        backend.result.invoke(index);
+        layer.closeLayer();
+      }
+
+      LauncherBackend {
+        id: backend
+        input: layer.input
+
+        onResultChanged: layer.selectedItemIndex = 0
+      }
+
+      LazyLoader {
+        activeAsync: layer.opened
+
+        ShinyWindow {
+          id: window
+          name: "launcher"
+          screen: layer.screen
+          anchors.bottom: true
+          implicitWidth: layer.screen.width * 0.35
+          implicitHeight: layer.screen.height
+          exclusionMode: ExclusionMode.Ignore
+          WlrLayershell.layer: WlrLayer.Overlay
+          WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
+
+          mask: Region {
+            item: drawer
+          }
+
+          HyprlandFocusGrab {
+            id: grab
+            active: true
+            windows: [window]
+
+            onCleared: layer.closeLayer()
+          }
+
+          Connections {
+            target: grab
+
+            function onActiveChanged() {
+              if (!grab.active)
+                layer.closeLayer();
+            }
+          }
+
+          LauncherDrawer {
+            id: drawer
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: -height + layer.animationFactor * (8 + height)
+            items: backend.result
+            selectedIndex: layer.selectedItemIndex
+
+            onInputChanged: layer.input = input
+            onItemClicked: index => layer.invokeElement(index)
+            onItemEntered: index => layer.selectedItemIndex = index
+            Keys.onEscapePressed: layer.closeLayer()
+            Keys.onReturnPressed: layer.invokeElement(layer.selectedItemIndex)
+            Keys.onUpPressed: layer.tryDecrementSelectedIndex()
+            Keys.onDownPressed: layer.tryIncrementSelectedIndex()
+            Keys.onTabPressed: layer.tryIncrementSelectedIndex(true)
+          }
+        }
       }
     }
   }
@@ -107,16 +121,31 @@ ShinyAnimatedLayer {
 
     target: "launcher"
 
-    function toggle() {
-      root.toggleLayer();
+    function toggle(): string {
+      const layer = root.getActive();
+      if (!layer)
+        return "unavailable";
+
+      layer.toggleLayer();
+      return "ok";
     }
 
-    function open() {
-      root.openLayer();
+    function open(): string {
+      const layer = root.getActive();
+      if (!layer)
+        return "unavailable";
+
+      layer.openLayer();
+      return "ok";
     }
 
-    function close() {
-      root.closeLayer();
+    function close(): string {
+      const layer = root.getActive();
+      if (!layer)
+        return "unavailable";
+
+      layer.closeLayer();
+      return "ok";
     }
   }
 

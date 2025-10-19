@@ -3,69 +3,50 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Hyprland
-import qs.config
 import qs.services
 import qs.utils
-import qs.layers.lockscreen
+import qs.config
 import qs.layers.corner
-import qs.layers.bar
 import qs.layers.wallpaper
-import qs.layers.launcher
+import qs.layers.bar
+import qs.layers.lockscreen
 import qs.layers.overview
+import qs.layers.launcher
+import qs.modules
 
 ShellRoot {
   settings.watchFiles: Environment.isDev
 
-  LazyLoader {
-    activeAsync: Config.lockScreen.enabled
+  ScreenCorners {}
 
-    LockScreen {}
+  Loader {
+    active: Config.wallpaper.enabled
+    sourceComponent: Wallpaper {}
   }
 
-  Variants {
-    model: Quickshell.screens
+  Loader {
+    active: Config.bar.enabled
+    sourceComponent: Bar {}
+  }
 
-    Scope {
-      id: scope
+  Loader {
+    active: Config.lockScreen.enabled
+    sourceComponent: LockScreen {}
+  }
 
-      property var modelData
+  Loader {
+    active: Config.overview.enabled
+    sourceComponent: Overview {}
+  }
 
-      ScreenCorners {
-        screen: scope.modelData
-      }
+  Loader {
+    active: Config.launcher.enabled
+    sourceComponent: Launcher {}
+  }
 
-      LazyLoader {
-        activeAsync: Config.wallpaper.enabled
-
-        Wallpaper {
-          screen: scope.modelData
-        }
-      }
-
-      LazyLoader {
-        activeAsync: Config.bar.enabled
-
-        Bar {
-          screen: scope.modelData
-        }
-      }
-
-      LazyLoader {
-        activeAsync: Config.launcher.enabled
-
-        Launcher {
-          screen: scope.modelData
-        }
-      }
-
-      LazyLoader {
-        activeAsync: Config.overview.enabled
-
-        Overview {
-          screen: scope.modelData
-        }
-      }
-    }
+  Loader {
+    active: Config.idle.enabled
+    sourceComponent: IdleManager {}
   }
 
   Connections {
@@ -92,9 +73,10 @@ ShellRoot {
   }
 
   Component.onCompleted: {
+    Brightness;
+    Foreground;
     Location;
     Weather;
-    Foreground;
     Player;
   }
 }

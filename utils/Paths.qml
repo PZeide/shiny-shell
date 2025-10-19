@@ -19,7 +19,7 @@ Singleton {
     return Qt.resolvedUrl(assetPath(path));
   }
 
-  function toPlain(url: url): string {
+  function fromUrl(url: url): string {
     return url.toString().replace("file://", "");
   }
 }

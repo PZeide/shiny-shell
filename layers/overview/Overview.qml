@@ -5,49 +5,66 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Hyprland
-import qs.widgets
+import qs.components
 
-ShinyAnimatedLayer {
+Item {
   id: root
 
-  LazyLoader {
-    activeAsync: root.opened
+  function getActive(): ShinyLayerWrapper {
+    return variant.instances.find(instance => instance.screen.name === Hyprland.focusedMonitor?.name);
+  }
 
-    ShinyWindow {
-      id: window
+  Variants {
+    id: variant
 
-      name: "overview"
-      screen: root.screen
-      anchors.top: true
-      implicitWidth: screen.width
-      implicitHeight: screen.height
-      exclusionMode: ExclusionMode.Ignore
-      WlrLayershell.layer: WlrLayer.Overlay
-      WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
+    model: Quickshell.screens
 
-      mask: Region {
-        item: drawer
-      }
+    delegate: ShinyLayerWrapper {
+      id: layer
 
-      HyprlandFocusGrab {
-        id: grab
+      required property ShellScreen modelData
 
-        active: true
-        windows: [window]
-        onCleared: root.closeLayer()
-      }
+      screen: modelData
 
-      OverviewDrawer {
-        id: drawer
+      LazyLoader {
+        activeAsync: layer.opened
 
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: parent.top
-        anchors.topMargin: -implicitHeight + root.animationFactor * (80 + implicitHeight)
-        focus: true
-        screen: root.screen
+        ShinyWindow {
+          id: window
 
-        Keys.onEscapePressed: root.closeLayer()
-        onShouldClose: root.closeLayer()
+          name: "overview"
+          screen: layer.screen
+          anchors.top: true
+          implicitWidth: screen.width
+          implicitHeight: screen.height
+          exclusionMode: ExclusionMode.Ignore
+          WlrLayershell.layer: WlrLayer.Overlay
+          WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
+
+          mask: Region {
+            item: drawer
+          }
+
+          HyprlandFocusGrab {
+            id: grab
+            active: true
+            windows: [window]
+
+            onCleared: layer.closeLayer()
+          }
+
+          OverviewDrawer {
+            id: drawer
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: parent.top
+            anchors.topMargin: -implicitHeight + layer.animationFactor * (80 + implicitHeight)
+            focus: true
+            screen: layer.screen
+
+            Keys.onEscapePressed: layer.closeLayer()
+            onShouldClose: layer.closeLayer()
+          }
+        }
       }
     }
   }
@@ -57,16 +74,31 @@ ShinyAnimatedLayer {
 
     target: "overview"
 
-    function toggle() {
-      root.toggleLayer();
+    function toggle(): string {
+      const layer = root.getActive();
+      if (!layer)
+        return "unavailable";
+
+      layer.toggleLayer();
+      return "ok";
     }
 
-    function open() {
-      root.openLayer();
+    function open(): string {
+      const layer = root.getActive();
+      if (!layer)
+        return "unavailable";
+
+      layer.openLayer();
+      return "ok";
     }
 
-    function close() {
-      root.closeLayer();
+    function close(): string {
+      const layer = root.getActive();
+      if (!layer)
+        return "unavailable";
+
+      layer.closeLayer();
+      return "ok";
     }
   }
 

@@ -1,5 +1,7 @@
 #include "websearch.hpp"
+#include "../delegate.hpp"
 #include <qdesktopservices.h>
+#include <qlogging.h>
 #include <qurl.h>
 
 namespace Shiny::Launcher::Plugins {
@@ -53,11 +55,11 @@ namespace Shiny::Launcher::Plugins {
     QUrl url = QUrl(strUrl);
 
     if (url.scheme() != "http" && url.scheme() != "https") {
-      qWarning() << "Cannot make a websearch to a non HTTP url";
+      qCWarning(logLauncher) << "Cannot make a websearch to a non HTTP url";
       return;
     }
 
     if (!QDesktopServices::openUrl(url))
-      qWarning() << "Failed to make the websearch";
+      qCWarning(logLauncher) << "Failed to make the websearch";
   }
-} // namespace Shiny::Launcher::Plugins
+}

@@ -4,7 +4,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
-import Shiny.Services.Location
+import Shiny.Services
 import qs.config
 
 Singleton {
@@ -14,14 +14,16 @@ Singleton {
   readonly property alias current: provider.current
 
   function refresh() {
+    if (!provider.enabled)
+      return;
+
     provider.refresh();
   }
 
   LocationProvider {
     id: provider
-
-    enabled: Config.location.enabled
     refreshInterval: Config.location.refreshInterval
+    enabled: Config.location.enabled
 
     onCurrentChanged: console.info(`Location updated to '${current.city}, ${current.countryName}'`)
   }
@@ -29,8 +31,25 @@ Singleton {
   IpcHandler {
     target: "location"
 
-    function refresh() {
+    function get(): string {
+      return JSON.stringify(root.isAvailable ? {
+        available: true,
+        latitude: root.current.latitude,
+        longitude: root.current.longitude,
+        countryCode: root.current.countryCode,
+        countryName: root.current.countryName,
+        city: root.current.city
+      } : {
+        available: false
+      });
+    }
+
+    function refresh(): string {
+      if (!provider.enabled)
+        return "unavailable";
+
       root.refresh();
+      return "ok";
     }
   }
 

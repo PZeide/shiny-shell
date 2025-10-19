@@ -4,7 +4,7 @@ import QtQuick
 import QtQml.Models
 import Quickshell
 import Quickshell.Hyprland
-import qs.widgets
+import qs.components
 import qs.config
 
 ShinyRectangle {
@@ -36,7 +36,6 @@ ShinyRectangle {
 
   Column {
     id: layout
-
     anchors.centerIn: parent
     spacing: Config.overview.spacing
 
@@ -83,11 +82,9 @@ ShinyRectangle {
     property HyprlandToplevel modelData
   }
 
+  // We use a different container for every windows to manage their z-order
   Item {
     id: windowContainer
-
-    // We use a different container for every windows to manage their z-order
-
     anchors.centerIn: parent
     implicitWidth: layout.implicitWidth
     implicitHeight: layout.implicitHeight
@@ -102,8 +99,8 @@ ShinyRectangle {
 
     SortFilterProxyModel {
       id: windowsModel
-
       model: Hyprland.toplevels
+
       filters: [
         FunctionFilter {
           function filter(data: ModelRoleData): bool {

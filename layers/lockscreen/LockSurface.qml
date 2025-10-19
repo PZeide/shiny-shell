@@ -6,116 +6,23 @@ import Quickshell.Wayland
 import Quickshell.Services.Pam
 import qs.config
 import qs.services
-import qs.widgets
+import qs.components
 import qs.utils.animations
+import qs.layers.lockscreen.components
 import qs.layers.wallpaper
 import qs.layers.corner
-import qs.layers.lockscreen.widgets
 
 WlSessionLockSurface {
   id: root
 
   required property WlSessionLock sessionLock
-  readonly property bool unlocking: handler.state === "animateOut" || handler.state === "fadeOut"
+  required property LockContext context
+
+  readonly property bool unlocking: context.state === "animateOut" || context.state === "fadeOut"
   readonly property int errorDuration: 5000
   property int error: PamResult.Success
-  property real opacityFactor: 0
-  property real readinessFactor: 0
 
   color: "transparent"
-
-  function unlock() {
-    console.info("Unlocking lock screen");
-    handler.state = "animateOut";
-  }
-
-  Item {
-    id: handler
-
-    states: [
-      State {
-        name: "fadeIn"
-      },
-      State {
-        name: "animateIn"
-      },
-      State {
-        name: "idle"
-      },
-      State {
-        name: "animateOut"
-      },
-      State {
-        name: "fadeOut"
-      }
-    ]
-
-    transitions: [
-      Transition {
-        to: "fadeIn"
-
-        SequentialAnimation {
-          MoveEnterSlowNumberAnimation {
-            target: root
-            property: "opacityFactor"
-            to: 1
-          }
-
-          ScriptAction {
-            script: handler.state = "animateIn"
-          }
-        }
-      },
-      Transition {
-        from: "fadeIn"
-        to: "animateIn"
-
-        SequentialAnimation {
-          MoveEnterSlowNumberAnimation {
-            target: root
-            property: "readinessFactor"
-            to: 1
-          }
-
-          ScriptAction {
-            script: handler.state = "idle"
-          }
-        }
-      },
-      Transition {
-        from: "idle"
-        to: "animateOut"
-
-        SequentialAnimation {
-          MoveExitSlowNumberAnimation {
-            target: root
-            property: "readinessFactor"
-            to: 0
-          }
-
-          ScriptAction {
-            script: handler.state = "fadeOut"
-          }
-        }
-      },
-      Transition {
-        from: "animateOut"
-        to: "fadeOut"
-
-        SequentialAnimation {
-          MoveExitNumberAnimation {
-            target: root
-            property: "opacityFactor"
-            to: 0
-          }
-
-          ScriptAction {
-            script: root.sessionLock.locked = false
-          }
-        }
-      }
-    ]
-  }
 
   MouseArea {
     anchors.fill: parent
@@ -129,13 +36,13 @@ WlSessionLockSurface {
 
     sourceComponent: WallpaperImage {
       id: background
-
       source: Config.wallpaper.path
-      opacity: root.opacityFactor
+      opacity: root.context.opacityFactor
+
       layer.effect: MultiEffect {
         autoPaddingEnabled: false
         blurEnabled: true
-        blur: 0.65 * root.readinessFactor
+        blur: 0.65 * root.context.readinessFactor
         blurMax: 48
       }
     }
@@ -145,7 +52,7 @@ WlSessionLockSurface {
     anchors.centerIn: parent
     passwordBuffer: input.text
     // use readinessFactor to make it fade before the foreground
-    opacity: root.readinessFactor
+    opacity: root.context.readinessFactor
   }
 
   Loader {
@@ -154,24 +61,21 @@ WlSessionLockSurface {
 
     sourceComponent: WallpaperImage {
       id: foreground
-
       source: Foreground.path
-      opacity: root.opacityFactor
+      opacity: root.context.opacityFactor
     }
   }
 
   ShinyRectangle {
     id: bottomRectangle
-
     anchors.bottom: parent.bottom
     anchors.left: parent.left
     anchors.right: parent.right
-    anchors.bottomMargin: -bottomRectangle.height * (1 - root.readinessFactor)
+    anchors.bottomMargin: -bottomRectangle.height * (1 - root.context.readinessFactor)
     implicitHeight: Math.max(bottomBar.height, bottomClock.height, bottomMusic.height)
 
     BottomBar {
       id: bottomBar
-
       anchors.bottom: parent.bottom
       anchors.left: parent.left
       anchors.right: parent.right
@@ -181,14 +85,12 @@ WlSessionLockSurface {
 
     BottomClock {
       id: bottomClock
-
       anchors.bottom: parent.bottom
       anchors.left: parent.left
     }
 
     BottomMusic {
       id: bottomMusic
-
       anchors.bottom: parent.bottom
       anchors.right: parent.right
     }
@@ -225,7 +127,7 @@ WlSessionLockSurface {
 
     anchors.top: parent.top
     anchors.horizontalCenter: parent.horizontalCenter
-    anchors.topMargin: errorTopMargin - lockHeight * (1 - root.readinessFactor)
+    anchors.topMargin: errorTopMargin - lockHeight * (1 - root.context.readinessFactor)
     processing: root.unlocking || pam.active
     error: root.error
 
@@ -248,8 +150,8 @@ WlSessionLockSurface {
 
   GhostPasswordInput {
     id: input
-
     readOnly: pam.active || root.unlocking
+
     onAccepted: {
       if (pam.active)
         return;
@@ -264,7 +166,7 @@ WlSessionLockSurface {
     onCompleted: result => {
       if (result === PamResult.Success) {
         root.error = PamResult.Success;
-        root.unlock();
+        root.context.unlock();
       } else {
         root.error = result;
         resetError.restart();
@@ -282,13 +184,7 @@ WlSessionLockSurface {
 
   Timer {
     id: resetError
-
     interval: root.errorDuration
     onTriggered: root.error = PamResult.Success
-  }
-
-  // Start fadeIn when component is complete
-  Component.onCompleted: {
-    handler.state = "fadeIn";
   }
 }

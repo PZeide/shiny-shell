@@ -8,7 +8,7 @@ IndentWidth: 2
 TabWidth: 2
 ConstructorInitializerIndentWidth: 2
 IndentCaseLabels: true
-PenaltyReturnTypeOnItsOwnLine: 200
+PenaltyReturnTypeOnItsOwnLine: 300
 UseTab: Never
 SortIncludes: true
 SortUsingDeclarations: false

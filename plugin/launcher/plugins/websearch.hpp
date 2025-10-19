@@ -36,4 +36,4 @@ namespace Shiny::Launcher::Plugins {
 
     void invoke(const QString& search) const;
   };
-} // namespace Shiny::Launcher::Plugins
+}

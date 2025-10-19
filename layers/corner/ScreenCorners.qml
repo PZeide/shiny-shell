@@ -3,78 +3,78 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
-import qs.widgets
+import qs.components
 
-Item {
-  id: root
+Variants {
+  model: Quickshell.screens
 
-  required property ShellScreen screen
+  Item {
+    id: root
 
-  ShinyWindow {
-    name: "corner-topleft"
-    screen: root.screen
-    anchors.top: true
-    anchors.left: true
-    implicitWidth: cornerTopLeft.implicitWidth
-    implicitHeight: cornerTopLeft.implicitHeight
-    exclusionMode: ExclusionMode.Normal
-    WlrLayershell.layer: WlrLayer.Top
+    required property ShellScreen modelData
 
-    RoundedCorner {
-      id: cornerTopLeft
+    ShinyWindow {
+      name: "corner-topleft"
+      screen: root.modelData
+      anchors.top: true
+      anchors.left: true
+      implicitWidth: cornerTopLeft.implicitWidth
+      implicitHeight: cornerTopLeft.implicitHeight
+      exclusionMode: ExclusionMode.Normal
+      WlrLayershell.layer: WlrLayer.Top
 
-      type: RoundedCorner.Type.TopLeft
+      RoundedCorner {
+        id: cornerTopLeft
+        type: RoundedCorner.Type.TopLeft
+      }
     }
-  }
 
-  ShinyWindow {
-    name: "corner-topright"
-    screen: root.screen
-    anchors.top: true
-    anchors.right: true
-    implicitWidth: cornerTopRight.implicitWidth
-    implicitHeight: cornerTopRight.implicitHeight
-    exclusionMode: ExclusionMode.Ignore
-    WlrLayershell.layer: WlrLayer.Top
+    ShinyWindow {
+      name: "corner-topright"
+      screen: root.modelData
+      anchors.top: true
+      anchors.right: true
+      implicitWidth: cornerTopRight.implicitWidth
+      implicitHeight: cornerTopRight.implicitHeight
+      exclusionMode: ExclusionMode.Ignore
+      WlrLayershell.layer: WlrLayer.Top
 
-    RoundedCorner {
-      id: cornerTopRight
-
-      type: RoundedCorner.Type.TopRight
+      RoundedCorner {
+        id: cornerTopRight
+        type: RoundedCorner.Type.TopRight
+      }
     }
-  }
 
-  ShinyWindow {
-    name: "corner-bottomleft"
-    screen: root.screen
-    anchors.bottom: true
-    anchors.left: true
-    implicitWidth: cornerBottomLeft.implicitWidth
-    implicitHeight: cornerBottomLeft.implicitHeight
-    exclusionMode: ExclusionMode.Ignore
-    WlrLayershell.layer: WlrLayer.Top
+    ShinyWindow {
+      name: "corner-bottomleft"
+      screen: root.modelData
+      anchors.bottom: true
+      anchors.left: true
+      implicitWidth: cornerBottomLeft.implicitWidth
+      implicitHeight: cornerBottomLeft.implicitHeight
+      exclusionMode: ExclusionMode.Ignore
+      WlrLayershell.layer: WlrLayer.Top
 
-    RoundedCorner {
-      id: cornerBottomLeft
-
-      type: RoundedCorner.Type.BottomLeft
+      RoundedCorner {
+        id: cornerBottomLeft
+        type: RoundedCorner.Type.BottomLeft
+      }
     }
-  }
 
-  ShinyWindow {
-    name: "corner-bottomright"
-    screen: root.screen
-    anchors.bottom: true
-    anchors.right: true
-    implicitWidth: cornerBottomRight.implicitWidth
-    implicitHeight: cornerBottomRight.implicitHeight
-    exclusionMode: ExclusionMode.Ignore
-    WlrLayershell.layer: WlrLayer.Top
+    ShinyWindow {
+      name: "corner-bottomright"
+      screen: root.modelData
+      anchors.bottom: true
+      anchors.right: true
+      implicitWidth: cornerBottomRight.implicitWidth
+      implicitHeight: cornerBottomRight.implicitHeight
+      exclusionMode: ExclusionMode.Ignore
+      WlrLayershell.layer: WlrLayer.Top
 
-    RoundedCorner {
-      id: cornerBottomRight
-
-      type: RoundedCorner.Type.BottomRight
+      RoundedCorner {
+        id: cornerBottomRight
+        type: RoundedCorner.Type.BottomRight
+      }
     }
   }
 }

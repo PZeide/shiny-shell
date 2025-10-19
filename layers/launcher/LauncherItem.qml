@@ -4,7 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Widgets
-import qs.widgets
+import qs.components
 import qs.config
 
 ShinyRectangle {
@@ -24,7 +24,6 @@ ShinyRectangle {
 
   MouseArea {
     id: mouseArea
-
     anchors.fill: parent
     hoverEnabled: true
 
@@ -51,7 +50,6 @@ ShinyRectangle {
 
       Loader {
         active: root.isSystemIcon
-
         anchors.fill: parent
 
         sourceComponent: IconImage {

@@ -4,7 +4,7 @@ import QtQuick
 import Quickshell.Wayland
 import Quickshell.Hyprland
 import Quickshell.Widgets
-import qs.widgets
+import qs.components
 import qs.config
 import qs.utils
 import qs.utils.animations
@@ -52,7 +52,6 @@ ShinyRectangle {
 
     ScreencopyView {
       id: screencopy
-
       anchors.fill: parent
       captureSource: root.window?.wayland ?? null
       live: true
@@ -72,7 +71,6 @@ ShinyRectangle {
 
   ShinyMouseArea {
     id: mouseArea
-
     layerRadius: root.radius
     anchors.fill: parent
     drag.target: parent

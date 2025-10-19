@@ -8,8 +8,8 @@ import qs.config
 
 LauncherDelegate {
   id: root
-
   maxItems: Config.launcher.maxItems
+
   plugins: {
     const result = [applicationsPlugin];
 
@@ -40,7 +40,6 @@ LauncherDelegate {
 
     WebSearchPlugin {
       id: webSearchPlugin
-
       searchUrl: Config.launcher.webSearch.url
     }
   }

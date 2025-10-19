@@ -3,33 +3,36 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
-import qs.widgets
+import qs.components
 
-ShinyWindow {
-  id: root
+Variants {
+  model: Quickshell.screens
 
-  required property ShellScreen screen
+  ShinyWindow {
+    id: root
 
-  name: "wallpaper"
-  screen: screen
-  anchors.bottom: true
-  anchors.left: true
-  anchors.right: true
-  anchors.top: true
-  focusable: false
-  exclusionMode: ExclusionMode.Ignore
-  WlrLayershell.layer: WlrLayer.Background
+    required property ShellScreen modelData
 
-  WallpaperImage {
-    id: wallpaper
+    name: "wallpaper"
+    screen: modelData
+    anchors.bottom: true
+    anchors.left: true
+    anchors.right: true
+    anchors.top: true
+    focusable: false
+    exclusionMode: ExclusionMode.Ignore
+    WlrLayershell.layer: WlrLayer.Background
 
-    asynchronous: true
+    WallpaperImage {
+      id: wallpaper
+      asynchronous: true
 
-    onStatusChanged: {
-      if (wallpaper.status === Image.Ready) {
-        console.info("Wallpaper successfully loaded");
-      } else if (wallpaper.status === Image.Error) {
-        console.error("Failed to load wallpaper, make sure that the path configured is correct");
+      onStatusChanged: {
+        if (wallpaper.status === Image.Ready) {
+          console.info("Wallpaper successfully loaded");
+        } else if (wallpaper.status === Image.Error) {
+          console.error("Failed to load wallpaper, make sure that the path configured is correct");
+        }
       }
     }
   }

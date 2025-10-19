@@ -3,6 +3,8 @@
 #include <qtypes.h>
 
 namespace Shiny::Launcher {
+  Q_LOGGING_CATEGORY(logLauncher, "shiny.launcher", QtInfoMsg)
+
   LauncherDelegate::LauncherDelegate(QObject* parent) : QObject(parent) {}
 
   QString LauncherDelegate::input() const {
@@ -28,7 +30,7 @@ namespace Shiny::Launcher {
       return;
 
     if (maxItems < 1) {
-      qWarning() << "maxItems should be at least 1";
+      qCWarning(logLauncher) << "maxItems should be at least 1";
       return;
     }
 
@@ -95,8 +97,10 @@ namespace Shiny::Launcher {
     return static_cast<LauncherDelegate*>(property->object)->m_plugins.count();
   }
 
-  LauncherPlugin*
-  LauncherDelegate::pluginsAt(QQmlListProperty<LauncherPlugin>* property, qsizetype index) {
+  LauncherPlugin* LauncherDelegate::pluginsAt(
+    QQmlListProperty<LauncherPlugin>* property,
+    qsizetype index
+  ) {
     return static_cast<LauncherDelegate*>(property->object)->m_plugins.at(index);
   }
 
@@ -124,4 +128,4 @@ namespace Shiny::Launcher {
     emit delegate->pluginsChanged();
     delegate->update();
   }
-}; // namespace Shiny::Launcher
+};

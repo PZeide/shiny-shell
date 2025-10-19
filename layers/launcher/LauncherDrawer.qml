@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import qs.widgets
+import qs.components
 import qs.config
 import qs.utils.animations
 
@@ -22,14 +22,12 @@ ShinyRectangle {
 
   ShinyRectangle {
     id: container
-
     anchors.fill: parent
     anchors.margins: 8
     clip: true
 
     ShinyRectangle {
       id: selection
-
       visible: itemsRepeater.count > root.selectedIndex
       y: root.selectedIndex * (height + itemsColumn.spacing)
       width: parent.width
@@ -44,7 +42,6 @@ ShinyRectangle {
 
     Item {
       id: itemsContainer
-
       width: parent.width
       implicitHeight: itemsColumn.implicitHeight
 
@@ -54,13 +51,11 @@ ShinyRectangle {
 
       Column {
         id: itemsColumn
-
         spacing: 6
         width: parent.width
 
         Repeater {
           id: itemsRepeater
-
           model: root.items
 
           LauncherItem {
@@ -81,7 +76,6 @@ ShinyRectangle {
 
     ShinyTextField {
       id: searchField
-
       anchors.bottom: parent.bottom
       width: parent.width
       placeholderText: "Search..."

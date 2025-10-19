@@ -16,6 +16,7 @@ Item {
   }
 
   required property int type
+
   property int implicitSize: Config.appearance.rounding.corner
   property color color: Config.appearance.color.bgPrimary
 

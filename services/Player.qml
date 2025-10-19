@@ -6,7 +6,7 @@ import Quickshell.Io
 import Quickshell.Services.Mpris
 import qs.config
 import qs.utils
-import qs.widgets
+import qs.components
 
 Singleton {
   id: root
@@ -47,41 +47,60 @@ Singleton {
 
   IpcHandler {
     id: ipc
-
     target: "player"
 
-    function play() {
+    function play(): string {
       if (root.preferred !== null && root.preferred.canPlay) {
         root.preferred.play();
+        return "ok";
       }
+
+      return "unavailable";
     }
 
-    function pause() {
+    function pause(): string {
       if (root.preferred !== null && root.preferred.canPause) {
         root.preferred.pause();
+        return "ok";
       }
+
+      return "unavailable";
     }
 
-    function playPause() {
+    function playPause(): string {
       if (root.preferred !== null && root.preferred.canTogglePlaying) {
         root.preferred.togglePlaying();
+        return "ok";
       }
+
+      return "unavailable";
     }
 
-    function stop() {
-      root.preferred.stop();
+    function stop(): string {
+      if (root.preferred !== null) {
+        root.preferred.stop();
+        return "ok";
+      }
+
+      return "unavailable";
     }
 
-    function next() {
+    function next(): string {
       if (root.preferred !== null && root.preferred.canGoNext) {
         root.preferred.next();
+        return "ok";
       }
+
+      return "unavailable";
     }
 
-    function previous() {
+    function previous(): string {
       if (root.preferred !== null && root.preferred.canGoPrevious) {
         root.preferred.previous();
+        return "ok";
       }
+
+      return "unavailable";
     }
   }
 

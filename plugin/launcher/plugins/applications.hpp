@@ -111,4 +111,4 @@ namespace Shiny::Launcher::Plugins {
 
     void invoke(const ApplicationEntry& entry) const;
   };
-} // namespace Shiny::Launcher::Plugins
+}

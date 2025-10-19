@@ -1,4 +1,5 @@
 #include "item.hpp"
+#include "delegate.hpp"
 #include <qlogging.h>
 
 namespace Shiny::Launcher {
@@ -35,10 +36,9 @@ namespace Shiny::Launcher {
 
   void LauncherItem::invoke() const {
     if (m_handler) {
-      qDebug() << "Invoking handler of LauncherItem";
       m_handler();
     } else {
-      qWarning() << "LauncherItem is missing a defined handler";
+      qCWarning(logLauncher) << "LauncherItem is missing a defined handler";
     }
   }
 
@@ -96,4 +96,4 @@ namespace Shiny::Launcher {
 
     m_items.at(index).invoke();
   }
-} // namespace Shiny::Launcher
+}

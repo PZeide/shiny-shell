@@ -31,4 +31,4 @@ namespace Shiny::Launcher {
     virtual int priority() const = 0;
     virtual QString name() const = 0;
   };
-} // namespace Shiny::Launcher
+}
