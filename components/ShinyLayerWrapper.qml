@@ -12,14 +12,14 @@ Item {
   readonly property bool opened: state !== "closed"
   property real animationFactor: 0
 
-  property PropertyAnimation animationIn: EmphasizedInNumberAnimation {
+  property PropertyAnimation animationIn: StandardInNumberAnimation {
     target: root
     property: "animationFactor"
     from: 0
     to: 1
   }
 
-  property PropertyAnimation animationOut: EmphasizedOutNumberAnimation {
+  property PropertyAnimation animationOut: StandardOutNumberAnimation {
     target: root
     property: "animationFactor"
     from: 1
