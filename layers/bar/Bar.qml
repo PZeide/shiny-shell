@@ -26,22 +26,28 @@ Variants {
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
 
     Row {
-      anchors.verticalCenter: parent.verticalCenter
+      height: parent.height
       anchors.left: parent.left
       anchors.leftMargin: 7
       spacing: Config.bar.moduleSpacing
 
       HostIcon {}
+      DateTime {}
     }
 
     Row {
+      height: parent.height
       anchors.verticalCenter: parent.verticalCenter
       anchors.horizontalCenter: parent.horizontalCenter
       spacing: Config.bar.moduleSpacing
+
+      Workspaces {
+        screen: root.screen
+      }
     }
 
     Row {
-      anchors.verticalCenter: parent.verticalCenter
+      height: parent.height
       anchors.right: parent.right
       anchors.rightMargin: 7
       spacing: Config.bar.moduleSpacing

@@ -11,7 +11,7 @@ JsonObject {
       actions: ["setbrightness,0.3"]
     },
     {
-      timeout: 500,
+      timeout: 600,
       actions: ["dpms"]
     },
     {

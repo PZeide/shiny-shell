@@ -4,8 +4,11 @@ import QtQuick
 import qs.config
 import qs.services
 import qs.components
+import qs.layers.bar
 
-ShinyText {
-  text: Host.osIcon
-  font.family: Config.appearance.font.family.iconNerd
+BarModuleWrapper {
+  ShinyText {
+    text: Host.osIcon
+    font.family: Config.appearance.font.family.iconNerd
+  }
 }

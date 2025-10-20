@@ -21,7 +21,7 @@ ShinyRectangle {
 
   TextMetrics {
     id: timeMetrics
-    text: Qt.formatTime(root.targetTimeMetrics, Config.locale.timeFormat).replace(/ (AM|PM)/, "")
+    text: Qt.formatTime(root.targetTimeMetrics, Config.locale.timeFormat).replace(/ (AM|PM|am|pm)/, "")
     renderType: Text.NativeRendering
     font.family: Config.appearance.font.family.sans
     font.pointSize: root.timeSize
@@ -42,7 +42,7 @@ ShinyRectangle {
     anchors.centerIn: parent
 
     ShinyText {
-      text: Qt.formatTime(Clock.date, Config.locale.timeFormat).replace(/ (AM|PM)/, "")
+      text: Qt.formatTime(Clock.date, Config.locale.timeFormat).replace(/ (AM|PM|am|pm)/, "")
       font.pointSize: root.timeSize
       horizontalAlignment: Text.AlignHCenter
       anchors.horizontalCenter: parent.horizontalCenter

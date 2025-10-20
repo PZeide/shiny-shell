@@ -13,7 +13,7 @@ ShinyRectangle {
   required property int workspaceId
   required property real workspaceX
   required property real workspaceY
-  readonly property HyprlandWorkspace maybeWorkspace: Hyprland.workspaces.values.find(w => w.id === workspaceId)
+  readonly property HyprlandWorkspace maybeWorkspace: Hyprland.workspaces.values.find(w => w.id === workspaceId) ?? null
   readonly property bool isActive: maybeWorkspace?.active ?? false
 
   readonly property bool hasForeignDrag: {

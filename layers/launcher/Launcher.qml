@@ -78,21 +78,17 @@ Item {
             item: drawer
           }
 
+          Component.onCompleted: {
+            layer.input = "";
+            layer.selectedItemIndex = 0;
+          }
+
           HyprlandFocusGrab {
             id: grab
             active: true
             windows: [window]
 
             onCleared: layer.closeLayer()
-          }
-
-          Connections {
-            target: grab
-
-            function onActiveChanged() {
-              if (!grab.active)
-                layer.closeLayer();
-            }
           }
 
           LauncherDrawer {
