@@ -149,14 +149,15 @@ ShinyRectangle {
         readonly property real workspaceY: (root.overviewWorkspaceHeight + Config.overview.spacing) * workspaceRowIndex
 
         window: modelData
+        windowFullscreen: (window?.lastIpcObject.fullscreen ?? 0) > 1
         // We apply a 'debuff' based on the focus history (bigger value = longer time since last focus so below)
         // We apply a 'buff' for the window if it's floating
         // We apply a 'buff' for the window if it's pinned
-        windowZ: 1000 - windowFocusHistory + (windowFloating ? 500 : 0) + (windowPinned ? 500 : 0)
-        initialX: workspaceX + (windowX - root.monitor.x - root.monitor.lastIpcObject.reserved[0]) * Config.overview.scale
-        initialY: workspaceY + (windowY - root.monitor.y - root.monitor.lastIpcObject.reserved[1]) * Config.overview.scale
-        implicitWidth: windowWidth * Config.overview.scale
-        implicitHeight: windowHeight * Config.overview.scale
+        windowZ: windowFullscreen ? 5000 : 1000 - windowFocusHistory + (windowFloating ? 500 : 0) + (windowPinned ? 500 : 0)
+        initialX: windowFullscreen ? workspaceX : workspaceX + (windowX - root.monitor.x - root.monitor.lastIpcObject.reserved[0]) * Config.overview.scale
+        initialY: windowFullscreen ? workspaceY : workspaceY + (windowY - root.monitor.y - root.monitor.lastIpcObject.reserved[1]) * Config.overview.scale
+        implicitWidth: windowFullscreen ? root.overviewWorkspaceWidth : windowWidth * Config.overview.scale
+        implicitHeight: windowFullscreen ? root.overviewWorkspaceHeight : windowHeight * Config.overview.scale
 
         onShouldFocus: {
           Hyprland.dispatch(`focuswindow address:0x${window.address}`);

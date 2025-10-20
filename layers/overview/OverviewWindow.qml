@@ -16,6 +16,7 @@ ShinyRectangle {
   required property int windowZ
   required property real initialX
   required property real initialY
+  required property bool windowFullscreen
 
   readonly property real iconToWindowRatio: 0.35
   readonly property real iconToWindowRatioCompact: 0.6
@@ -48,13 +49,15 @@ ShinyRectangle {
 
   ShinyClippingRectangle {
     anchors.fill: parent
+    color: root.windowFullscreen ? Config.appearance.color.bgPrimary : "transparent"
     radius: root.radius
 
     ScreencopyView {
       id: screencopy
-      anchors.fill: parent
       captureSource: root.window?.wayland ?? null
       live: true
+      width: parent.width
+      height: sourceSize.width > 0 && sourceSize.height > 0 ? (parent.width * sourceSize.height / sourceSize.width) : parent.height
 
       IconImage {
         anchors.centerIn: parent
