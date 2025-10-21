@@ -18,17 +18,20 @@ namespace Shiny::Launcher {
     QML_UNCREATABLE("Use a subclass of LauncherPlugin inside Shiny.Launcher.Plugins")
 
     // clang-format off
-    Q_PROPERTY(int priority READ priority CONSTANT)
     Q_PROPERTY(QString name READ name CONSTANT)
+    Q_PROPERTY(int priority READ priority CONSTANT)
     // clang-format on
 
   public:
     explicit LauncherPlugin(QObject* parent = nullptr);
     virtual ~LauncherPlugin() = default;
 
-    virtual QList<LauncherItem> filter(const QString& input, qsizetype max) const = 0;
-    virtual bool canActivate(const QString& input) const = 0;
-    virtual int priority() const = 0;
     virtual QString name() const = 0;
+    virtual int priority() const = 0;
+    virtual bool canActivate(const QString& input) const = 0;
+    virtual void filter(const QString& input, qsizetype max) = 0;
+
+  signals:
+    void filterResult(QList<LauncherItem> items);
   };
 }

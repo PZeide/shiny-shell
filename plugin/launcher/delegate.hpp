@@ -51,6 +51,7 @@ namespace Shiny::Launcher {
 
   private slots:
     void update();
+    void resultReceived(QList<LauncherItem> items);
 
   private:
     QString m_input;

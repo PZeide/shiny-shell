@@ -22,10 +22,10 @@ namespace Shiny::Launcher::Plugins {
   public:
     explicit CalculatorPlugin(QObject* parent = nullptr);
 
-    QList<LauncherItem> filter(const QString& input, qsizetype max) const override;
-    bool canActivate(const QString& input) const override;
     int priority() const override;
     QString name() const override;
+    bool canActivate(const QString& input) const override;
+    void filter(const QString& input, qsizetype max) override;
 
     int evaluationTimeout() const;
     void setEvaluationTimeout(int evaluationTimeout);

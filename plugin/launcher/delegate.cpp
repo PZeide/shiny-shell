@@ -1,5 +1,7 @@
 #include "delegate.hpp"
+#include "plugin.hpp"
 #include <qlogging.h>
+#include <qobjectdefs.h>
 #include <qtypes.h>
 
 namespace Shiny::Launcher {
@@ -70,16 +72,38 @@ namespace Shiny::Launcher {
     }
 
     if (m_activePlugin != candidate) {
+      if (m_activePlugin) {
+        disconnect(
+          m_activePlugin,
+          &LauncherPlugin::filterResult,
+          this,
+          &LauncherDelegate::resultReceived
+        );
+      }
+
       m_activePlugin = candidate;
       emit activePluginChanged();
+
+      connect(
+        m_activePlugin,
+        &LauncherPlugin::filterResult,
+        this,
+        &LauncherDelegate::resultReceived
+      );
     }
 
-    if (candidate) {
-      if (m_resultModel->setItems(candidate->filter(m_input, m_maxItems)))
-        emit resultChanged();
-    } else {
-      if (m_resultModel->setItems({}))
-        emit resultChanged();
+    if (m_activePlugin) {
+      m_activePlugin->filter(m_input, m_maxItems);
+    }
+  }
+
+  void LauncherDelegate::resultReceived(QList<LauncherItem> items) {
+    if (items.count() > m_maxItems)
+      items.resize(m_maxItems);
+
+    if (m_resultModel->items() != items) {
+      m_resultModel->setItems(items);
+      emit resultChanged();
     }
   }
 

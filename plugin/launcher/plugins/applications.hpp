@@ -75,10 +75,10 @@ namespace Shiny::Launcher::Plugins {
   public:
     explicit ApplicationsPlugin(QObject* parent = nullptr);
 
-    QList<LauncherItem> filter(const QString& input, qsizetype max) const override;
-    bool canActivate(const QString& input) const override;
-    int priority() const override;
     QString name() const override;
+    int priority() const override;
+    bool canActivate(const QString& input) const override;
+    void filter(const QString& input, qsizetype max) override;
 
     QList<ApplicationEntry> applications() const;
     void setApplications(QList<ApplicationEntry> applications);

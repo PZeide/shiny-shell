@@ -80,14 +80,14 @@ namespace Shiny::Launcher {
     }
   }
 
-  bool LauncherItemListModel::setItems(const QList<Shiny::Launcher::LauncherItem>& items) {
-    if (items == m_items)
-      return false;
+  QList<Shiny::Launcher::LauncherItem> LauncherItemListModel::items() {
+    return m_items;
+  }
 
+  void LauncherItemListModel::setItems(const QList<Shiny::Launcher::LauncherItem>& items) {
     beginResetModel();
     m_items = items;
     endResetModel();
-    return true;
   }
 
   void LauncherItemListModel::invoke(int index) const {

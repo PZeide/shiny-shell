@@ -15,13 +15,27 @@ namespace Shiny::Launcher::Plugins {
     }
   }
 
-  QList<LauncherItem> CalculatorPlugin::filter(const QString& input, qsizetype) const {
+  QString CalculatorPlugin::name() const {
+    return "Calculator";
+  }
+
+  int CalculatorPlugin::priority() const {
+    return PREFIXED_PLUGIN_PRIORITY;
+  }
+
+  bool CalculatorPlugin::canActivate(const QString& input) const {
+    return input.startsWith("=");
+  }
+
+  void CalculatorPlugin::filter(const QString& input, qsizetype) {
     QString expression = input;
     if (expression.startsWith("="))
       expression = expression.mid(1).trimmed();
 
-    if (expression.isEmpty())
-      return {};
+    if (expression.isEmpty()) {
+      emit filterResult({});
+      return;
+    }
 
     std::string unlocalized =
       CALCULATOR->unlocalizeExpression(expression.toStdString(), m_evaluationOptions.parse_options);
@@ -50,14 +64,14 @@ namespace Shiny::Launcher::Plugins {
 
     if (!errors.empty()) {
       QString description = QString::fromStdString(errors.front());
-
-      return {LauncherItem(
+      emit filterResult({LauncherItem(
         false,
         "calculate",
         "Failed to evaluate expression",
         description,
         std::bind_front(&CalculatorPlugin::invoke, this, "Expression error")
-      )};
+      )});
+      return;
     }
 
     QString name = QString("%1 = %2").arg(parsed).arg(result);
@@ -67,25 +81,13 @@ namespace Shiny::Launcher::Plugins {
       description = QString::fromStdString(warnings.front());
     }
 
-    return {LauncherItem(
+    emit filterResult({LauncherItem(
       false,
       "calculate",
       name,
       description,
       std::bind_front(&CalculatorPlugin::invoke, this, QString::fromStdString(result))
-    )};
-  }
-
-  bool CalculatorPlugin::canActivate(const QString& input) const {
-    return input.startsWith("=");
-  }
-
-  int CalculatorPlugin::priority() const {
-    return PREFIXED_PLUGIN_PRIORITY;
-  }
-
-  QString CalculatorPlugin::name() const {
-    return "Calculator";
+    )});
   }
 
   int CalculatorPlugin::evaluationTimeout() const {

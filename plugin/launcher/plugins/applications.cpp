@@ -21,10 +21,24 @@ namespace Shiny::Launcher::Plugins {
 
   ApplicationsPlugin::ApplicationsPlugin(QObject* parent) : LauncherPlugin(parent) {}
 
-  QList<LauncherItem> ApplicationsPlugin::filter(const QString& input, qsizetype max) const {
+  QString ApplicationsPlugin::name() const {
+    return "Applications";
+  }
+
+  int ApplicationsPlugin::priority() const {
+    return CATCHALL_PLUGIN_PRIORITY;
+  }
+
+  bool ApplicationsPlugin::canActivate(const QString&) const {
+    return true;
+  }
+
+  void ApplicationsPlugin::filter(const QString& input, qsizetype max) {
     QString trimmedInput = input.trimmed();
-    if (trimmedInput.isEmpty())
-      return {};
+    if (trimmedInput.isEmpty()) {
+      emit filterResult({});
+      return;
+    }
 
     rapidfuzz::CachedJaroWinkler<quint32> scorer(
       trimmedInput.toLower().toUtf8(),
@@ -65,19 +79,7 @@ namespace Shiny::Launcher::Plugins {
       ));
     }
 
-    return result;
-  }
-
-  bool ApplicationsPlugin::canActivate(const QString&) const {
-    return true;
-  }
-
-  int ApplicationsPlugin::priority() const {
-    return CATCHALL_PLUGIN_PRIORITY;
-  }
-
-  QString ApplicationsPlugin::name() const {
-    return "Applications";
+    emit filterResult(result);
   }
 
   QList<ApplicationEntry> ApplicationsPlugin::applications() const {

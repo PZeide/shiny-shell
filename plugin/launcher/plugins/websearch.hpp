@@ -20,10 +20,10 @@ namespace Shiny::Launcher::Plugins {
   public:
     explicit WebSearchPlugin(QObject* parent = nullptr);
 
-    QList<LauncherItem> filter(const QString& input, qsizetype max) const override;
-    bool canActivate(const QString& input) const override;
-    int priority() const override;
     QString name() const override;
+    int priority() const override;
+    bool canActivate(const QString& input) const override;
+    void filter(const QString& input, qsizetype max) override;
 
     QString searchUrl() const;
     void setSearchUrl(QString searchUrl);

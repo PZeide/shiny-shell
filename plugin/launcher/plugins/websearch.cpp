@@ -2,39 +2,42 @@
 #include "../delegate.hpp"
 #include <qdesktopservices.h>
 #include <qlogging.h>
+#include <qtmetamacros.h>
 #include <qurl.h>
 
 namespace Shiny::Launcher::Plugins {
   WebSearchPlugin::WebSearchPlugin(QObject* parent) : Shiny::Launcher::LauncherPlugin(parent) {}
 
-  QList<LauncherItem> WebSearchPlugin::filter(const QString& input, qsizetype) const {
-    QString searchTerm = input;
-    if (searchTerm.startsWith("?"))
-      searchTerm = searchTerm.mid(1).trimmed();
-
-    if (searchTerm.isEmpty())
-      return {};
-
-    QString name = QString("Search for \"%1\"").arg(searchTerm);
-    return {LauncherItem(
-      false,
-      "explore",
-      name,
-      "",
-      std::bind_front(&WebSearchPlugin::invoke, this, searchTerm)
-    )};
-  }
-
-  bool WebSearchPlugin::canActivate(const QString& input) const {
-    return input.startsWith("?");
+  QString WebSearchPlugin::name() const {
+    return "Web search";
   }
 
   int WebSearchPlugin::priority() const {
     return PREFIXED_PLUGIN_PRIORITY;
   }
 
-  QString WebSearchPlugin::name() const {
-    return "Web search";
+  bool WebSearchPlugin::canActivate(const QString& input) const {
+    return input.startsWith("?");
+  }
+
+  void WebSearchPlugin::filter(const QString& input, qsizetype) {
+    QString searchTerm = input;
+    if (searchTerm.startsWith("?"))
+      searchTerm = searchTerm.mid(1).trimmed();
+
+    if (searchTerm.isEmpty()) {
+      emit filterResult({});
+      return;
+    }
+
+    QString name = QString("Search for \"%1\"").arg(searchTerm);
+    emit filterResult({LauncherItem(
+      false,
+      "explore",
+      name,
+      "",
+      std::bind_front(&WebSearchPlugin::invoke, this, searchTerm)
+    )});
   }
 
   QString WebSearchPlugin::searchUrl() const {

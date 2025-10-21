@@ -64,7 +64,8 @@ namespace Shiny::Launcher {
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    bool setItems(const QList<Shiny::Launcher::LauncherItem>& items);
+    QList<Shiny::Launcher::LauncherItem> items();
+    void setItems(const QList<Shiny::Launcher::LauncherItem>& items);
     Q_INVOKABLE void invoke(int index) const;
 
   private:
