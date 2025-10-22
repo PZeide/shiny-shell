@@ -9,20 +9,23 @@ Item {
 
   required property ShellScreen screen
 
-  readonly property bool opened: state !== "closed"
+  readonly property bool opened: state === "opened" || state === "animateIn" || state === "animateOut"
+  readonly property bool closed: state === "closed"
+  readonly property bool animating: state === "animateIn" || state === "animateOut"
+  property bool animated: true
   property real animationFactor: 0
 
   property PropertyAnimation animationIn: StandardInNumberAnimation {
     target: root
     property: "animationFactor"
-    from: 0
+    alwaysRunToEnd: false
     to: 1
   }
 
   property PropertyAnimation animationOut: StandardOutNumberAnimation {
     target: root
     property: "animationFactor"
-    from: 1
+    alwaysRunToEnd: false
     to: 0
   }
 
@@ -50,12 +53,18 @@ Item {
       SequentialAnimation {
         ScriptAction {
           script: {
+            if (!root.animated) {
+              root.state = "opened";
+              return;
+            }
+
             root.animationOut.stop();
+            root.animationIn.from = root.animationFactor;
             root.animationIn.restart();
           }
         }
         PauseAnimation {
-          duration: root.animationIn.duration
+          duration: root.animated ? root.animationIn.duration : 0
         }
         ScriptAction {
           script: {
@@ -72,12 +81,18 @@ Item {
       SequentialAnimation {
         ScriptAction {
           script: {
+            if (!root.animated) {
+              root.state = "closed";
+              return;
+            }
+
             root.animationIn.stop();
+            root.animationOut.from = root.animationFactor;
             root.animationOut.restart();
           }
         }
         PauseAnimation {
-          duration: root.animationOut.duration
+          duration: root.animated ? root.animationOut.duration : 0
         }
         ScriptAction {
           script: {
@@ -94,21 +109,21 @@ Item {
     if (state === "animateIn" || state === "opened")
       return;
 
-    state = "animateIn";
+    state = root.animated ? "animateIn" : "opened";
   }
 
   function closeLayer() {
     if (state === "animateOut" || state === "closed")
       return;
 
-    state = "animateOut";
+    state = root.animated ? "animateOut" : "closed";
   }
 
   function toggleLayer() {
     if (state === "animateOut" || state === "closed") {
-      state = "animateIn";
+      state = root.animated ? "animateIn" : "opened";
     } else {
-      state = "animateOut";
+      state = root.animated ? "animateOut" : "closed";
     }
   }
 }
