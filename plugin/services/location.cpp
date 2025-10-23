@@ -4,6 +4,7 @@
 #include <qcontainerfwd.h>
 #include <qjsondocument.h>
 #include <qjsonobject.h>
+#include <qjsonvalue.h>
 #include <qlocale.h>
 #include <qlogging.h>
 #include <qnetworkrequest.h>
@@ -114,6 +115,12 @@ namespace Shiny::Services {
     if (!m_enabled)
       return;
 
+    quint64 tracker = reply->property("tracker").toULongLong();
+    if (tracker != m_requestTracker) {
+      // Another request came through after, ignore this one
+      return;
+    }
+
     if (reply->error() != QNetworkReply::NoError) {
       qCWarning(logLocation) << "Failed to fetch location:" << reply->errorString();
       return;
@@ -121,7 +128,6 @@ namespace Shiny::Services {
 
     QByteArray response = reply->readAll();
     QJsonDocument json = QJsonDocument::fromJson(response);
-
     if (!json.isObject()) {
       qCWarning(logLocation) << "Failed to fetch location: response is not valid json object";
       return;
@@ -129,10 +135,38 @@ namespace Shiny::Services {
 
     QJsonObject object = json.object();
 
+    if (!object.value("loc").isString()) {
+      qCWarning(logLocation) << "Failed to fetch location: missing 'loc' field in response";
+      return;
+    }
+
     QString location = object.value("loc").toString();
     QStringList values = location.split(",");
-    qreal latitude = values.value(0).toDouble();
-    qreal longitude = values.value(1).toDouble();
+
+    if (values.size() != 2) {
+      qCWarning(logLocation) << "Failed to fetch location: invalid location format" << location;
+      return;
+    }
+
+    bool latOk = false, lonOk = false;
+    qreal latitude = values.value(0).toDouble(&latOk);
+    qreal longitude = values.value(1).toDouble(&lonOk);
+    if (!latOk || !lonOk) {
+      qCWarning(logLocation) << "Failed to fetch location: invalid coordinates" << values[0] << "/"
+                             << values[1];
+      return;
+    }
+
+    if (latitude < -90.0 || latitude > 90.0 || longitude < -180.0 || longitude > 180.0) {
+      qCWarning(logLocation) << "Failed to fetch location: coordinates out of range:" << latitude
+                             << "/" << longitude;
+      return;
+    }
+
+    if (!object.value("country").isString()) {
+      qCWarning(logLocation) << "Failed to fetch location: missing 'country' field in response";
+      return;
+    }
 
     QString countryCode = object.value("country").toString();
     QLocale::Territory territory = QLocale::codeToTerritory(countryCode);
@@ -141,6 +175,11 @@ namespace Shiny::Services {
       countryName = "Unknown country";
     } else {
       countryName = QLocale::territoryToString(territory);
+    }
+
+    if (!object.value("city").isString()) {
+      qCWarning(logLocation) << "Failed to fetch location: missing 'city' field in response";
+      return;
     }
 
     QString city = object.value("city").toString();

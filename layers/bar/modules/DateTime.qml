@@ -14,7 +14,8 @@ BarModuleWrapper {
 
   ShinyText {
     text: "•"
-    font.pointSize: Config.appearance.font.size.xl
+    font.pointSize: Config.appearance.font.size.lg
+    casual: 1
   }
 
   ShinyText {

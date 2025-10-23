@@ -13,6 +13,7 @@ Singleton {
   property alias brightness: adapter.brightness
   property alias idle: adapter.idle
   property alias launcher: adapter.launcher
+  property alias leftSidebar: adapter.leftSidebar
   property alias locale: adapter.locale
   property alias location: adapter.location
   property alias lockScreen: adapter.lockScreen
@@ -34,6 +35,7 @@ Singleton {
       property BrightnessConfig brightness: BrightnessConfig {}
       property IdleConfig idle: IdleConfig {}
       property LauncherConfig launcher: LauncherConfig {}
+      property LeftSidebarConfig leftSidebar: LeftSidebarConfig {}
       property LocaleConfig locale: LocaleConfig {}
       property LocationConfig location: LocationConfig {}
       property LockScreenConfig lockScreen: LockScreenConfig {}

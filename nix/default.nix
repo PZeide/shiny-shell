@@ -8,7 +8,7 @@
   pkg-config,
   qt6,
   quickshell,
-  poppins,
+  recursive,
   iosevka,
   material-symbols,
   nerd-fonts,
@@ -58,7 +58,7 @@
   fontconfig = makeFontsConf {
     # Default fonts
     fontDirectories = [
-      poppins
+      recursive
       iosevka
       material-symbols
       nerd-fonts.symbols-only

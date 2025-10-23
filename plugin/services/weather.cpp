@@ -135,34 +135,51 @@ namespace Shiny::Services {
     if (!m_enabled)
       return;
 
-    if (reply->error() != QNetworkReply::NoError) {
-      qCWarning(logWeather) << "Failed to fetch weather:" << reply->errorString();
-      return;
-    }
-
-    QVariant trackerVariant = reply->property("tracker");
-    if (!trackerVariant.isValid())
-      return;
-
-    quint64 tracker = trackerVariant.toULongLong();
+    quint64 tracker = reply->property("tracker").toULongLong();
     if (tracker != m_requestTracker) {
       // Another request came through after, ignore this one
       return;
     }
 
+    if (reply->error() != QNetworkReply::NoError) {
+      qCWarning(logWeather) << "Failed to fetch weather:" << reply->errorString();
+      return;
+    }
+
     QByteArray response = reply->readAll();
     QJsonDocument json = QJsonDocument::fromJson(response);
-
     if (!json.isObject()) {
       qCWarning(logWeather) << "Failed to fetch weather: response is not valid json object";
       return;
     }
 
     QJsonObject object = json.object();
+
+    if (!object.value("current").isObject()) {
+      qCWarning(logWeather) << "Failed to fetch weather: current object is missing";
+      return;
+    }
+
     QJsonObject current = object.value("current").toObject();
 
-    qreal temperature = current.value("temperature_2m").toDouble();
+    if (!current.value("temperature_2m").isDouble()) {
+      qCWarning(logWeather) << "Failed to fetch weather: missing 'temperature_2m' field in current";
+      return;
+    }
+
+    double temperature = current.value("temperature_2m").toDouble();
+
+    if (!current.value("is_day").isDouble()) {
+      qCWarning(logWeather) << "Failed to fetch weather: missing 'is_day' field in current";
+      return;
+    }
+
     bool isDay = current.value("is_day").toInt() == 1;
+
+    if (!current.value("weather_code").isDouble()) {
+      qCWarning(logWeather) << "Failed to fetch weather: missing 'weather_code' field in current";
+      return;
+    }
 
     int weatherCode = current.value("weather_code").toInt();
     QString condition;

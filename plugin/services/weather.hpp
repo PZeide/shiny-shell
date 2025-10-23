@@ -12,9 +12,6 @@
 
 // open-meteo has a really generous limit so we can ask for meteo updates every 3 minutes
 constexpr int WEATHER_DEFAULT_REFRESH_INTERVAL_MSECS = 3 * 60 * 1000;
-const QString OPEN_METEO_URL_TEMPLATE = QStringLiteral(
-  "https://api.open-meteo.com/v1/forecast?latitude=%1&longitude=%2&current=temperature_2m,weather_code,is_day"
-);
 
 namespace Shiny::Services {
   Q_DECLARE_LOGGING_CATEGORY(logWeather)

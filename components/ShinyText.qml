@@ -7,6 +7,9 @@ import qs.utils.animations
 Text {
   id: root
 
+  property real casual: 0 // Only available on the Recursive font
+  property real slant: 0 // Only available on the Recursive font
+
   property bool animateTextChange: false
   property real animationDistanceX: 0
   property real animationDistanceY: 6
@@ -16,6 +19,10 @@ Text {
   color: Config.appearance.color.fgPrimary
   font.family: Config.appearance.font.family.sans
   font.pointSize: Config.appearance.font.size.md
+  font.variableAxes: {
+    "CASL": casual.toFixed(2),
+    "slnt": slant
+  }
 
   Behavior on color {
     EffectColorAnimation {}

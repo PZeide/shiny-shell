@@ -21,6 +21,11 @@ TextInput {
     }
   }
 
+  onActiveFocusChanged: {
+    if (!activeFocus)
+      root.forceActiveFocus();
+  }
+
   onOverwriteModeChanged: {
     if (overwriteMode)
       overwriteMode = false;

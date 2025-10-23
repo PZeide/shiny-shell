@@ -1,4 +1,4 @@
-find_package(Qt6 REQUIRED COMPONENTS Core Qml Gui Network DBus)
+find_package(Qt6 REQUIRED COMPONENTS Core Qml Gui Network DBus Sql)
 
 set(QT_QML_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/qml")
 qt_standard_project_setup(REQUIRES 6.10)
@@ -33,6 +33,8 @@ function(qml_module arg_TARGET)
 endfunction()
 
 
+add_subdirectory(ai)
+add_subdirectory(booru)
 add_subdirectory(dbus)
 add_subdirectory(launcher)
 add_subdirectory(services)

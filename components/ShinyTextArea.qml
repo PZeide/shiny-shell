@@ -6,13 +6,9 @@ import qs.config
 import qs.utils
 import qs.utils.animations
 
-TextField {
+TextArea {
   id: root
 
-  readonly property bool hasIcon: icon !== ""
-  property string icon: ""
-  property color iconColor: Config.appearance.color.fgSecondary
-  property real iconSize: Config.appearance.font.size.lg
   property real radius: Config.appearance.rounding.sm
 
   color: Config.appearance.color.fgSecondary
@@ -24,7 +20,6 @@ TextField {
   font.family: Config.appearance.font.family.sans
   font.pointSize: Config.appearance.font.size.md
   padding: 12
-  leftPadding: hasIcon ? iconSize + 25 : 12
 
   cursorDelegate: ShinyRectangle {
     id: cursor
@@ -81,15 +76,5 @@ TextField {
   background: ShinyRectangle {
     radius: root.radius
     color: Config.appearance.color.bgSecondary
-  }
-
-  ShinyIcon {
-    visible: root.hasIcon
-    icon: root.icon
-    anchors.left: parent.left
-    anchors.verticalCenter: parent.verticalCenter
-    font.pointSize: root.iconSize
-    color: root.iconColor
-    leftPadding: root.hasIcon ? 12 : 0
   }
 }

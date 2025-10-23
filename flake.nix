@@ -39,7 +39,7 @@
           inputsFrom = [shiny-shell shiny-shell.plugin];
 
           packages = with pkgs; [
-            poppins
+            recursive
             iosevka
             material-symbols
             nerd-fonts.symbols-only

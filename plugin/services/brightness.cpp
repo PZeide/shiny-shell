@@ -276,7 +276,7 @@ namespace Shiny::Services {
   std::optional<QDir> BrightnessController::preferredController() {
     QDir controllers(SYS_BACKLIGHT);
     if (!controllers.exists() || !controllers.isReadable()) {
-      qWarning() << "Failed to list all backlight controllers";
+      qCWarning(logBrightness) << "Failed to list all backlight controllers";
       return std::nullopt;
     }
 

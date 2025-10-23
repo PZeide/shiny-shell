@@ -6,6 +6,7 @@ import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Hyprland
 import qs.components
+import qs.config
 
 Item {
   id: root
@@ -32,11 +33,13 @@ Item {
         ShinyWindow {
           id: window
 
-          name: "overview"
+          name: "left-sidebar"
           screen: layer.screen
           anchors.top: true
-          implicitWidth: screen.width
-          implicitHeight: screen.height
+          margins.top: Config.bar.height + Config.leftSidebar.margins
+          anchors.left: true
+          implicitWidth: drawer.implicitWidth + Config.leftSidebar.margins
+          implicitHeight: drawer.implicitHeight
           exclusionMode: ExclusionMode.Ignore
           WlrLayershell.layer: WlrLayer.Overlay
           WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
@@ -51,6 +54,18 @@ Item {
             windows: [window]
 
             onCleared: layer.closeLayer()
+          }
+
+          LeftSidebarDrawer {
+            id: drawer
+
+            implicitWidth: window.screen.width * 0.25
+            implicitHeight: window.screen.height - Config.bar.height - Config.leftSidebar.margins * 2
+            anchors.left: parent.left
+            anchors.leftMargin: -implicitWidth + layer.animationFactor * (Config.leftSidebar.margins + implicitWidth)
+            focus: true
+
+            Keys.onEscapePressed: layer.closeLayer()
           }
         }
       }

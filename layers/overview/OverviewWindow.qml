@@ -20,7 +20,7 @@ ShinyRectangle {
 
   readonly property real iconToWindowRatio: 0.35
   readonly property real iconToWindowRatioCompact: 0.6
-  readonly property string windowIconPath: Icons.findFromClass(window.lastIpcObject.class)
+  readonly property string windowIconPath: window !== null ? Icons.findFromClass(window.lastIpcObject.class) : ""
 
   signal shouldFocus
   signal shouldClose

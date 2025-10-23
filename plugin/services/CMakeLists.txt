@@ -5,5 +5,7 @@ qml_module(shiny-services
         brightness.hpp brightness.cpp
         location.hpp location.cpp
         weather.hpp weather.cpp
+    LIBRARIES
+        Qt::Network
 )
 

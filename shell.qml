@@ -9,6 +9,7 @@ import qs.config
 import qs.layers.corner
 import qs.layers.wallpaper
 import qs.layers.bar
+import qs.layers.left_sidebar
 import qs.layers.lockscreen
 import qs.layers.overview
 import qs.layers.launcher
@@ -27,6 +28,11 @@ ShellRoot {
   Loader {
     active: Config.bar.enabled
     sourceComponent: Bar {}
+  }
+
+  Loader {
+    active: Config.leftSidebar.enabled
+    sourceComponent: LeftSidebar {}
   }
 
   Loader {

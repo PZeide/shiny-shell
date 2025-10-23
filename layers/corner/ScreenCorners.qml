@@ -36,7 +36,7 @@ Variants {
       anchors.right: true
       implicitWidth: cornerTopRight.implicitWidth
       implicitHeight: cornerTopRight.implicitHeight
-      exclusionMode: ExclusionMode.Ignore
+      exclusionMode: ExclusionMode.Normal
       WlrLayershell.layer: WlrLayer.Top
 
       RoundedCorner {

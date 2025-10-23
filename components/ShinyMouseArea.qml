@@ -17,7 +17,7 @@ MouseArea {
   onContainsMouseChanged: layer.opacity = (root.containsMouse) ? root.hoverOpacity : 0
   onContainsPressChanged: layer.opacity = (root.containsPress) ? root.clickOpacity : root.hoverOpacity
 
-  Rectangle {
+  ShinyRectangle {
     id: layer
     anchors.fill: parent
     color: root.layerColor

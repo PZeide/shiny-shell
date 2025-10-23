@@ -30,7 +30,7 @@ JsonObject {
   }
 
   component FontFamilyConfig: JsonObject {
-    property string sans: "Poppins"
+    property string sans: "Recursive"
     property string mono: "Iosevka"
     property string iconNerd: "Symbols Nerd Font"
     property string iconMaterial: "Material Symbols Rounded"
@@ -38,7 +38,7 @@ JsonObject {
 
   component FontSizeConfig: JsonObject {
     property int xs: 9
-    property int sm: 10
+    property int sm: 11
     property int md: 12
     property int lg: 15
     property int xl: 18
@@ -51,7 +51,7 @@ JsonObject {
     property int md: 17
     property int lg: 25
     property int full: 1000
-    property int corner: 22
+    property int corner: 18
   }
 
   component AnimConfig: JsonObject {

@@ -53,7 +53,7 @@ namespace Shiny::Launcher::Plugins {
       double score = scorer.normalized_similarity(name.toUtf8());
 
       if (score >= m_scoreThreshold) {
-        scored.append({app, score});
+        scored.emplace_back(app, score);
       }
     }
 
@@ -70,13 +70,13 @@ namespace Shiny::Launcher::Plugins {
 
     for (qsizetype i = 0; i < limit; ++i) {
       ApplicationEntry& app = scored[i].first;
-      result.append(LauncherItem(
+      result.emplace_back(
         true,
         app.icon,
         app.name,
         app.comment,
         std::bind_front(&ApplicationsPlugin::invoke, this, app)
-      ));
+      );
     }
 
     emit filterResult(result);
