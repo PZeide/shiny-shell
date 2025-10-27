@@ -11,7 +11,6 @@ Singleton {
   property alias appearance: adapter.appearance
   property alias bar: adapter.bar
   property alias brightness: adapter.brightness
-  property alias idle: adapter.idle
   property alias launcher: adapter.launcher
   property alias leftSidebar: adapter.leftSidebar
   property alias locale: adapter.locale
@@ -19,6 +18,7 @@ Singleton {
   property alias lockScreen: adapter.lockScreen
   property alias overview: adapter.overview
   property alias player: adapter.player
+  property alias session: adapter.session
   property alias wallpaper: adapter.wallpaper
 
   FileView {
@@ -33,7 +33,6 @@ Singleton {
       property AppearanceConfig appearance: AppearanceConfig {}
       property BarConfig bar: BarConfig {}
       property BrightnessConfig brightness: BrightnessConfig {}
-      property IdleConfig idle: IdleConfig {}
       property LauncherConfig launcher: LauncherConfig {}
       property LeftSidebarConfig leftSidebar: LeftSidebarConfig {}
       property LocaleConfig locale: LocaleConfig {}
@@ -41,6 +40,7 @@ Singleton {
       property LockScreenConfig lockScreen: LockScreenConfig {}
       property OverviewConfig overview: OverviewConfig {}
       property PlayerConfig player: PlayerConfig {}
+      property SessionConfig session: SessionConfig {}
       property WallpaperConfig wallpaper: WallpaperConfig {}
     }
   }

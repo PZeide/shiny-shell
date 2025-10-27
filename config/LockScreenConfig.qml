@@ -5,6 +5,4 @@ import Quickshell.Io
 
 JsonObject {
   property bool enabled: true
-  property bool lockOnStart: false
-  property bool lockOnSuspend: true
 }

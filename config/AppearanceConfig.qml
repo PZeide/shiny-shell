@@ -7,21 +7,65 @@ JsonObject {
   property ColorConfig color: ColorConfig {}
   property FontConfig font: FontConfig {}
   property RoundingConfig rounding: RoundingConfig {}
+  property PaddingConfig padding: PaddingConfig {}
+  property SpacingConfig spacing: SpacingConfig {}
   property AnimConfig anim: AnimConfig {}
 
+  // https://m3.material.io/styles/color/static/baseline
   component ColorConfig: JsonObject {
-    property color bgPrimary: "#1a1111"
-    property color bgSecondary: "#271d1d"
-    property color bgSelection: "#3d3232"
+    property color primary: "#ffb3b6"
+    property color overPrimary: "#561d23"
+    property color primaryContainer: "#723338"
+    property color overPrimaryContainer: "#ffdada"
+    property color primaryFixed: "#ffdada"
+    property color primaryFixedDim: "#ffb3b6"
+    property color overPrimaryFixed: "#3b080f"
+    property color overPrimaryFixedVariant: "#723338"
 
-    property color fgPrimary: "#f0dede"
-    property color fgSecondary: "#d7c1c1"
+    property color secondary: "#e6bdbd"
+    property color overSecondary: "#44292a"
+    property color secondaryContainer: "#5d3f40"
+    property color overSecondaryContainer: "#ffdada"
+    property color secondaryFixed: "#ffdada"
+    property color secondaryFixedDim: "#e6bdbd"
+    property color overSecondaryFixed: "#2c1516"
+    property color overSecondaryFixedVariant: "#5d3f40"
 
-    property color accentPrimary: "#ffb4ab"
-    property color accentSecondary: "#e6c18d"
+    property color tertiary: "#e6c08d"
+    property color overTertiary: "#432c06"
+    property color tertiaryContainer: "#5c421a"
+    property color overTertiaryContainer: "#ffddb2"
+    property color tertiaryFixed: "#ffddb2"
+    property color tertiaryFixedDim: "#e6c08d"
+    property color overTertiaryFixed: "#291800"
+    property color overTertiaryFixedVariant: "#5c421a"
 
-    property color bgError: "#ef4444"
-    property color bgWarning: "#efb100"
+    property color error: "#ffb4ab"
+    property color overError: "#690005"
+    property color errorContainer: "#93000a"
+    property color overErrorContainer: "#ffdad6"
+
+    property color surfaceDim: "#1a1111"
+    property color surface: "#1a1111"
+    property color surfaceBright: "#413737"
+    property color surfaceVariant: "#524343"
+    property color surfaceContainerLowest: "#140c0c"
+    property color surfaceContainerLow: "#22191a"
+    property color surfaceContainer: "#271d1d"
+    property color surfaceContainerHigh: "#322828"
+    property color surfaceContainerHighest: "#3d3232"
+    property color overSurface: "#f0dede"
+    property color overSurfaceVariant: "#d7c1c1"
+
+    property color outline: "#9f8c8c"
+    property color outlineVariant: "#524343"
+
+    property color inverseSurface: "#f0dede"
+    property color inverseOverSurface: "#382e2e"
+    property color inversePrimary: "#8f4a4e"
+
+    property color shadow: "#000000"
+    property color scrim: "#000000"
   }
 
   component FontConfig: JsonObject {
@@ -30,7 +74,7 @@ JsonObject {
   }
 
   component FontFamilyConfig: JsonObject {
-    property string sans: "Recursive"
+    property string sans: "Vegur"
     property string mono: "Iosevka"
     property string iconNerd: "Symbols Nerd Font"
     property string iconMaterial: "Material Symbols Rounded"
@@ -43,15 +87,35 @@ JsonObject {
     property int lg: 15
     property int xl: 18
     property int xxl: 28
+    property int huge: 84
   }
 
   component RoundingConfig: JsonObject {
+    property int xxs: 3
     property int xs: 9
     property int sm: 12
     property int md: 17
     property int lg: 25
     property int full: 1000
     property int corner: 18
+  }
+
+  component SpacingConfig: JsonObject {
+    property int xxs: 3
+    property int xs: 7
+    property int sm: 10
+    property int md: 12
+    property int lg: 15
+    property int xl: 20
+    property int xxl: 25
+  }
+
+  component PaddingConfig: JsonObject {
+    property int xs: 5
+    property int sm: 7
+    property int md: 10
+    property int lg: 12
+    property int xl: 15
   }
 
   component AnimConfig: JsonObject {

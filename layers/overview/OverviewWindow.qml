@@ -49,7 +49,7 @@ ShinyRectangle {
 
   ShinyClippingRectangle {
     anchors.fill: parent
-    color: root.windowFullscreen ? Config.appearance.color.bgPrimary : "transparent"
+    color: root.windowFullscreen ? Config.appearance.color.surface : "transparent"
     radius: root.radius
 
     ScreencopyView {

@@ -2,11 +2,11 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Effects
+import QtQuick.Layouts
 import Quickshell.Wayland
 import Quickshell.Services.Pam
 import qs.config
 import qs.services
-import qs.components
 import qs.utils.animations
 import qs.layers.lockscreen.components
 import qs.layers.wallpaper
@@ -30,21 +30,16 @@ WlSessionLockSurface {
     cursorShape: Qt.BlankCursor
   }
 
-  Loader {
-    active: Config.wallpaper.enabled
-    anchors.fill: parent
+  WallpaperImage {
+    id: background
+    source: Config.wallpaper.path
+    opacity: root.context.opacityFactor
 
-    sourceComponent: WallpaperImage {
-      id: background
-      source: Config.wallpaper.path
-      opacity: root.context.opacityFactor
-
-      layer.effect: MultiEffect {
-        autoPaddingEnabled: false
-        blurEnabled: true
-        blur: 0.65 * root.context.readinessFactor
-        blurMax: 48
-      }
+    layer.effect: MultiEffect {
+      autoPaddingEnabled: false
+      blurEnabled: true
+      blur: 0.65 * root.context.readinessFactor
+      blurMax: 48
     }
   }
 
@@ -56,7 +51,7 @@ WlSessionLockSurface {
   }
 
   Loader {
-    active: Config.wallpaper.enabled && Config.wallpaper.foreground && Foreground.isAvailable
+    active: Config.wallpaper.foreground && Foreground.isAvailable
     anchors.fill: parent
 
     sourceComponent: WallpaperImage {
@@ -66,57 +61,30 @@ WlSessionLockSurface {
     }
   }
 
-  ShinyRectangle {
+  RowLayout {
     id: bottomRectangle
     anchors.bottom: parent.bottom
     anchors.left: parent.left
     anchors.right: parent.right
-    anchors.bottomMargin: -bottomRectangle.height * (1 - root.context.readinessFactor)
-    implicitHeight: Math.max(bottomBar.height, bottomClock.height, bottomMusic.height)
+    anchors.bottomMargin: -bottomRectangle.implicitHeight * (1 - root.context.readinessFactor)
+    spacing: 0
+
+    BottomClock {
+      id: bottomClock
+      Layout.alignment: Qt.AlignBottom | Qt.AlignLeft
+    }
 
     BottomBar {
       id: bottomBar
-      anchors.bottom: parent.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
+      Layout.alignment: Qt.AlignBottom
+      Layout.fillWidth: true
       leftOffset: bottomClock.width
       rightOffset: bottomMusic.width
     }
 
-    BottomClock {
-      id: bottomClock
-      anchors.bottom: parent.bottom
-      anchors.left: parent.left
-    }
-
     BottomMusic {
       id: bottomMusic
-      anchors.bottom: parent.bottom
-      anchors.right: parent.right
-    }
-
-    RoundedCorner {
-      anchors.bottom: bottomClock.top
-      anchors.left: parent.left
-      type: RoundedCorner.Type.BottomLeft
-    }
-
-    RoundedCorner {
-      anchors.bottom: bottomMusic.top
-      anchors.right: parent.right
-      type: RoundedCorner.Type.BottomRight
-    }
-
-    RoundedCorner {
-      anchors.bottom: bottomBar.top
-      anchors.left: bottomClock.right
-      type: RoundedCorner.Type.BottomLeft
-    }
-
-    RoundedCorner {
-      anchors.bottom: bottomBar.top
-      anchors.right: bottomMusic.left
-      type: RoundedCorner.Type.BottomRight
+      Layout.alignment: Qt.AlignBottom | Qt.AlignRight
     }
   }
 

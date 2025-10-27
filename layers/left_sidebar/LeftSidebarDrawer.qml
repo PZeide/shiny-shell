@@ -28,7 +28,7 @@ ShinyClippingRectangle {
     }
   ]
 
-  color: Config.appearance.color.bgPrimary
+  color: Config.appearance.color.surface
   radius: Config.appearance.rounding.md
 
   ColumnLayout {
@@ -44,7 +44,7 @@ ShinyClippingRectangle {
     }
 
     ShinyRectangle {
-      color: Config.appearance.color.bgSecondary
+      color: Config.appearance.color.outline
       Layout.fillWidth: true
       implicitHeight: 3
     }

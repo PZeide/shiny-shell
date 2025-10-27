@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 import qs.config
-import qs.utils
 import qs.utils.animations
 
 TextField {
@@ -11,20 +10,20 @@ TextField {
 
   readonly property bool hasIcon: icon !== ""
   property string icon: ""
-  property color iconColor: Config.appearance.color.fgSecondary
+  property color iconColor: Config.appearance.color.overSurface
   property real iconSize: Config.appearance.font.size.lg
   property real radius: Config.appearance.rounding.sm
 
-  color: Config.appearance.color.fgSecondary
-  selectionColor: Config.appearance.color.bgSelection
-  selectedTextColor: Config.appearance.color.fgSecondary
-  placeholderTextColor: Colors.transparentize(Config.appearance.color.fgSecondary, 0.4)
+  color: Config.appearance.color.overSurface
+  selectionColor: Config.appearance.color.surfaceBright
+  selectedTextColor: Config.appearance.color.overSurface
+  placeholderTextColor: Config.appearance.color.outlineVariant
   cursorVisible: !readOnly
   renderType: Text.NativeRendering
   font.family: Config.appearance.font.family.sans
   font.pointSize: Config.appearance.font.size.md
-  padding: 12
-  leftPadding: hasIcon ? iconSize + 25 : 12
+  padding: Config.appearance.padding.lg
+  leftPadding: hasIcon ? iconSize + Config.appearance.padding.lg * 2 : Config.appearance.padding.lg
 
   cursorDelegate: ShinyRectangle {
     id: cursor
@@ -80,7 +79,7 @@ TextField {
 
   background: ShinyRectangle {
     radius: root.radius
-    color: Config.appearance.color.bgSecondary
+    color: Config.appearance.color.surfaceContainer
   }
 
   ShinyIcon {
@@ -90,6 +89,6 @@ TextField {
     anchors.verticalCenter: parent.verticalCenter
     font.pointSize: root.iconSize
     color: root.iconColor
-    leftPadding: root.hasIcon ? 12 : 0
+    leftPadding: root.hasIcon ? Config.appearance.padding.lg : 0
   }
 }

@@ -24,12 +24,12 @@ Item {
 
     gradient: Gradient {
       GradientStop {
-        color: Config.appearance.color.accentPrimary
+        color: Config.appearance.color.primary
         position: 0.0
       }
 
       GradientStop {
-        color: Config.appearance.color.accentSecondary
+        color: Config.appearance.color.secondary
         position: 1.0
       }
     }

@@ -4,19 +4,19 @@ import QtQuick
 import qs.components
 import qs.config
 import qs.services
+import qs.layers.corner
 
 ShinyRectangle {
   id: root
 
-  readonly property int timeSize: 72
-  readonly property int dateSize: 18
-  // Arbitrary dates but whatever
+  readonly property int timeSize: Config.appearance.font.size.huge
+  readonly property int dateSize: Config.appearance.font.size.xl
   readonly property var targetTimeMetrics: new Date(0, 0, 0, 23, 59, 59)
   readonly property var targetDateMetrics: new Date(2000, 8, 27)
 
-  implicitWidth: Math.max(timeMetrics.width, dateMetrics.width) + 48
-  implicitHeight: contentColumn.height + 32
-  color: Config.appearance.color.bgPrimary
+  implicitWidth: Math.max(timeMetrics.width, dateMetrics.width) + Config.appearance.padding.xl * 2
+  implicitHeight: contentColumn.height + Config.appearance.padding.lg * 2
+  color: Config.appearance.color.surface
   topRightRadius: Config.appearance.rounding.lg
 
   TextMetrics {
@@ -56,5 +56,11 @@ ShinyRectangle {
       anchors.horizontalCenter: parent.horizontalCenter
       font.weight: Font.Light
     }
+  }
+
+  RoundedCorner {
+    anchors.bottom: parent.top
+    anchors.left: parent.left
+    type: RoundedCorner.Type.BottomLeft
   }
 }

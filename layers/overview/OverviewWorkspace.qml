@@ -27,10 +27,10 @@ ShinyRectangle {
   signal workspaceClicked
   signal receiveWindow(window: HyprlandToplevel)
 
-  color: Config.appearance.color.bgSecondary
+  color: Config.appearance.color.surfaceContainer
   opacity: root.hasForeignDrag ? 0.6 : 1
   border.width: 2
-  border.color: isActive ? Config.appearance.color.accentPrimary : "transparent"
+  border.color: isActive ? Config.appearance.color.primary : "transparent"
 
   Behavior on opacity {
     EffectNumberAnimation {}
@@ -43,11 +43,10 @@ ShinyRectangle {
   ShinyText {
     anchors.centerIn: parent
     text: root.workspaceId
-    color: Colors.transparentize(Config.appearance.color.fgPrimary, 0.8)
+    color: Config.appearance.color.surfaceContainerHighest
     font.pointSize: -1 // By default we use pointSize but here we want to use pixelSize so we reset pointSize to avoid a warning
     font.pixelSize: Math.min(root.implicitWidth, root.implicitHeight) * 0.55
     font.weight: Font.DemiBold
-    font.family: Config.appearance.font.family.mono
   }
 
   ShinyMouseArea {

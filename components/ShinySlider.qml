@@ -20,7 +20,7 @@ Slider {
     width: parent.width - parent.height
     height: parent.height * 0.6
     radius: Config.appearance.rounding.md
-    color: Config.appearance.color.bgSecondary
+    color: Config.appearance.color.surfaceVariant
   }
 
   ShinyRectangle {
@@ -28,7 +28,7 @@ Slider {
     width: parent.height + root.visualPosition * (parent.width - parent.height)
     height: parent.height
     radius: Config.appearance.rounding.md
-    color: Config.appearance.color.accentPrimary
+    color: Config.appearance.color.primary
 
     Behavior on width {
       EffectNumberAnimation {}
@@ -38,7 +38,7 @@ Slider {
   handle: ShinyIcon {
     visible: root.icon !== ""
     icon: root.icon
-    color: Config.appearance.color.fgPrimary
+    color: Config.appearance.color.overSurface
     font.pointSize: root.iconSize
     anchors.right: bar.right
     anchors.verticalCenter: bar.verticalCenter

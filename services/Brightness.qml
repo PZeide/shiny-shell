@@ -49,7 +49,6 @@ Singleton {
 
   IpcHandler {
     id: ipc
-
     target: "brightness"
 
     function get(): string {

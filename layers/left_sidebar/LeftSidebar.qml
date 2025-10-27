@@ -36,9 +36,9 @@ Item {
           name: "left-sidebar"
           screen: layer.screen
           anchors.top: true
-          margins.top: Config.bar.height + Config.leftSidebar.margins
+          margins.top: Config.bar.height + Config.appearance.spacing.xs
           anchors.left: true
-          implicitWidth: drawer.implicitWidth + Config.leftSidebar.margins
+          implicitWidth: drawer.implicitWidth + Config.appearance.spacing.xs
           implicitHeight: drawer.implicitHeight
           exclusionMode: ExclusionMode.Ignore
           WlrLayershell.layer: WlrLayer.Overlay
@@ -60,9 +60,9 @@ Item {
             id: drawer
 
             implicitWidth: window.screen.width * 0.25
-            implicitHeight: window.screen.height - Config.bar.height - Config.leftSidebar.margins * 2
+            implicitHeight: window.screen.height - Config.bar.height - Config.appearance.spacing.xs * 2
             anchors.left: parent.left
-            anchors.leftMargin: -implicitWidth + layer.animationFactor * (Config.leftSidebar.margins + implicitWidth)
+            anchors.leftMargin: -implicitWidth + layer.animationFactor * (Config.appearance.spacing.xs + implicitWidth)
             focus: true
 
             Keys.onEscapePressed: layer.closeLayer()
@@ -74,7 +74,6 @@ Item {
 
   IpcHandler {
     id: ipc
-
     target: "left-sidebar"
 
     function toggle(): string {

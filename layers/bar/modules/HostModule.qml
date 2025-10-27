@@ -10,5 +10,6 @@ BarModuleWrapper {
   ShinyText {
     text: Host.osIcon
     font.family: Config.appearance.font.family.iconNerd
+    color: Config.appearance.color.primary
   }
 }

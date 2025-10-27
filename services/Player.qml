@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 pragma Singleton
 
+import QtQuick
 import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Mpris
@@ -43,6 +44,13 @@ Singleton {
       blacklistEntry = blacklistEntry.toLowerCase();
       return identity === blacklistEntry || desktopEntry === blacklistEntry || dbusName === blacklistEntry;
     });
+  }
+
+  Timer {
+    running: root.preferred !== null && root.preferred.playbackState == MprisPlaybackState.Playing
+    interval: 1000
+    repeat: true
+    onTriggered: root.preferred.positionChanged()
   }
 
   IpcHandler {

@@ -8,8 +8,9 @@ Singleton {
   readonly property bool isAvailable: UPower.displayDevice.ready && UPower.displayDevice.isLaptopBattery
   readonly property int state: UPower.displayDevice.state
   readonly property real percentage: UPower.displayDevice.percentage
-  readonly property string formattedPercentage: `${(UPower.displayDevice.percentage * 100).toFixed(1)}%`
-  readonly property bool isLow: percentage <= 0.2 && state !== UPowerDeviceState.Charging
+  readonly property string formattedPercentage: `${(UPower.displayDevice.percentage * 100).toFixed(0)}%`
+  readonly property bool isLow: percentage <= 0.2
+  readonly property bool isPluggedIn: state === UPowerDeviceState.Charging || state === UPowerDeviceState.PendingCharge || state === UPowerDeviceState.FullyCharged
 
   readonly property string icon: {
     const isCharging = state === UPowerDeviceState.Charging;

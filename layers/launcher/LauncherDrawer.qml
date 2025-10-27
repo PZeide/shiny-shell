@@ -17,13 +17,13 @@ ShinyRectangle {
 
   width: parent.width
   implicitHeight: itemsContainer.implicitHeight + searchField.implicitHeight + container.anchors.margins * 2
-  color: Config.appearance.color.bgPrimary
+  color: Config.appearance.color.surface
   radius: Config.appearance.rounding.md
 
   ShinyRectangle {
     id: container
     anchors.fill: parent
-    anchors.margins: 8
+    anchors.margins: Config.appearance.spacing.sm
     clip: true
 
     ShinyRectangle {
@@ -32,7 +32,7 @@ ShinyRectangle {
       y: root.selectedIndex * (height + itemsColumn.spacing)
       width: parent.width
       height: 70
-      color: Config.appearance.color.bgSecondary
+      color: Config.appearance.color.secondaryContainer
       radius: Config.appearance.rounding.lg
 
       Behavior on y {
@@ -51,7 +51,7 @@ ShinyRectangle {
 
       Column {
         id: itemsColumn
-        spacing: 6
+        spacing: Config.appearance.spacing.md
         width: parent.width
 
         Repeater {

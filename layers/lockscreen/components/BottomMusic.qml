@@ -8,117 +8,110 @@ import qs.config
 import qs.services
 import qs.utils
 import qs.utils.animations
+import qs.layers.corner
 
 ShinyRectangle {
   id: root
 
   readonly property bool showMusic: Player.preferred !== null && Player.preferred.playbackState != MprisPlaybackState.Stopped
 
-  implicitWidth: root.showMusic ? 424 : 50
-  implicitHeight: 132
-  color: Config.appearance.color.bgPrimary
+  implicitWidth: root.showMusic ? loader.implicitWidth : musicOff.implicitWidth + Config.appearance.padding.lg * 2
+  height: 120
+  color: Config.appearance.color.surface
   topLeftRadius: Config.appearance.rounding.lg
 
+  Behavior on implicitWidth {
+    EffectNumberAnimation {}
+  }
+
   Loader {
+    id: loader
     active: root.showMusic
-    anchors.fill: parent
-    anchors.leftMargin: 12
-    anchors.rightMargin: 12
 
-    sourceComponent: Item {
-      anchors.fill: parent
+    sourceComponent: RowLayout {
+      id: musicContent
+      height: root.height
+      spacing: Config.appearance.spacing.md
 
-      RowLayout {
-        id: musicContent
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
-        spacing: 8
+      ShinyClippingRectangle {
+        id: musicArt
+        Layout.leftMargin: Config.appearance.spacing.md
+        implicitWidth: 100
+        implicitHeight: 100
+        radius: Config.appearance.rounding.sm
 
-        ShinyClippingRectangle {
-          id: musicArt
-          implicitWidth: 96
-          implicitHeight: 96
-          radius: Config.appearance.rounding.sm
+        Image {
+          anchors.fill: parent
+          asynchronous: true
+          fillMode: Image.PreserveAspectCrop
+          retainWhileLoading: true
+          sourceSize.width: 100
+          sourceSize.height: 100
+          source: Player.preferred.trackArtUrl === "" ? Player.placeholderTrackArt : Player.preferred.trackArtUrl
+        }
+      }
 
-          Image {
-            anchors.fill: parent
-            asynchronous: true
-            fillMode: Image.PreserveAspectCrop
-            retainWhileLoading: true
-            sourceSize.width: 96
-            sourceSize.height: 96
-            source: Player.preferred.trackArtUrl === "" ? Player.placeholderTrackArt : Player.preferred.trackArtUrl
-          }
+      ColumnLayout {
+        Layout.fillWidth: true
+        Layout.rightMargin: Config.appearance.spacing.md
+        Layout.topMargin: Config.appearance.spacing.lg
+        Layout.bottomMargin: Config.appearance.spacing.lg
+        spacing: 0
+
+        ShinyText {
+          Layout.maximumWidth: positionRow.implicitWidth
+          animateTextChange: true
+          text: Player.preferred.trackTitle || "Unknown Title"
+          font.pointSize: Config.appearance.font.size.lg
+          font.weight: Font.Medium
+          elide: Text.ElideRight
+          wrapMode: Text.NoWrap
         }
 
-        ColumnLayout {
-          Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-          Layout.fillWidth: true
-          spacing: 0
+        ShinyText {
+          Layout.maximumWidth: positionRow.implicitWidth
+          animateTextChange: true
+          text: Player.preferred.trackArtist || "Unknown Artist"
+          font.pointSize: Config.appearance.font.size.md
+          font.weight: Font.Light
+          elide: Text.ElideRight
+          wrapMode: Text.NoWrap
+        }
 
-          ShinyText {
-            Layout.fillWidth: true
-            animateTextChange: true
-            text: Player.preferred.trackTitle || "Unknown Title"
-            font.pointSize: Config.appearance.font.size.lg
-            font.weight: Font.Medium
-            elide: Text.ElideRight
-            wrapMode: Text.NoWrap
+        Item {
+          Layout.fillHeight: true
+        }
+
+        RowLayout {
+          id: positionRow
+
+          ShinyRectangle {
+            implicitWidth: 32
+            implicitHeight: 32
+            radius: Config.appearance.rounding.full
+            color: Config.appearance.color.surfaceContainer
+
+            ShinyIcon {
+              anchors.centerIn: parent
+              icon: "music_note"
+              fill: 1
+              font.pointSize: Config.appearance.font.size.lg
+            }
+          }
+
+          ShinySlider {
+            property bool positionSupported: Player.preferred.lengthSupported && Player.preferred.positionSupported
+
+            enabled: false
+            implicitWidth: 190
+            implicitHeight: 10
+            value: positionSupported ? Player.preferred.position / Player.preferred.length : 1
           }
 
           ShinyText {
-            Layout.fillWidth: true
-            animateTextChange: true
-            text: Player.preferred.trackArtist || "Unknown Artist"
-            font.pointSize: Config.appearance.font.size.md
-            font.weight: Font.Light
-            elide: Text.ElideRight
-            wrapMode: Text.NoWrap
-          }
-
-          Item {
-            Layout.fillHeight: true
-          }
-
-          RowLayout {
-            id: positionRow
-            Layout.fillWidth: true
-
-            ShinyRectangle {
-              implicitWidth: 32
-              implicitHeight: 32
-              radius: Config.appearance.rounding.full
-              color: Config.appearance.color.bgSecondary
-
-              ShinyIcon {
-                anchors.centerIn: parent
-                icon: "music_note"
-                fill: 1
-                font.pointSize: Config.appearance.font.size.lg
-              }
-            }
-
-            Timer {
-              running: Player.preferred.playbackState == MprisPlaybackState.Playing
-              interval: 1000
-              repeat: true
-              onTriggered: Player.preferred.positionChanged()
-            }
-
-            ShinySlider {
-              property bool positionSupported: Player.preferred.lengthSupported && Player.preferred.positionSupported
-
-              Layout.fillWidth: true
-              implicitHeight: 10
-              value: positionSupported ? Player.preferred.position / Player.preferred.length : 1
-            }
-
-            ShinyText {
-              visible: Player.preferred.positionSupported
-              text: Player.preferred.lengthSupported ? `${Formatting.numericDuration(Player.preferred.position)} / ${Formatting.numericDuration(Player.preferred.length)}` : Formatting.numericDuration(Player.preferred.position)
-              font.pointSize: Config.appearance.font.size.sm
-            }
+            visible: Player.preferred.positionSupported
+            text: Player.preferred.lengthSupported ? `${Formatting.numericDuration(Player.preferred.position)} / ${Formatting.numericDuration(Player.preferred.length)}` : Formatting.numericDuration(Player.preferred.position)
+            font.pointSize: Config.appearance.font.size.sm
           }
         }
       }
@@ -134,7 +127,9 @@ ShinyRectangle {
     font.pointSize: Config.appearance.font.size.xl
   }
 
-  Behavior on implicitWidth {
-    EffectNumberAnimation {}
+  RoundedCorner {
+    anchors.bottom: parent.top
+    anchors.right: parent.right
+    type: RoundedCorner.Type.BottomRight
   }
 }

@@ -16,7 +16,6 @@ Item {
 
   Variants {
     id: variant
-
     model: Quickshell.screens
 
     delegate: ShinyLayerWrapper {
@@ -71,7 +70,6 @@ Item {
 
   IpcHandler {
     id: ipc
-
     target: "overview"
 
     function toggle(): string {

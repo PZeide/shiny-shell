@@ -34,26 +34,25 @@ ShinyRectangle {
   RowLayout {
     anchors.left: parent.left
     anchors.right: parent.right
-    anchors.leftMargin: 12
-    anchors.rightMargin: 12
+    anchors.leftMargin: Config.appearance.padding.md
+    anchors.rightMargin: Config.appearance.padding.md
     anchors.verticalCenter: parent.verticalCenter
-    spacing: 8
+    spacing: Config.appearance.spacing.sm
 
-    ShinyClippingRectangle {
+    ShinyRectangle {
       id: itemIcon
 
-      property int iconSize: root.height - 24
+      property int iconSize: root.height - Config.appearance.spacing.lg * 2
 
+      Layout.alignment: Qt.AlignVCenter
       implicitWidth: iconSize
       implicitHeight: iconSize
       radius: Config.appearance.rounding.sm
 
       Loader {
         active: root.isSystemIcon
-        anchors.fill: parent
 
         sourceComponent: IconImage {
-          anchors.fill: parent
           implicitSize: itemIcon.iconSize
           source: Quickshell.iconPath(root.icon)
         }
@@ -61,11 +60,12 @@ ShinyRectangle {
 
       Loader {
         active: !root.isSystemIcon
+        anchors.fill: parent
 
         sourceComponent: ShinyIcon {
-          anchors.fill: parent
           icon: root.icon
           font.pointSize: Config.appearance.font.size.xxl
+          verticalAlignment: Text.AlignVCenter
         }
       }
     }

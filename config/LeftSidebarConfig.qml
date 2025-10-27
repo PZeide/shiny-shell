@@ -5,7 +5,6 @@ import Quickshell.Io
 
 JsonObject {
   property bool enabled: true
-  property int margins: 6
   property AiConfig ai: AiConfig {}
   property BooruConfig booru: BooruConfig {}
 

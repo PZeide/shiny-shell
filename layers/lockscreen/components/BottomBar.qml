@@ -7,142 +7,68 @@ import qs.config
 import qs.services
 import qs.utils
 import qs.utils.animations
+import qs.layers.corner
+import qs.layers.bar
+import qs.layers.bar.modules
 
 ShinyRectangle {
   id: root
+  implicitHeight: Config.bar.height
+  color: Config.appearance.color.surface
 
+  // Used to position pill centered horizontally
   required property real leftOffset
   required property real rightOffset
 
-  implicitHeight: 48
-  color: Config.appearance.color.bgPrimary
+  RoundedCorner {
+    anchors.bottom: parent.top
+    anchors.left: parent.left
+    type: RoundedCorner.Type.BottomLeft
+  }
 
-  component Pill: Item {
-    default property alias content: contentLayout.children
+  RoundedCorner {
+    anchors.bottom: parent.top
+    anchors.right: parent.right
+    type: RoundedCorner.Type.BottomRight
+  }
 
+  RowLayout {
+    anchors.left: parent.left
     anchors.top: parent.top
     anchors.bottom: parent.bottom
-    anchors.topMargin: 6
-    anchors.bottomMargin: 6
-    implicitWidth: contentLayout.width + 24
+    spacing: Config.appearance.spacing.sm
 
-    ShinyRectangle {
-      anchors.fill: parent
-      color: Config.appearance.color.bgSecondary
-      radius: Config.appearance.rounding.lg
+    Loader {
+      Layout.fillHeight: true
+      active: Location.isAvailable
+      sourceComponent: LocationModule {}
     }
 
-    RowLayout {
-      id: contentLayout
-      anchors.centerIn: parent
+    Loader {
+      Layout.fillHeight: true
+      active: Weather.isAvailable
+      sourceComponent: WeatherModule {}
     }
   }
 
-  Pill {
-    anchors.horizontalCenter: parent.horizontalCenter
+  BarModuleWrapper {
+    x: (root.width + root.leftOffset + root.rightOffset) / 2 - width / 2 - root.leftOffset
 
     ShinyText {
-      id: text
       text: "Enter your password to unlock"
     }
   }
 
-  Item {
-    anchors.fill: parent
-    anchors.leftMargin: root.leftOffset
-    anchors.rightMargin: root.rightOffset
+  RowLayout {
+    anchors.right: parent.right
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    spacing: Config.appearance.spacing.sm
 
     Loader {
-      active: Weather.isAvailable
-      anchors.fill: parent
-
-      sourceComponent: Item {
-        anchors.fill: parent
-
-        Pill {
-          anchors.left: parent.left
-          anchors.leftMargin: 8
-
-          ShinyIcon {
-            icon: Weather.now.icon
-            fill: 1
-            font.pointSize: Config.appearance.font.size.xl
-          }
-
-          ShinyText {
-            text: Formatting.temperature(Weather.now.temperature)
-          }
-        }
-      }
-    }
-
-    Loader {
+      Layout.fillHeight: true
       active: Battery.isAvailable
-      anchors.fill: parent
-
-      sourceComponent: Item {
-        anchors.fill: parent
-
-        ShinyClippingRectangle {
-          id: batteryPill
-          anchors.top: parent.top
-          anchors.bottom: parent.bottom
-          anchors.right: parent.right
-          anchors.topMargin: 6
-          anchors.bottomMargin: 6
-          anchors.rightMargin: 8
-          implicitWidth: 100
-          color: Config.appearance.color.bgSecondary
-          radius: Config.appearance.rounding.lg
-
-          RowLayout {
-            anchors.centerIn: parent
-            spacing: 4
-
-            ShinyIcon {
-              icon: Battery.icon
-              fill: 1
-              font.pointSize: Config.appearance.font.size.xl
-            }
-
-            ShinyText {
-              text: Battery.formattedPercentage
-            }
-          }
-
-          ShinyRectangle {
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            clip: true
-            width: batteryPill.width * Battery.percentage
-            color: Battery.isLow ? Config.appearance.color.bgError : Config.appearance.color.fgPrimary
-
-            Behavior on width {
-              EffectNumberAnimation {}
-            }
-
-            RowLayout {
-              // Simulate centering inside batteryPill
-              x: (batteryPill.width - width) / 2
-              y: (batteryPill.height - height) / 2
-              spacing: 4
-
-              ShinyIcon {
-                icon: Battery.icon
-                fill: 1
-                color: Config.appearance.color.bgSecondary
-                font.pointSize: Config.appearance.font.size.xl
-              }
-
-              ShinyText {
-                text: Battery.formattedPercentage
-                color: Config.appearance.color.bgSecondary
-              }
-            }
-          }
-        }
-      }
+      sourceComponent: BatteryModule {}
     }
   }
 }

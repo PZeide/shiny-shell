@@ -9,17 +9,16 @@ import qs.layers.bar
 BarModuleWrapper {
   ShinyText {
     text: Qt.formatTime(Clock.date, Config.locale.timeFormat)
-    font.pointSize: Config.appearance.font.size.md
+    font.pointSize: Config.appearance.font.size.sm
   }
 
   ShinyText {
     text: "•"
-    font.pointSize: Config.appearance.font.size.lg
-    casual: 1
+    font.pointSize: Config.appearance.font.size.md
   }
 
   ShinyText {
     text: Qt.formatDate(Clock.date, Config.locale.dateShortFormat)
-    font.pointSize: Config.appearance.font.size.md
+    font.pointSize: Config.appearance.font.size.sm
   }
 }

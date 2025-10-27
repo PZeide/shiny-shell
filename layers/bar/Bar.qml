@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
+import Shiny.DBus
 import qs.components
 import qs.config
 import qs.layers.bar.modules
@@ -15,42 +16,49 @@ Variants {
 
     required property ShellScreen modelData
 
+    readonly property int moduleSpacing: Config.appearance.spacing.sm
+
     name: "bar"
     screen: modelData
     anchors.top: true
     anchors.left: true
     anchors.right: true
     implicitHeight: Config.bar.height
-    color: Config.appearance.color.bgPrimary
+    color: Config.appearance.color.surface
     WlrLayershell.layer: WlrLayer.Top
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
 
     Row {
-      height: parent.height
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
       anchors.left: parent.left
-      anchors.leftMargin: 7
-      spacing: Config.bar.moduleSpacing
+      anchors.leftMargin: Config.appearance.spacing.sm
+      spacing: root.moduleSpacing
 
-      HostIcon {}
-      DateTime {}
+      HostModule {}
+      ClockModule {}
+      WeatherModule {}
     }
 
     Row {
-      height: parent.height
-      anchors.verticalCenter: parent.verticalCenter
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
       anchors.horizontalCenter: parent.horizontalCenter
-      spacing: Config.bar.moduleSpacing
+      spacing: root.moduleSpacing
 
-      Workspaces {
+      WorkspacesModule {
         screen: root.screen
       }
     }
 
     Row {
-      height: parent.height
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
       anchors.right: parent.right
-      anchors.rightMargin: 7
-      spacing: Config.bar.moduleSpacing
+      anchors.rightMargin: Config.appearance.spacing.sm
+      spacing: root.moduleSpacing
+
+      BatteryModule {}
     }
   }
 }

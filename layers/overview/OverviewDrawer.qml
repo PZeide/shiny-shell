@@ -28,16 +28,16 @@ ShinyRectangle {
   readonly property real overviewWorkspaceWidth: ((root.monitorTransformedWidth - horizontalReserved) * Config.overview.scale / monitor.scale)
   readonly property real overviewWorkspaceHeight: ((root.monitorTransformedHeight - verticalReserved) * Config.overview.scale / monitor.scale)
 
-  implicitWidth: layout.implicitWidth + Config.overview.spacing * 2
-  implicitHeight: layout.implicitHeight + Config.overview.spacing * 2
-  color: Config.appearance.color.bgPrimary
+  implicitWidth: layout.implicitWidth + Config.appearance.spacing.xs * 2
+  implicitHeight: layout.implicitHeight + Config.appearance.spacing.xs * 2
+  color: Config.appearance.color.surface
 
   signal shouldClose
 
   Column {
     id: layout
     anchors.centerIn: parent
-    spacing: Config.overview.spacing
+    spacing: Config.appearance.spacing.xs
 
     Repeater {
       model: Config.overview.rows
@@ -47,8 +47,7 @@ ShinyRectangle {
 
         required property int index
 
-        spacing: Config.overview.spacing
-
+        spacing: Config.appearance.spacing.xs
         Repeater {
           model: Config.overview.columns
 
@@ -58,8 +57,8 @@ ShinyRectangle {
             required property int index
 
             workspaceId: root.workspaceGroup * root.workspacesShown + row.index * Config.overview.columns + cell.index + 1
-            workspaceX: (root.overviewWorkspaceWidth + Config.overview.spacing) * cell.index
-            workspaceY: (root.overviewWorkspaceHeight + Config.overview.spacing) * row.index
+            workspaceX: (root.overviewWorkspaceWidth + Config.appearance.spacing.xs) * cell.index
+            workspaceY: (root.overviewWorkspaceHeight + Config.appearance.spacing.xs) * row.index
             implicitWidth: root.overviewWorkspaceWidth
             implicitHeight: root.overviewWorkspaceHeight
             radius: Config.appearance.rounding.corner * Config.overview.scale
@@ -145,8 +144,8 @@ ShinyRectangle {
 
         readonly property int workspaceColumnIndex: (workspace?.id - 1) % Config.overview.columns
         readonly property int workspaceRowIndex: Math.floor((workspace?.id - 1) % root.workspacesShown / Config.overview.columns)
-        readonly property real workspaceX: (root.overviewWorkspaceWidth + Config.overview.spacing) * workspaceColumnIndex
-        readonly property real workspaceY: (root.overviewWorkspaceHeight + Config.overview.spacing) * workspaceRowIndex
+        readonly property real workspaceX: (root.overviewWorkspaceWidth + Config.appearance.spacing.xs) * workspaceColumnIndex
+        readonly property real workspaceY: (root.overviewWorkspaceHeight + Config.appearance.spacing.xs) * workspaceRowIndex
 
         window: modelData
         windowFullscreen: (window?.lastIpcObject.fullscreen ?? 0) > 1

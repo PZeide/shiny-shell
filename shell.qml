@@ -6,34 +6,25 @@ import Quickshell.Hyprland
 import qs.services
 import qs.utils
 import qs.config
-import qs.layers.corner
 import qs.layers.wallpaper
+import qs.layers.corner
 import qs.layers.bar
 import qs.layers.left_sidebar
 import qs.layers.lockscreen
 import qs.layers.overview
 import qs.layers.launcher
-import qs.modules
 
 ShellRoot {
   settings.watchFiles: Environment.isDev
 
+  Wallpaper {}
   ScreenCorners {}
+  Bar {}
 
-  Loader {
-    active: Config.wallpaper.enabled
-    sourceComponent: Wallpaper {}
-  }
-
-  Loader {
-    active: Config.bar.enabled
-    sourceComponent: Bar {}
-  }
-
-  Loader {
+  /*Loader {
     active: Config.leftSidebar.enabled
     sourceComponent: LeftSidebar {}
-  }
+  }*/
 
   Loader {
     active: Config.lockScreen.enabled
@@ -48,11 +39,6 @@ ShellRoot {
   Loader {
     active: Config.launcher.enabled
     sourceComponent: Launcher {}
-  }
-
-  Loader {
-    active: Config.idle.enabled
-    sourceComponent: IdleManager {}
   }
 
   Connections {
@@ -82,7 +68,8 @@ ShellRoot {
     Brightness;
     Foreground;
     Location;
-    Weather;
     Player;
+    Session;
+    Weather;
   }
 }
