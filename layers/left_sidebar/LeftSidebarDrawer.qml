@@ -7,6 +7,7 @@ import qs.components
 import qs.config
 import qs.layers.left_sidebar.ai
 import qs.layers.left_sidebar.booru
+import qs.layers.left_sidebar.gacha
 
 ShinyClippingRectangle {
   id: root
@@ -25,6 +26,13 @@ ShinyClippingRectangle {
       name: "Booru",
       icon: "developer_board",
       component: booruComponent
+    },
+    {
+      enabled: Config.leftSidebar.gacha.enabled,
+      id: "gacha",
+      name: "Gacha",
+      icon: "stars_2",
+      component: gachaComponent
     }
   ]
 
@@ -34,7 +42,7 @@ ShinyClippingRectangle {
   ColumnLayout {
     id: layout
     anchors.fill: parent
-    anchors.margins: 8
+    anchors.margins: Config.appearance.spacing.sm
     spacing: 0
 
     NavigationBanner {
@@ -44,9 +52,9 @@ ShinyClippingRectangle {
     }
 
     ShinyRectangle {
-      color: Config.appearance.color.outline
+      color: Config.appearance.color.surfaceBright
       Layout.fillWidth: true
-      implicitHeight: 3
+      implicitHeight: 2
     }
 
     SwipeView {
@@ -69,5 +77,10 @@ ShinyClippingRectangle {
   Component {
     id: booruComponent
     BooruPane {}
+  }
+
+  Component {
+    id: gachaComponent
+    GachaPane {}
   }
 }

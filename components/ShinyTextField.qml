@@ -15,7 +15,7 @@ TextField {
   property real radius: Config.appearance.rounding.sm
 
   color: Config.appearance.color.overSurface
-  selectionColor: Config.appearance.color.surfaceBright
+  selectionColor: Config.appearance.color.surfaceVariant
   selectedTextColor: Config.appearance.color.overSurface
   placeholderTextColor: Config.appearance.color.outlineVariant
   cursorVisible: !readOnly

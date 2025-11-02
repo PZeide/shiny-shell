@@ -62,13 +62,13 @@ ShinyRectangle {
           ShinyIcon {
             icon: element.icon
             font.pointSize: Config.appearance.font.size.xl
-            color: element.selected ? Config.appearance.color.accentPrimary : Config.appearance.color.fgPrimary
+            color: element.selected ? Config.appearance.color.primary : Config.appearance.color.overSurface
             Layout.alignment: Qt.AlignHCenter
           }
 
           ShinyText {
             text: element.name
-            color: element.selected ? Config.appearance.color.accentPrimary : Config.appearance.color.fgPrimary
+            color: element.selected ? Config.appearance.color.primary : Config.appearance.color.overSurface
             Layout.alignment: Qt.AlignHCenter
           }
         }
@@ -84,7 +84,7 @@ ShinyRectangle {
     x: root.selectedItem?.x ?? 0
     implicitWidth: root.selectedItem?.implicitWidth ?? 0
     implicitHeight: 4
-    color: Config.appearance.color.accentPrimary
+    color: Config.appearance.color.primary
     radius: Config.appearance.rounding.sm
 
     Behavior on x {

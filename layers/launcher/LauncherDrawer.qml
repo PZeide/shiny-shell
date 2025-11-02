@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import Qt.labs.synchronizer
 import qs.components
 import qs.config
 import qs.utils.animations
@@ -83,7 +84,9 @@ ShinyRectangle {
       focus: true
       radius: Config.appearance.rounding.md
 
-      onTextChanged: root.input = text
+      Synchronizer on text {
+        property alias source: root.input
+      }
     }
   }
 }

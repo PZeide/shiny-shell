@@ -1,3 +1,6 @@
+//@ pragma Env QS_NO_RELOAD_POPUP=1
+//@ pragma Env QSG_RENDER_LOOP=threaded
+
 pragma ComponentBehavior: Bound
 
 import QtQuick
@@ -21,10 +24,10 @@ ShellRoot {
   ScreenCorners {}
   Bar {}
 
-  /*Loader {
+  Loader {
     active: Config.leftSidebar.enabled
     sourceComponent: LeftSidebar {}
-  }*/
+  }
 
   Loader {
     active: Config.lockScreen.enabled
@@ -42,18 +45,6 @@ ShellRoot {
   }
 
   Connections {
-    target: Quickshell
-
-    function onReloadCompleted() {
-      Quickshell.inhibitReloadPopup();
-    }
-
-    function onReloadFailed() {
-      Quickshell.inhibitReloadPopup();
-    }
-  }
-
-  Connections {
     target: Hyprland
 
     // We use some properties not exposed by Quickshell so we update everything on each event
@@ -65,6 +56,8 @@ ShellRoot {
   }
 
   Component.onCompleted: {
+    DesktopEntries;
+
     Brightness;
     Foreground;
     Location;

@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 import qs.config
-import qs.utils
 import qs.utils.animations
 
 TextArea {
@@ -11,10 +10,10 @@ TextArea {
 
   property real radius: Config.appearance.rounding.sm
 
-  color: Config.appearance.color.fgSecondary
-  selectionColor: Config.appearance.color.bgSelection
-  selectedTextColor: Config.appearance.color.fgSecondary
-  placeholderTextColor: Colors.transparentize(Config.appearance.color.fgSecondary, 0.4)
+  color: Config.appearance.color.overSurface
+  selectionColor: Config.appearance.color.surfaceVariant
+  selectedTextColor: Config.appearance.color.overSurface
+  placeholderTextColor: Config.appearance.color.outlineVariant
   cursorVisible: !readOnly
   renderType: Text.NativeRendering
   font.family: Config.appearance.font.family.sans
@@ -75,6 +74,6 @@ TextArea {
 
   background: ShinyRectangle {
     radius: root.radius
-    color: Config.appearance.color.bgSecondary
+    color: Config.appearance.color.surfaceContainer
   }
 }

@@ -15,14 +15,15 @@ ColumnLayout {
   }
 
   ShinyRectangle {
-    color: Config.appearance.color.bgSecondary
+    color: Config.appearance.color.surfaceBright
     Layout.fillWidth: true
-    implicitHeight: 3
+    implicitHeight: 2
   }
 
   ColumnLayout {
     Layout.fillWidth: true
     Layout.topMargin: 4
+    spacing: Config.appearance.spacing.sm
 
     ShinyTextArea {
       id: textArea
@@ -32,10 +33,25 @@ ColumnLayout {
 
     RowLayout {
       Layout.fillWidth: true
-      Layout.fillHeight: false
+      Layout.leftMargin: Config.appearance.spacing.xs
+      Layout.rightMargin: Config.appearance.spacing.xs
+
+      ShinyText {
+        text: "Allow NSFW"
+        color: allowNsfwSwitch.checked ? Config.appearance.color.overSurface : Config.appearance.color.outline
+        font.pointSize: Config.appearance.font.size.sm
+      }
 
       ShinySwitch {
-        text: "Allow NSFW"
+        id: allowNsfwSwitch
+      }
+
+      Item {
+        Layout.fillWidth: true
+      }
+
+      ShinyMenu {
+        id: providerMenu
       }
     }
   }

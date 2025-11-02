@@ -7,12 +7,11 @@ import qs.utils.animations
 Switch {
   id: root
 
-  property real scale: 0.6
-  property color activeColor: Config.appearance.color.accentPrimary
-  property color inactiveColor: Config.appearance.color.bgSecondary
+  property color activeColor: Config.appearance.color.primary
+  property color inactiveColor: Config.appearance.color.surfaceContainerHighest
 
-  implicitHeight: 32 * root.scale
-  implicitWidth: 52 * root.scale
+  implicitHeight: 20
+  implicitWidth: 34
 
   MouseArea {
     anchors.fill: parent
@@ -25,8 +24,8 @@ Switch {
     height: parent.height
     radius: Config.appearance.rounding.full
     color: root.checked ? root.activeColor : root.inactiveColor
-    border.width: 2 * root.scale
-    border.color: root.checked ? root.activeColor : Config.appearance.color.bgSelection
+    border.width: 1
+    border.color: root.checked ? root.activeColor : Config.appearance.color.outline
 
     Behavior on color {
       StandardColorAnimation {}
@@ -38,13 +37,15 @@ Switch {
   }
 
   indicator: Rectangle {
-    width: (root.pressed || root.down) ? (28 * root.scale) : root.checked ? (24 * root.scale) : (16 * root.scale)
-    height: (root.pressed || root.down) ? (28 * root.scale) : root.checked ? (24 * root.scale) : (16 * root.scale)
+    readonly property real indicatorSize: (root.pressed || root.down) ? 18 : root.checked ? 16 : 10
+
+    width: indicatorSize
+    height: indicatorSize
     radius: Config.appearance.rounding.full
-    color: root.checked ? Config.appearance.color.bgPrimary : Config.appearance.color.bgSelection
+    color: root.checked ? Config.appearance.color.overPrimary : Config.appearance.color.outline
     anchors.verticalCenter: parent.verticalCenter
     anchors.left: parent.left
-    anchors.leftMargin: root.checked ? ((root.pressed || root.down) ? (22 * root.scale) : 24 * root.scale) : ((root.pressed || root.down) ? (2 * root.scale) : 8 * root.scale)
+    anchors.leftMargin: root.checked ? ((root.pressed || root.down) ? 15 : 16) : ((root.pressed || root.down) ? 1 : 5)
 
     Behavior on anchors.leftMargin {
       StandardNumberAnimation {}
