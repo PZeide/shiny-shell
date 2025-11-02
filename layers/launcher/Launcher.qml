@@ -60,7 +60,7 @@ Item {
       }
 
       LazyLoader {
-        activeAsync: layer.opened
+        active: layer.opened
 
         ShinyWindow {
           id: window
