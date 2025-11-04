@@ -4,7 +4,6 @@ import QtQuick
 import Quickshell.Hyprland
 import qs.components
 import qs.config
-import qs.utils
 import qs.utils.animations
 
 ShinyRectangle {

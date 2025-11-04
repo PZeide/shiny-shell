@@ -39,7 +39,7 @@ ShinyRectangle {
     anchors.verticalCenter: parent.verticalCenter
     spacing: Config.appearance.spacing.sm
 
-    ShinyRectangle {
+    ShinyClippingRectangle {
       id: itemIcon
 
       property int iconSize: root.height - Config.appearance.spacing.lg * 2

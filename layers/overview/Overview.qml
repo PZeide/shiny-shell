@@ -5,7 +5,8 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Hyprland
-import qs.components
+import qs.components.containers
+import qs.components.misc
 
 Item {
   id: root
@@ -26,7 +27,7 @@ Item {
       screen: modelData
 
       LazyLoader {
-        active: layer.opened
+        active: layer.shown
 
         ShinyWindow {
           id: window

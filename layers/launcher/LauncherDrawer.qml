@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Qt.labs.synchronizer
 import qs.components
+import qs.components.controls
 import qs.config
 import qs.utils.animations
 

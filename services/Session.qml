@@ -8,7 +8,8 @@ import Quickshell.Wayland
 import Quickshell.Hyprland
 import Shiny.DBus
 import qs.config
-import qs.components
+import qs.components.containers
+import qs.components.misc
 import qs.services
 
 Singleton {

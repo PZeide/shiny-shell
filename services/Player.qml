@@ -7,7 +7,7 @@ import Quickshell.Io
 import Quickshell.Services.Mpris
 import qs.config
 import qs.utils
-import qs.components
+import qs.components.misc
 
 Singleton {
   id: root

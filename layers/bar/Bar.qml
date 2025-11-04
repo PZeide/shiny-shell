@@ -3,10 +3,10 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
-import Shiny.DBus
-import qs.components
+import qs.components.containers
 import qs.config
 import qs.layers.bar.modules
+import qs.services
 
 Variants {
   model: Quickshell.screens
@@ -35,9 +35,10 @@ Variants {
       anchors.leftMargin: Config.appearance.spacing.sm
       spacing: root.moduleSpacing
 
-      HostModule {}
-      ClockModule {}
-      WeatherModule {}
+      Repeater {
+        model: Config.bar.leftModules
+        delegate: delegateChooser
+      }
     }
 
     Row {
@@ -46,8 +47,9 @@ Variants {
       anchors.horizontalCenter: parent.horizontalCenter
       spacing: root.moduleSpacing
 
-      WorkspacesModule {
-        screen: root.screen
+      Repeater {
+        model: Config.bar.centerModules
+        delegate: delegateChooser
       }
     }
 
@@ -58,7 +60,60 @@ Variants {
       anchors.rightMargin: Config.appearance.spacing.sm
       spacing: root.moduleSpacing
 
-      BatteryModule {}
+      Repeater {
+        model: Config.bar.rightModules
+        delegate: delegateChooser
+      }
     }
+
+    DelegateChooser {
+      id: delegateChooser
+
+      DelegateChoice {
+        roleValue: "battery"
+        delegate: DelegateLoader {
+          active: Battery.isAvailable
+          sourceComponent: BatteryModule {}
+        }
+      }
+
+      DelegateChoice {
+        roleValue: "clock"
+        delegate: ClockModule {}
+      }
+
+      DelegateChoice {
+        roleValue: "host"
+        delegate: HostModule {}
+      }
+
+      DelegateChoice {
+        roleValue: "location"
+        delegate: DelegateLoader {
+          active: Location.isAvailable
+          sourceComponent: LocationModule {}
+        }
+      }
+
+      DelegateChoice {
+        roleValue: "weather"
+        delegate: DelegateLoader {
+          active: Weather.isAvailable
+          sourceComponent: WeatherModule {}
+        }
+      }
+
+      DelegateChoice {
+        roleValue: "workspaces"
+        delegate: WorkspacesModule {
+          screen: root.screen
+        }
+      }
+    }
+  }
+
+  component DelegateLoader: Loader {
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
   }
 }

@@ -5,8 +5,6 @@ import QtQuick.Layouts
 import qs.components
 import qs.config
 import qs.services
-import qs.utils
-import qs.utils.animations
 import qs.layers.corner
 import qs.layers.bar
 import qs.layers.bar.modules

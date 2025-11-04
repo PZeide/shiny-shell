@@ -9,8 +9,9 @@ Item {
 
   required property ShellScreen screen
 
-  readonly property bool opened: state === "opened" || state === "animateIn" || state === "animateOut"
-  readonly property bool closed: state === "closed"
+  readonly property bool shown: state === "opened" || state === "animateIn" || state === "animateOut"
+  readonly property bool opened: state === "opened" || state === "animateIn"
+  readonly property bool closed: state === "closed" || state === "animateOut"
   readonly property bool animating: state === "animateIn" || state === "animateOut"
   property bool animated: true
   property real animationFactor: 0
@@ -106,21 +107,21 @@ Item {
   ]
 
   function openLayer() {
-    if (state === "animateIn" || state === "opened")
+    if (root.opened)
       return;
 
     state = root.animated ? "animateIn" : "opened";
   }
 
   function closeLayer() {
-    if (state === "animateOut" || state === "closed")
+    if (root.closed)
       return;
 
     state = root.animated ? "animateOut" : "closed";
   }
 
   function toggleLayer() {
-    if (state === "animateOut" || state === "closed") {
+    if (root.closed) {
       state = root.animated ? "animateIn" : "opened";
     } else {
       state = root.animated ? "animateOut" : "closed";
