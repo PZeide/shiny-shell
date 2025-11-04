@@ -9,6 +9,7 @@
 #include <qlogging.h>
 #include <qnetworkrequest.h>
 #include <qurl.h>
+#include <utility>
 
 namespace Shiny::Services {
   Q_LOGGING_CATEGORY(logLocation, "shiny.services.location", QtInfoMsg)
@@ -184,7 +185,12 @@ namespace Shiny::Services {
 
     QString city = object.value("city").toString();
 
-    m_current = std::make_unique<LocationData>(latitude, longitude, countryCode, countryName, city);
-    emit currentChanged();
+    auto newCurrent =
+      std::make_unique<LocationData>(latitude, longitude, countryCode, countryName, city);
+
+    if (*m_current != *newCurrent) {
+      m_current = std::move(newCurrent);
+      emit currentChanged();
+    }
   }
 }

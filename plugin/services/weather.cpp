@@ -267,7 +267,10 @@ namespace Shiny::Services {
         return;
     }
 
-    m_now = std::make_unique<WeatherData>(condition, icon, temperature, isDay);
-    emit nowChanged();
+    auto newNow = std::make_unique<WeatherData>(condition, icon, temperature, isDay);
+    if (*m_now != *newNow) {
+      m_now = std::move(newNow);
+      emit nowChanged();
+    }
   }
 }
