@@ -188,7 +188,7 @@ namespace Shiny::Services {
     auto newCurrent =
       std::make_unique<LocationData>(latitude, longitude, countryCode, countryName, city);
 
-    if (*m_current != *newCurrent) {
+    if (!m_current || *m_current != *newCurrent) {
       m_current = std::move(newCurrent);
       emit currentChanged();
     }
