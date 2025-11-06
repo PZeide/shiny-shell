@@ -23,7 +23,7 @@ if("plugin" IN_LIST ENABLE_MODULES)
 endif()
 
 if("shell" IN_LIST ENABLE_MODULES)
-    foreach(dir assets components config layers modules services utils)
+    foreach(dir assets components config layers services utils)
         install(DIRECTORY ${dir} DESTINATION "${INSTALL_SHELL}")
     endforeach()
 
