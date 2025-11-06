@@ -6,6 +6,7 @@ import Quickshell
 import Quickshell.Io
 import Shiny.Services
 import qs.config
+import qs.components.misc
 
 Singleton {
   id: root
@@ -109,5 +110,17 @@ Singleton {
       root.set(target);
       return "ok";
     }
+  }
+
+  ShinyShortcut {
+    name: "brightness-incr"
+    description: "Increment brightness"
+    onPressed: root.set(root.userValue + (Config.brightness.increment / 100))
+  }
+
+  ShinyShortcut {
+    name: "brightness-decr"
+    description: "Decrement brightness"
+    onPressed: root.set(root.userValue - (Config.brightness.increment / 100))
   }
 }

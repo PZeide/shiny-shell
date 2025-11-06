@@ -9,7 +9,7 @@ import qs.config
 Scope {
   id: root
 
-  readonly property ShellScreen focusedScreen: Quickshell.screens.find(s => s.name === Hyprland.focusedMonitor?.name)
+  readonly property var focusedScreen: Quickshell.screens.find(s => s.name === Hyprland.focusedMonitor?.name)
   property int currentType: -1
   property int nextType: -1
   property bool inhibitClose

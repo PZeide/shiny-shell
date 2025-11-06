@@ -8,4 +8,5 @@ JsonObject {
   property string controller: ""
   property bool natural: true
   property bool smooth: true
+  property int increment: 5
 }
