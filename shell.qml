@@ -17,6 +17,7 @@ import qs.layers.lockscreen
 import qs.layers.overview
 import qs.layers.launcher
 import qs.layers.osd
+import qs.layers.session_control
 
 ShellRoot {
   settings.watchFiles: Environment.isDev
@@ -48,6 +49,11 @@ ShellRoot {
   LazyLoader {
     active: Config.osd.enabled
     Osd {}
+  }
+
+  LazyLoader {
+    active: Config.session.controlEnabled
+    SessionControl {}
   }
 
   Connections {

@@ -8,6 +8,7 @@ import Quickshell.Hyprland
 import qs.components.effects
 import qs.components.containers
 import qs.components.misc
+import qs.config
 
 Item {
   id: root
@@ -32,11 +33,11 @@ Item {
 
         ShinyWindow {
           id: window
-          name: "overview"
+          name: "session-control"
           screen: layer.screen
-          anchors.top: true
-          implicitWidth: screen.width
-          implicitHeight: screen.height
+          anchors.right: true
+          implicitWidth: drawer.implicitWidth + Config.appearance.padding.sm + elevation.size * 2
+          implicitHeight: drawer.implicitHeight + elevation.size * 2
           exclusionMode: ExclusionMode.Ignore
           WlrLayershell.layer: WlrLayer.Overlay
           WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
@@ -58,16 +59,14 @@ Item {
             target: drawer
           }
 
-          OverviewDrawer {
+          SessionControlDrawer {
             id: drawer
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.top
-            anchors.topMargin: -implicitHeight + layer.animationFactor * (screen.height * 0.07 + implicitHeight)
-            focus: true
-            screen: layer.screen
+            anchors.right: parent.right
+            anchors.rightMargin: -implicitWidth + layer.animationFactor * (Config.appearance.padding.sm + implicitWidth)
+            anchors.verticalCenter: parent.verticalCenter
 
-            Keys.onEscapePressed: layer.closeLayer()
             onShouldClose: layer.closeLayer()
+            Keys.onEscapePressed: layer.closeLayer()
           }
         }
       }
@@ -76,7 +75,7 @@ Item {
 
   IpcHandler {
     id: ipc
-    target: "overview"
+    target: "session-control"
 
     function toggle(): string {
       const layer = root.getActive();
@@ -107,20 +106,20 @@ Item {
   }
 
   ShinyShortcut {
-    name: "overview-open"
-    description: "Open overview"
+    name: "session-control-open"
+    description: "Open session control"
     onPressed: ipc.open()
   }
 
   ShinyShortcut {
-    name: "overview-close"
-    description: "Close overview"
+    name: "session-control-close"
+    description: "Close session control"
     onPressed: ipc.close()
   }
 
   ShinyShortcut {
-    name: "overview-toggle"
-    description: "Toggle overview"
+    name: "session-control-toggle"
+    description: "Toggle session control"
     onPressed: ipc.toggle()
   }
 }

@@ -4,6 +4,7 @@ import QtQuick
 import Quickshell.Io
 
 JsonObject {
+  property bool controlEnabled: true
   property string shutdownCommand: "systemctl poweroff"
   property string rebootCommand: "systemctl reboot"
   property string suspendCommand: "systemctl suspend"
