@@ -7,6 +7,7 @@ import Quickshell.Wayland
 import Quickshell.Hyprland
 import qs.components.containers
 import qs.components.misc
+import qs.components.effects
 import qs.config
 
 Item {
@@ -37,10 +38,10 @@ Item {
           name: "left-sidebar"
           screen: layer.screen
           anchors.top: true
-          margins.top: Config.bar.height + Config.appearance.spacing.xs
+          margins.top: Config.bar.height + Config.appearance.spacing.xs - elevation.size
           anchors.left: true
-          implicitWidth: drawer.implicitWidth + Config.appearance.spacing.xs
-          implicitHeight: drawer.implicitHeight
+          implicitWidth: drawer.implicitWidth + Config.appearance.spacing.xs + elevation.size * 2
+          implicitHeight: drawer.implicitHeight + elevation.size * 2
           exclusionMode: ExclusionMode.Ignore
           WlrLayershell.layer: WlrLayer.Overlay
           WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
@@ -57,6 +58,11 @@ Item {
             onCleared: layer.closeLayer()
           }
 
+          ShinyElevatedLayer {
+            id: elevation
+            target: drawer
+          }
+
           LeftSidebarDrawer {
             id: drawer
 
@@ -64,6 +70,8 @@ Item {
             implicitHeight: window.screen.height - Config.bar.height - Config.appearance.spacing.xs * 2
             anchors.left: parent.left
             anchors.leftMargin: -implicitWidth + layer.animationFactor * (Config.appearance.spacing.xs + implicitWidth)
+            anchors.top: parent.top
+            anchors.topMargin: elevation.size
             focus: true
 
             Keys.onEscapePressed: layer.closeLayer()

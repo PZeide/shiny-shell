@@ -28,9 +28,10 @@ ShinyRectangle {
   readonly property real overviewWorkspaceWidth: ((root.monitorTransformedWidth - horizontalReserved) * Config.overview.scale / monitor.scale)
   readonly property real overviewWorkspaceHeight: ((root.monitorTransformedHeight - verticalReserved) * Config.overview.scale / monitor.scale)
 
-  implicitWidth: layout.implicitWidth + Config.appearance.spacing.xs * 2
-  implicitHeight: layout.implicitHeight + Config.appearance.spacing.xs * 2
+  implicitWidth: layout.implicitWidth + Config.appearance.spacing.sm * 2
+  implicitHeight: layout.implicitHeight + Config.appearance.spacing.sm * 2
   color: Config.appearance.color.surface
+  radius: Config.appearance.rounding.md
 
   signal shouldClose
 
@@ -48,6 +49,7 @@ ShinyRectangle {
         required property int index
 
         spacing: Config.appearance.spacing.xs
+
         Repeater {
           model: Config.overview.columns
 
@@ -134,10 +136,10 @@ ShinyRectangle {
 
         readonly property HyprlandWorkspace workspace: window?.workspace ?? null
 
-        readonly property int windowWidth: window?.lastIpcObject.size[0] ?? 0
-        readonly property int windowHeight: window?.lastIpcObject.size[1] ?? 0
-        readonly property int windowX: window?.lastIpcObject.at[0] ?? 0
-        readonly property int windowY: window?.lastIpcObject.at[1] ?? 0
+        readonly property int windowWidth: window?.lastIpcObject.size?.[0] ?? 0
+        readonly property int windowHeight: window?.lastIpcObject.size?.[1] ?? 0
+        readonly property int windowX: window?.lastIpcObject.at?.[0] ?? 0
+        readonly property int windowY: window?.lastIpcObject.at?.[1] ?? 0
         readonly property real windowFocusHistory: window?.lastIpcObject.focusHistoryID ?? 0
         readonly property bool windowFloating: window?.lastIpcObject.floating ?? false
         readonly property bool windowPinned: window?.lastIpcObject.pinned ?? false

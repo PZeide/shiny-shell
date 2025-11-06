@@ -104,8 +104,7 @@ ShinyRectangle {
             property bool positionSupported: Player.preferred.lengthSupported && Player.preferred.positionSupported
 
             enabled: false
-            implicitWidth: 190
-            implicitHeight: 10
+            implicitTrackWidth: 190
             value: positionSupported ? Player.preferred.position / Player.preferred.length : 1
           }
 

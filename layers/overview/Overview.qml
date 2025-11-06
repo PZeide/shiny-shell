@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Hyprland
+import qs.components.effects
 import qs.components.containers
 import qs.components.misc
 
@@ -51,6 +52,11 @@ Item {
             windows: [window]
 
             onCleared: layer.closeLayer()
+          }
+
+          ShinyElevatedLayer {
+            id: elevation
+            target: drawer
           }
 
           OverviewDrawer {

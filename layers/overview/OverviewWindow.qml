@@ -72,7 +72,7 @@ ShinyRectangle {
   Drag.hotSpot.y: height / 2
   Drag.keys: ["window"]
 
-  ShinyMouseArea {
+  ShinyInteractiveLayer {
     id: mouseArea
     layerRadius: root.radius
     anchors.fill: parent

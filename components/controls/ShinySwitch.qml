@@ -1,14 +1,18 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Templates
 import qs.config
+import qs.components
 import qs.utils.animations
 
 // From https://github.com/end-4/dots-hyprland/blob/main/dots/.config/quickshell/ii/modules/common/widgets/StyledSwitch.qml
 Switch {
   id: root
 
+  property real implicitPressedIndicatorSize: implicitHeight - Math.min(2, implicitHeight / 10)
+  property real implicitCheckedIndicatorSize: implicitHeight - Math.min(4, implicitHeight / 5)
+  property real implicitIndicatorSize: implicitHeight / 2
   property color activeColor: Config.appearance.color.primary
   property color inactiveColor: Config.appearance.color.surfaceContainerHighest
 
@@ -22,8 +26,6 @@ Switch {
   }
 
   background: Rectangle {
-    width: parent.width
-    height: parent.height
     radius: Config.appearance.rounding.full
     color: root.checked ? root.activeColor : root.inactiveColor
     border.width: 1
@@ -38,26 +40,30 @@ Switch {
     }
   }
 
-  indicator: Rectangle {
-    readonly property real indicatorSize: (root.pressed || root.down) ? 18 : root.checked ? 16 : 10
+  indicator: ShinyRectangle {
+    readonly property real indicatorSize: (root.pressed || root.down) ? root.implicitPressedIndicatorSize : root.checked ? root.implicitCheckedIndicatorSize : root.implicitIndicatorSize
+    readonly property real leftMargin: (root.implicitHeight - root.implicitIndicatorSize) / 2
+    readonly property real pressedLeftMargin: (root.implicitHeight - root.implicitPressedIndicatorSize) / 2
+    readonly property real checkedLeftMargin: root.implicitWidth - root.implicitCheckedIndicatorSize - ((root.implicitHeight - root.implicitCheckedIndicatorSize) / 2)
+    readonly property real checkedPressedLeftMargin: root.implicitWidth - root.implicitPressedIndicatorSize - pressedLeftMargin
 
-    width: indicatorSize
-    height: indicatorSize
-    radius: Config.appearance.rounding.full
-    color: root.checked ? Config.appearance.color.overPrimary : Config.appearance.color.outline
     anchors.verticalCenter: parent.verticalCenter
     anchors.left: parent.left
-    anchors.leftMargin: root.checked ? ((root.pressed || root.down) ? 15 : 16) : ((root.pressed || root.down) ? 1 : 5)
+    anchors.leftMargin: root.checked ? ((root.pressed || root.down) ? checkedPressedLeftMargin : checkedLeftMargin) : ((root.pressed || root.down) ? pressedLeftMargin : leftMargin)
+    implicitWidth: indicatorSize
+    implicitHeight: indicatorSize
+    radius: Config.appearance.rounding.full
+    color: root.checked ? Config.appearance.color.overPrimary : Config.appearance.color.outline
 
     Behavior on anchors.leftMargin {
       StandardNumberAnimation {}
     }
 
-    Behavior on width {
+    Behavior on implicitWidth {
       StandardNumberAnimation {}
     }
 
-    Behavior on height {
+    Behavior on implicitHeight {
       StandardNumberAnimation {}
     }
 

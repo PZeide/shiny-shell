@@ -13,6 +13,7 @@ MouseArea {
   property real hoverOpacity: 0.08
 
   hoverEnabled: true
+  acceptedButtons: Qt.LeftButton
 
   onContainsMouseChanged: layer.opacity = (root.containsMouse) ? root.hoverOpacity : 0
   onContainsPressChanged: layer.opacity = (root.containsPress) ? root.clickOpacity : root.hoverOpacity

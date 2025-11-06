@@ -50,14 +50,13 @@ BarModuleWrapper {
         StandardColorAnimation {}
       }
 
-      ShinyMouseArea {
+      ShinyInteractiveLayer {
         visible: !workspaceRectangle.isActive
         anchors.fill: parent
         layerColor: workspaceRectangle.isOccupied ? Config.appearance.color.surface : Config.appearance.color.primary
         layerRadius: workspaceRectangle.radius
         clickOpacity: 0.45
         hoverOpacity: 0.25
-        acceptedButtons: Qt.LeftButton
 
         onPressed: event => {
           event.accepted = true;

@@ -17,7 +17,6 @@ ShinyRectangle {
   signal itemClicked(int index)
   signal itemEntered(int index)
 
-  width: parent.width
   implicitHeight: itemsContainer.implicitHeight + searchField.implicitHeight + container.anchors.margins * 2
   color: Config.appearance.color.surface
   radius: Config.appearance.rounding.md
@@ -71,7 +70,7 @@ ShinyRectangle {
         Item {
           visible: itemsRepeater.count > 0
           width: parent.width
-          height: 4
+          height: Config.appearance.spacing.xs
         }
       }
     }

@@ -24,24 +24,24 @@ ShellRoot {
   ScreenCorners {}
   Bar {}
 
-  Loader {
-    active: Config.leftSidebar.enabled
-    sourceComponent: LeftSidebar {}
-  }
-
-  Loader {
+  LazyLoader {
     active: Config.lockScreen.enabled
-    sourceComponent: LockScreen {}
+    LockScreen {}
   }
 
-  Loader {
+  LazyLoader {
+    active: Config.leftSidebar.enabled
+    LeftSidebar {}
+  }
+
+  LazyLoader {
     active: Config.overview.enabled
-    sourceComponent: Overview {}
+    Overview {}
   }
 
-  Loader {
+  LazyLoader {
     active: Config.launcher.enabled
-    sourceComponent: Launcher {}
+    Launcher {}
   }
 
   Connections {

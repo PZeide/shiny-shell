@@ -50,10 +50,6 @@ ColumnLayout {
       Item {
         Layout.fillWidth: true
       }
-
-      ShinyMenu {
-        id: providerMenu
-      }
     }
   }
 }

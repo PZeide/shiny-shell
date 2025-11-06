@@ -48,12 +48,11 @@ ShinyRectangle {
     font.weight: Font.DemiBold
   }
 
-  ShinyMouseArea {
+  ShinyInteractiveLayer {
     id: mouseArea
     visible: !root.isActive
     layerRadius: root.radius
     anchors.fill: parent
-    acceptedButtons: Qt.LeftButton
 
     onPressed: root.workspaceClicked()
   }

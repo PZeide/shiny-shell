@@ -7,6 +7,8 @@ import Quickshell.Wayland
 import Quickshell.Hyprland
 import qs.components.containers
 import qs.components.misc
+import qs.components.effects
+import qs.config
 
 Item {
   id: root
@@ -91,10 +93,17 @@ Item {
             onCleared: layer.closeLayer()
           }
 
+          ShinyElevatedLayer {
+            id: elevation
+            target: drawer
+          }
+
           LauncherDrawer {
             id: drawer
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: -height + layer.animationFactor * (8 + height)
+            anchors.bottomMargin: -height + layer.animationFactor * (Config.appearance.spacing.xs + height)
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: parent.width - elevation.size * 2
             items: backend.result
             selectedIndex: layer.selectedItemIndex
 

@@ -46,7 +46,7 @@ ShinyRectangle {
             root.selectedItem = this;
         }
 
-        ShinyMouseArea {
+        ShinyInteractiveLayer {
           id: mouseArea
           anchors.fill: parent
           acceptedButtons: element.selected ? Qt.NoButton : Qt.LeftButton
