@@ -110,17 +110,27 @@ Singleton {
       root.set(target);
       return "ok";
     }
+
+    function increment(): string {
+      root.set(root.userValue + (Config.brightness.increment / 100));
+      return "ok";
+    }
+
+    function decrement(): string {
+      root.set(root.userValue - (Config.brightness.increment / 100));
+      return "ok";
+    }
   }
 
   ShinyShortcut {
-    name: "brightness-incr"
+    name: "brightness-increment"
     description: "Increment brightness"
-    onPressed: root.set(root.userValue + (Config.brightness.increment / 100))
+    onPressed: ipc.increment()
   }
 
   ShinyShortcut {
-    name: "brightness-decr"
+    name: "brightness-decrement"
     description: "Decrement brightness"
-    onPressed: root.set(root.userValue - (Config.brightness.increment / 100))
+    onPressed: ipc.decrement()
   }
 }
