@@ -16,6 +16,7 @@ import qs.layers.left_sidebar
 import qs.layers.lockscreen
 import qs.layers.overview
 import qs.layers.launcher
+import qs.layers.osd
 
 ShellRoot {
   settings.watchFiles: Environment.isDev
@@ -42,6 +43,11 @@ ShellRoot {
   LazyLoader {
     active: Config.launcher.enabled
     Launcher {}
+  }
+
+  LazyLoader {
+    active: Config.osd.enabled
+    Osd {}
   }
 
   Connections {

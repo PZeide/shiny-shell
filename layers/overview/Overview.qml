@@ -32,7 +32,6 @@ Item {
 
         ShinyWindow {
           id: window
-
           name: "overview"
           screen: layer.screen
           anchors.top: true
