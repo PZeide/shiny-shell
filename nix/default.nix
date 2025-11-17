@@ -51,7 +51,8 @@
   };
 
   runtimeDeps = [
-    rembg
+    #FIXME gradio failed to build
+    #rembg
     app2unit
     xdg-terminal-exec
     pipewire
