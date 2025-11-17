@@ -9,10 +9,10 @@ import qs.config
 Scope {
   id: root
 
-  readonly property var focusedScreen: Quickshell.screens.find(s => s.name === Hyprland.focusedMonitor?.name)
+  readonly property ShellScreen focusedScreen: Quickshell.screens.find(s => s.name === Hyprland.focusedMonitor?.name) ?? null
   property int currentType: -1
   property int nextType: -1
-  property bool inhibitClose
+  property bool inhibitClose: false
 
   enum Type {
     AudioSink,

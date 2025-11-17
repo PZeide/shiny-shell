@@ -19,6 +19,7 @@
   libqalculate,
   app2unit,
   xdg-terminal-exec,
+  pipewire,
   ...
 }: let
   plugin = stdenv.mkDerivation {
@@ -53,6 +54,7 @@
     rembg
     app2unit
     xdg-terminal-exec
+    pipewire
   ];
 
   fontconfig = makeFontsConf {
