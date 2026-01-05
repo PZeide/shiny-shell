@@ -8,7 +8,7 @@
   pkg-config,
   qt6,
   quickshell,
-  recursive,
+  vegur,
   iosevka,
   material-symbols,
   nerd-fonts,
@@ -51,8 +51,7 @@
   };
 
   runtimeDeps = [
-    #FIXME gradio failed to build
-    #rembg
+    rembg
     app2unit
     xdg-terminal-exec
     pipewire
@@ -61,7 +60,7 @@
   fontconfig = makeFontsConf {
     # Default fonts
     fontDirectories = [
-      recursive
+      vegur
       iosevka
       material-symbols
       nerd-fonts.symbols-only

@@ -39,6 +39,7 @@
           inputsFrom = [shiny-shell shiny-shell.plugin];
 
           packages = with pkgs; [
+            # Fonts for development tools
             vegur
             iosevka
             material-symbols

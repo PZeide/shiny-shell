@@ -18,7 +18,6 @@ import qs.layers.overview
 import qs.layers.launcher
 import qs.layers.osd
 import qs.layers.session_control
-import qs.layers.notification_popups
 
 ShellRoot {
   settings.watchFiles: Environment.isDev
