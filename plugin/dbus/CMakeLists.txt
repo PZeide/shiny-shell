@@ -1,7 +1,9 @@
 qml_module(shiny-dbus
     URI Shiny.DBus
     SOURCES
-        logindhandler.hpp logindhandler.cpp
+        geoclueagent.hpp geoclueagent.cpp
+        loginmanager.hpp loginmanager.cpp
+        sleepinhibitor.hpp sleepinhibitor.cpp
     LIBRARIES
         Qt::DBus
 )

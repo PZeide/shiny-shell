@@ -1,16 +1,15 @@
 #pragma once
 
-#include <qcontainerfwd.h>
-#include <qdbusargument.h>
-#include <qdbusconnection.h>
-#include <qdbusinterface.h>
-#include <qdbuspendingcall.h>
-#include <qdbusunixfiledescriptor.h>
-#include <qloggingcategory.h>
-#include <qmetaobject.h>
-#include <qobject.h>
-#include <qqmlintegration.h>
-#include <qtmetamacros.h>
+#include <QDBusConnection>
+#include <QDBusInterface>
+#include <QDBusPendingCall>
+#include <QDBusUnixFileDescriptor>
+#include <QLoggingCategory>
+#include <QObject>
+#include <QProperty>
+#include <QQmlEngine>
+#include <QStringView>
+#include <qproperty.h>
 
 namespace Shiny::DBus {
   Q_DECLARE_LOGGING_CATEGORY(logLogindHandler)
@@ -20,28 +19,41 @@ namespace Shiny::DBus {
     QML_ELEMENT
 
     // clang-format off
-    Q_PROPERTY(bool valid READ valid)
-    Q_PROPERTY(bool sleepInhibited READ sleepInhibited WRITE setSleepInhibited NOTIFY sleepInhibitedChanged)
-    Q_PROPERTY(QString sleepInhibitDescription READ sleepInhibitDescription WRITE setSleepInhibitDescription
-               NOTIFY sleepInhibitDescriptionChanged)
-    Q_PROPERTY(bool lockHint READ lockHint WRITE setLockHint) // No NOTIFY because the service don't monitor for external changes
+    Q_PROPERTY(bool valid READ valid CONSTANT)
+    Q_PROPERTY(QString sleepInhibitDescription BINDABLE sleepInhibitDescriptionBindable FINAL)
+    Q_PROPERTY(bool sleepInhibited BINDABLE sleepInhibitedBindable)
+    Q_PROPERTY(bool lockHint BINDABLE lockHintBindable)
     // clang-format on
 
   public:
     explicit LogindHandler(QObject* parent = nullptr);
+    ~LogindHandler() override = default;
 
-    bool valid() const;
+    [[nodiscard]] bool valid() const;
 
-    bool sleepInhibited() const;
-    void setSleepInhibited(bool sleepInhibited);
+    QProperty<bool> sleepInhibited{this, "sleepInhibited", false};
 
-    QString sleepInhibitDescription() const;
-    void setSleepInhibitDescription(QString sleepInhibitDescription);
+    /** @brief Inhibit or uninhibit sleep */
+    Q_INVOKABLE void setSleepInhibited(bool sleepInhibited);
 
-    bool lockHint() const;
-    void setLockHint(bool lockHint);
+    /** @brief Sleep inhibit description property */
+    QProperty<QString> sleepInhibitDescription{
+      this,
+      "sleepInhibitDescription",
+      QStringLiteral("Cleanup before sleep")
+    };
+
+    /** @brief Sets the sleep inhibit description */
+    Q_INVOKABLE void setSleepInhibitDescription(QStringView sleepInhibitDescription);
+
+    /** @brief Lock hint state property */
+    QProperty<bool> lockHint{this, "lockHint", false};
+
+    /** @brief Sets the lock hint */
+    Q_INVOKABLE void setLockHint(bool lockHint);
 
   signals:
+    void validChanged();
     void sleepInhibitedChanged();
     void sleepInhibitDescriptionChanged();
     void aboutToSleep();
@@ -54,13 +66,14 @@ namespace Shiny::DBus {
     void handlePrepareForSleep(bool start);
 
   private:
-    QDBusConnection m_connection = QDBusConnection::systemBus();
+    QDBusConnection m_connection{QDBusConnection::systemBus()};
     QString m_sessionPath;
     bool m_prepareForSleepBound = false;
     bool m_lockBound = false;
     bool m_unlockBound = false;
     QDBusUnixFileDescriptor m_sleepInhibitFd;
-    QString m_sleepInhibitDescription = "Cleanup before sleep";
+
+    Q_OBJECT_BINDABLE_PROPERTY(LogindHandler, QString, sleepInhibitDescriptionBindable)
 
     void connectNotify(const QMetaMethod& signal) override;
     void bindPrepareForSleep();

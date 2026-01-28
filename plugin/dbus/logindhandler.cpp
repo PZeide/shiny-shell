@@ -1,13 +1,11 @@
 #include "logindhandler.hpp"
-#include <qdbusconnection.h>
-#include <qdbuserror.h>
-#include <qdbusextratypes.h>
-#include <qdbusinterface.h>
-#include <qdbusmessage.h>
-#include <qdbusreply.h>
-#include <qdbusunixfiledescriptor.h>
-#include <qlogging.h>
-#include <qobject.h>
+#include <QDBusError>
+#include <QDBusInterface>
+#include <QDBusMessage>
+#include <QDBusReply>
+#include <QDBusUnixFileDescriptor>
+#include <QLoggingCategory>
+#include <QObject>
 #include <unistd.h>
 
 namespace Shiny::DBus {
@@ -46,7 +44,7 @@ namespace Shiny::DBus {
     return m_connection.isConnected() && !m_sessionPath.isEmpty();
   }
 
-  bool LogindHandler::sleepInhibited() const {
+  bool LogindHandler::isSleepInhibited() const {
     return m_sleepInhibitFd.isValid();
   }
 
@@ -80,15 +78,15 @@ namespace Shiny::DBus {
     }
   }
 
-  QString LogindHandler::sleepInhibitDescription() const {
+  QString LogindHandler::getSleepInhibitDescription() const {
     return m_sleepInhibitDescription;
   }
 
-  void LogindHandler::setSleepInhibitDescription(QString sleepInhibitDescription) {
+  void LogindHandler::setSleepInhibitDescription(QStringView sleepInhibitDescription) {
     if (m_sleepInhibitDescription == sleepInhibitDescription)
       return;
 
-    m_sleepInhibitDescription = sleepInhibitDescription;
+    m_sleepInhibitDescription = sleepInhibitDescription.toString();
     emit sleepInhibitDescriptionChanged();
 
     if (m_sleepInhibitFd.isValid()) {
@@ -102,17 +100,13 @@ namespace Shiny::DBus {
     if (!valid())
       return false;
 
-    QDBusMessage message = QDBusMessage::createMethodCall(
-      LOGIN1_SERVICE,
-      m_sessionPath,
-      PROPERTY_INTERFACE,
-      "SetLockedHint"
-    );
+    QDBusMessage message =
+      QDBusMessage::createMethodCall(LOGIN1_SERVICE, m_sessionPath, PROPERTY_INTERFACE, "Get");
 
     message.setArguments({LOGIN1_SESSION_INTERFACE, "LockedHint"});
     QDBusReply<QDBusVariant> reply = m_connection.call(message);
     if (!reply.isValid()) {
-      qCWarning(logLogindHandler) << "Failed to get lock hint";
+      qCWarning(logLogindHandler) << "Failed to get lock hint:" << reply.error().message();
       return false;
     }
 
