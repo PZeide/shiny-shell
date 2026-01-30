@@ -1,0 +1,8 @@
+.direnv/
+
+# CPP
+.cache/
+build/
+
+# QML
+.qmlls.ini

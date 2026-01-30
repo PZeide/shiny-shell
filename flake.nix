@@ -1,0 +1,60 @@
+{
+  description = "Shiny Shell | @PZeide";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+
+    quickshell = {
+      url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs = {
+    self,
+    nixpkgs,
+    flake-utils,
+    quickshell,
+    ...
+  }:
+    (flake-utils.lib.eachSystem ["x86_64-linux" "aarch64-linux"] (
+      system: let
+        pkgs = nixpkgs.legacyPackages.${system};
+
+        shiny-shell = pkgs.callPackage ./nix/default.nix {
+          rev = self.rev or self.dirtyRev;
+
+          quickshell = quickshell.packages.${system}.default.override {
+            withX11 = false;
+            withI3 = false;
+          };
+        };
+      in {
+        devShells.default = pkgs.mkShell {
+          inputsFrom = [shiny-shell shiny-shell.plugin];
+
+          packages = with pkgs; [
+            # Fonts for development tools
+            vegur
+            iosevka
+            material-symbols
+            nerd-fonts.symbols-only
+          ];
+
+          shellHook = ''
+            # Add our plugin to the QML path
+            export QML2_IMPORT_PATH="$PWD/build/qml:''${QML2_IMPORT_PATH:-}"
+          '';
+        };
+
+        packages = rec {
+          inherit shiny-shell;
+          default = shiny-shell;
+        };
+      }
+    ))
+    // {
+      homeManagerModules.default = import ./nix/hm-module.nix self;
+    };
+}
