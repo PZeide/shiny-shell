@@ -43,6 +43,7 @@
           ];
 
           shellHook = ''
+            export SHINY_SHELL_DEVELOPMENT=1
             # Add our plugin to the QML path
             export QML2_IMPORT_PATH="$PWD/build/qml:''${QML2_IMPORT_PATH:-}"
           '';

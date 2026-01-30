@@ -4,7 +4,7 @@ set(QT_QML_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/qml")
 qt_standard_project_setup(REQUIRES 6.10)
 
 function(qml_module arg_TARGET)
-    cmake_parse_arguments(PARSE_ARGV 1 arg "" "URI" "SOURCES;LIBRARIES;DEPENDENCIES")
+    cmake_parse_arguments(PARSE_ARGV 1 arg "" "URI" "SOURCES;LIBRARIES;DEPENDENCIES;QML_FILES")
 
     qt_add_qml_module(${arg_TARGET}
         URI ${arg_URI}
@@ -29,6 +29,14 @@ function(qml_module arg_TARGET)
     install(TARGETS "${module_plugin_target}" LIBRARY DESTINATION "${module_dir}" RUNTIME DESTINATION "${module_dir}")
     install(FILES "${module_qmldir}" DESTINATION "${module_dir}")
     install(FILES "${module_typeinfo}" DESTINATION "${module_dir}")
+
+    # Install QML files if provided
+    if(arg_QML_FILES)
+        foreach(qml_file IN LISTS arg_QML_FILES)
+            get_filename_component(qml_file_name ${qml_file} NAME)
+            install(FILES ${qml_file} DESTINATION "${module_dir}")
+        endforeach()
+    endif()
 
     target_link_libraries(${arg_TARGET} PRIVATE Qt::Core Qt::Gui Qt::Qml ${arg_LIBRARIES})
 endfunction()

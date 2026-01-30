@@ -1,27 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-execute_process(
-    COMMAND git rev-parse HEAD
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    RESULT_VARIABLE GIT_RESULT
-    OUTPUT_VARIABLE GIT_REV
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-execute_process(
-    COMMAND git status --porcelain
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    OUTPUT_VARIABLE GIT_STATUS
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-if(NOT "${GIT_STATUS}" STREQUAL "")
-    set(VERSION "${GIT_REV}-dirty")
-else()
-    set(VERSION "${GIT_REV}")
-endif()
-
-project(shiny-shell VERSION ${VERSION} LANGUAGES CXX)
+project(shiny-shell VERSION 0.0.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
