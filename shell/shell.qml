@@ -6,7 +6,15 @@
 //@ pragma UseQApplication
 
 import Quickshell
+import Shiny.Location
 
 ShellRoot {
     id: root
+
+    GeoClueAgent {
+        onRequestReceived: request => {
+            console.info(request.desktopId);
+            request.authorize(true);
+        }
+    }
 }
