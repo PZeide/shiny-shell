@@ -14,7 +14,6 @@
   nerd-fonts,
   librebarcode-fonts,
   makeFontsConf,
-  rembg,
   rapidfuzz-cpp,
   libqalculate,
   app2unit,
@@ -51,7 +50,6 @@
   };
 
   runtimeDeps = [
-    rembg
     app2unit
     xdg-terminal-exec
     pipewire
