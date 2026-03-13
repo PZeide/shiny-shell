@@ -30,15 +30,10 @@ function(qml_module arg_TARGET)
     install(FILES "${module_qmldir}" DESTINATION "${module_dir}")
     install(FILES "${module_typeinfo}" DESTINATION "${module_dir}")
 
-    # Install QML files if provided
-    if(arg_QML_FILES)
-        foreach(qml_file IN LISTS arg_QML_FILES)
-            get_filename_component(qml_file_name ${qml_file} NAME)
-            install(FILES ${qml_file} DESTINATION "${module_dir}")
-        endforeach()
-    endif()
-
     target_link_libraries(${arg_TARGET} PRIVATE Qt::Core Qt::Gui Qt::Qml ${arg_LIBRARIES})
 endfunction()
 
+add_subdirectory(brightness)
+add_subdirectory(launcher)
 add_subdirectory(location)
+add_subdirectory(session)

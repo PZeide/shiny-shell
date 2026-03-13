@@ -1,0 +1,117 @@
+pragma ComponentBehavior: Bound
+
+import QtQuick
+import QtQuick.Templates
+import QtQuick.Layouts
+import qs.components
+import qs.config
+import qs.utils
+import qs.utils.animations
+
+MenuItem {
+  id: root
+
+  readonly property bool hasIcon: iconName !== ""
+  property string iconName: ""
+  property real iconFill: 0
+  property int iconGrade: 0
+  property alias iconFont: icon.font
+
+  implicitHeight: 36
+  implicitWidth: contentLayout.implicitWidth + leftPadding + rightPadding
+  verticalPadding: Config.appearance.padding.xs
+  horizontalPadding: Config.appearance.padding.sm
+  implicitTextPadding: (icon.visible ? (icon.implicitWidth + spacing) : 0) + (checkCircle.visible ? (checkCircle.implicitWidth + spacing) : 0)
+  spacing: Config.appearance.spacing.xs
+
+  background: ShinyRectangle {
+    radius: Config.appearance.rounding.xs
+
+    color: {
+      if (!root.enabled) {
+        return "transparent";
+      } else if (root.down) {
+        return Colors.transparentize(Config.appearance.color.primary, 0.85);
+      } else if (root.hovered) {
+        return Colors.transparentize(Config.appearance.color.primary, 0.92);
+      } else {
+        return "transparent";
+      }
+    }
+  }
+
+  contentItem: RowLayout {
+    id: contentLayout
+    anchors.verticalCenter: parent.verticalCenter
+    spacing: root.spacing
+
+    ShinyIcon {
+      id: icon
+      Layout.alignment: Qt.AlignLeft
+      visible: root.hasIcon && !root.checkable
+      icon: root.iconName
+      fill: root.iconFill
+      grade: root.iconGrade
+      font.pointSize: Config.appearance.font.size.lg
+      color: root.enabled ? Config.appearance.color.overSurface : Colors.transparentize(Config.appearance.color.overSurface, 0.3)
+
+      Behavior on color {
+        EffectColorAnimation {}
+      }
+    }
+
+    ShinyRectangle {
+      id: checkCircle
+      visible: root.checkable
+      border.width: 1
+      radius: Config.appearance.rounding.full
+      implicitWidth: 16
+      implicitHeight: 16
+
+      border.color: {
+        if (!root.checked) {
+          return root.enabled ? Config.appearance.color.outline : Colors.transparentize(Config.appearance.color.outline, 0.3);
+        } else {
+          return "transparent";
+        }
+      }
+
+      color: {
+        if (root.checked) {
+          return root.enabled ? Config.appearance.color.primary : Colors.transparentize(Config.appearance.color.primary, 0.3);
+        } else {
+          return "transparent";
+        }
+      }
+
+      ShinyIcon {
+        anchors.centerIn: parent
+        visible: root.checked
+        icon: "check"
+        color: root.enabled ? Config.appearance.color.overPrimary : Colors.transparentize(Config.appearance.color.overPrimary, 0.3)
+      }
+    }
+
+    ShinyText {
+      Layout.fillWidth: true
+      text: root.text
+      font.pointSize: Config.appearance.font.size.md
+      color: root.enabled ? Config.appearance.color.overSurface : Colors.transparentize(Config.appearance.color.overSurface, 0.3)
+      leftPadding: root.textPadding - root.implicitTextPadding
+      wrapMode: Text.NoWrap
+      elide: Text.ElideRight
+    }
+
+    ShinyIcon {
+      Layout.alignment: Qt.AlignRight
+      visible: root.subMenu !== null
+      icon: "chevron_right"
+      font.pointSize: Config.appearance.font.size.lg
+      color: root.enabled ? Config.appearance.color.overSurface : Colors.transparentize(Config.appearance.color.overSurface, 0.3)
+
+      Behavior on color {
+        EffectColorAnimation {}
+      }
+    }
+  }
+}

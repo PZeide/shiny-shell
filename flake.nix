@@ -25,10 +25,15 @@
         shiny-shell = pkgs.callPackage ./nix/default.nix {
           rev = self.rev or self.dirtyRev;
 
-          quickshell = quickshell.packages.${system}.default.override {
-            withX11 = false;
-            withI3 = false;
-          };
+          quickshell =
+            (quickshell.packages.${system}.default.override {
+              withX11 = false;
+              withI3 = false;
+            }).withModules [
+              pkgs.qt6.qtsvg
+              pkgs.qt6.qtimageformats
+              pkgs.qt6.qtmultimedia
+            ];
         };
       in {
         devShells.default = pkgs.mkShell {
@@ -43,7 +48,7 @@
           ];
 
           shellHook = ''
-            export SHINY_SHELL_DEVELOPMENT=1
+            export SHINYSHELL_ENVIRONMENT=dev
             # Add our plugin to the QML path
             export QML2_IMPORT_PATH="$PWD/build/qml:''${QML2_IMPORT_PATH:-}"
           '';
@@ -56,6 +61,7 @@
       }
     ))
     // {
+      nixosModules.greeter = import ./nix/greeter.nix self;
       homeManagerModules.default = import ./nix/hm-module.nix self;
     };
 }

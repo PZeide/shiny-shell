@@ -1,9 +1,8 @@
----
+# yaml-language-server: $schema=https://json.schemastore.org/clang-format.json
 BasedOnStyle: LLVM
+Language: Cpp
 IndentWidth: 4
 ColumnLimit: 120
----
-Language: Cpp
 DerivePointerAlignment: false
 PointerAlignment: Left
 AccessModifierOffset: -4

@@ -1,8 +1,11 @@
+# devenv
 .direnv/
 
-# CPP
-.cache/
+# cmake
 build/
 
-# QML
-.qmlls.ini
+# clangd
+.cache/
+
+# rust
+target/

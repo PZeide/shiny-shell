@@ -73,6 +73,7 @@ in
 
     nativeBuildInputs = [cmake ninja makeWrapper qt6.wrapQtAppsHook];
     buildInputs = [quickshell plugin qt6.qtbase];
+
     propagatedBuildInputs = runtimeDeps;
 
     cmakeFlags = [
@@ -85,6 +86,11 @@ in
         --prefix PATH : "${lib.makeBinPath runtimeDeps}" \
         --set FONTCONFIG_FILE "${fontConfig}" \
       	--add-flags "-p $out/share/shiny-shell"
+
+      makeWrapper ${quickshell}/bin/qs $out/bin/shiny-shell-greeter \
+        --prefix PATH : "${lib.makeBinPath runtimeDeps}" \
+        --set FONTCONFIG_FILE "${fontConfig}" \
+       	--add-flags "-p $out/share/shiny-shell/greeter.qml"
     '';
 
     passthru = {

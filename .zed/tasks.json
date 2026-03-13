@@ -1,0 +1,19 @@
+[
+  {
+    "label": "Configure & Build plugin (Debug)",
+    "command": "cmake -DCMAKE_BUILD_TYPE=Debug -B ./build && cmake --build ./build",
+    "allow_concurrent_runs": true
+  },
+  {
+    "label": "Run shell",
+    "command": "quickshell -p shell",
+    "env": { "SHINY_SHELL_ENV": "dev" },
+    "allow_concurrent_runs": true
+  },
+  {
+    "label": "Run shell (Debug)",
+    "command": "quickshell -p shell -v",
+    "env": { "SHINY_SHELL_ENV": "dev" },
+    "allow_concurrent_runs": true
+  }
+]

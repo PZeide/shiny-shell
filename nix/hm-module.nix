@@ -15,13 +15,13 @@ in {
       package = mkOption {
         type = types.package;
         default = self.packages.${system}.default;
-        description = "Package of shiny-shell";
+        description = "Package to use for shiny-shell";
       };
 
       settings = mkOption {
         type = types.attrs;
         default = {};
-        description = "shiny-sell settings";
+        description = "Settings for shiny-shell";
       };
     };
   };

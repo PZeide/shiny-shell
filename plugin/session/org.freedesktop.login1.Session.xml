@@ -1,0 +1,15 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"https://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.freedesktop.login1.Session">
+    <property name="LockedHint" type="b" access="read">
+    </property>
+    <method name="SetLockedHint">
+      <arg type="b" name="locked" direction="in"/>
+    </method>
+    <signal name="Lock">
+    </signal>
+    <signal name="Unlock">
+    </signal>
+  </interface>
+</node>
