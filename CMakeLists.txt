@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(ENABLE_MODULES "shell;plugin;assistant" CACHE STRING "Modules to build/install")
+set(ENABLE_MODULES "shell;plugin" CACHE STRING "Modules to build/install")
 set(INSTALL_SHELL "/etc/xdg/quickshell/shiny-shell" CACHE STRING "Installation directory of the shell")
 set(INSTALL_PLUGIN "/usr/lib/qt6/qml" CACHE STRING "Installation directory of the plugin")
 set(INSTALL_ASSISTANT "/usr/libexec/shiny-shell" CACHE STRING "Installation directory of the assistant sidecar")
@@ -26,8 +26,4 @@ endif()
 
 if("shell" IN_LIST ENABLE_MODULES)
     add_subdirectory(shell)
-endif()
-
-if("assistant" IN_LIST ENABLE_MODULES)
-    add_subdirectory(assistant)
 endif()

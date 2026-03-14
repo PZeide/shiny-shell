@@ -34,6 +34,7 @@ function(qml_module arg_TARGET)
 endfunction()
 
 add_subdirectory(brightness)
+add_subdirectory(greeter)
 add_subdirectory(launcher)
 add_subdirectory(location)
 add_subdirectory(session)

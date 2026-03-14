@@ -7,5 +7,5 @@ build/
 # clangd
 .cache/
 
-# rust
-target/
+# nix
+result

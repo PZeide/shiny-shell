@@ -1,19 +1,37 @@
 [
-  {
-    "label": "Configure & Build plugin (Debug)",
-    "command": "cmake -DCMAKE_BUILD_TYPE=Debug -B ./build && cmake --build ./build",
-    "allow_concurrent_runs": true
-  },
-  {
-    "label": "Run shell",
-    "command": "quickshell -p shell",
-    "env": { "SHINY_SHELL_ENV": "dev" },
-    "allow_concurrent_runs": true
-  },
-  {
-    "label": "Run shell (Debug)",
-    "command": "quickshell -p shell -v",
-    "env": { "SHINY_SHELL_ENV": "dev" },
-    "allow_concurrent_runs": true
-  }
+	{
+		"label": "Configure & Build plugin (Debug)",
+		"command": "cmake -DCMAKE_BUILD_TYPE=Debug -B ./build && cmake --build ./build",
+		"allow_concurrent_runs": true
+	},
+	{
+		"label": "Run shell",
+		"command": "quickshell -p shell",
+		"allow_concurrent_runs": true
+	},
+	{
+		"label": "Run shell (Debug)",
+		"command": "quickshell -p shell -v",
+		"allow_concurrent_runs": true
+	},
+	{
+		"label": "Run greeter",
+		"command": "quickshell -p shell/greeter.qml",
+		"env": {
+			"SHINYSHELL_GREETER_SESSION": "hyprland-uwsm",
+			"SHINYSHELL_GREETER_USER": "greeter"
+		},
+		"allow_concurrent_runs": true
+	},
+	{
+		"label": "Build greeter VM (NixOS)",
+		"command": "nixos-rebuild build-vm --flake .#test-greeter-vm",
+		"allow_concurrent_runs": true
+	},
+	{
+		"label": "Run greeter VM (NixOS)",
+		"command": "result/bin/run-greeter-dev-vm",
+		"env": { "NIX_DISK_IMAGE": ".cache/greeter-dev.qcow2" },
+		"allow_concurrent_runs": true
+	}
 ]

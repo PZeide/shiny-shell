@@ -48,7 +48,9 @@
           ];
 
           shellHook = ''
-            export SHINYSHELL_ENVIRONMENT=dev
+            export SHINYSHELL_ENVIRONMENT="dev"
+            export SHINYSHELL_CONFIG="$PWD/dev/config-dev.json"
+
             # Add our plugin to the QML path
             export QML2_IMPORT_PATH="$PWD/build/qml:''${QML2_IMPORT_PATH:-}"
           '';
@@ -63,5 +65,10 @@
     // {
       nixosModules.greeter = import ./nix/greeter.nix self;
       homeManagerModules.default = import ./nix/hm-module.nix self;
+
+      nixosConfigurations.test-greeter-vm = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [(import ./dev/greeter-vm.nix self)];
+      };
     };
 }

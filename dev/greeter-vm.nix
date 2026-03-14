@@ -1,10 +1,11 @@
-{modulesPath, ...}: {
+self: {modulesPath, ...}: {
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
     (modulesPath + "/virtualisation/qemu-vm.nix")
+    self.nixosModules.greeter
   ];
 
-  networking.hostName = "greeter-test";
+  networking.hostName = "greeter-dev";
 
   nixpkgs = {
     hostPlatform = "x86_64-linux";
@@ -17,9 +18,9 @@
     cores = 2;
   };
 
-  users.users.thibaud = {
+  users.users.dev = {
     enable = true;
-    initialPassword = "invoke_wife";
+    initialPassword = "wife";
     createHome = true;
     isNormalUser = true;
     extraGroups = ["wheel"];
@@ -32,6 +33,8 @@
 
   programs.shiny-shell-greeter = {
     enable = true;
+    user = "dev";
+    session = "hyprland";
   };
 
   system.stateVersion = "25.11";

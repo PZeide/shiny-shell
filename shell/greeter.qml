@@ -10,47 +10,25 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
-import Quickshell.Services.Greetd
-import qs.utils
-import qs.layers.wallpaper
+import qs.layers.greeter
 
 ShellRoot {
-  settings.watchFiles: Environment.isDev
+  id: root
 
+  readonly property bool isDev: Quickshell.env("SHINYSHELL_ENVIRONMENT") === "dev"
   readonly property string session: Quickshell.env("SHINYSHELL_GREETER_SESSION")
   readonly property string user: Quickshell.env("SHINYSHELL_GREETER_USER")
 
-  FloatingWindow {
-    id: window
-    fullscreen: true
+  settings.watchFiles: isDev
 
-    WallpaperImage {
-      imageWidth: window.width
-      imageHeight: window.height
-    }
-  }
-
-  Connections {
-    function onAuthMessage(message, error, responseRequired, echoResponse) {
-      console.log("[MSG] " + message);
-      console.log("[ERR] " + error);
-      console.log("[RESREQ] " + responseRequired);
-      console.log("[ECHO] " + echoResponse);
-
-      if (responseRequired) {
-        Greetd.respond("Thibaud");
-      }
-    }
-
-    function onReadyToLaunch() {
-      console.log("[GREETD EXEC] thibaud");
-      Greetd.launch("exec uwsm start -eD Hyprland hyprland.desktop");
-    }
-
-    target: Greetd
+  Greeter {
+    session: root.session
+    user: root.user
   }
 
   Component.onCompleted: {
-    Greetd.createSession("thibaud");
+    if (!root.user || !root.session) {
+      console.error("No user or session found, greeter will not function properly");
+    }
   }
 }

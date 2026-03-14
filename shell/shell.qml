@@ -11,7 +11,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Hyprland
-import qs.utils
 import qs.services
 import qs.config
 import qs.layers.launcher
@@ -21,7 +20,7 @@ import qs.layers.polkit
 import qs.layers.wallpaper
 
 ShellRoot {
-  settings.watchFiles: Environment.isDev
+  settings.watchFiles: Quickshell.env("SHINYSHELL_ENVIRONMENT") === "dev"
 
   Wallpaper {}
 

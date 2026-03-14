@@ -21,7 +21,7 @@ Singleton {
   property alias wallpaper: adapter.wallpaper
 
   FileView {
-    path: `${Paths.configUrl}/${Environment.isDev ? "config-dev.json" : "config.json"}`
+    path: Quickshell.env("SHINYSHELL_CONFIG") ?? `${Paths.configUrl}/config.json`
     watchChanges: true
     onFileChanged: reload()
     onAdapterUpdated: writeAdapter()
