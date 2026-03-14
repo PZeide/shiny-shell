@@ -75,14 +75,15 @@ self: {
   hyprConf = pkgs.writeText "shiny-shell-greeter-hyprland.conf" (
     if cfg.useHyprlandUserOptions
     then ''
+      ${inputs.home-manager.lib.hm.generators.toHyprconf {
+        attrs = userHyprConfig;
+        importantPrefixes = config.home-manager.users.${cfg.user}.wayland.windowManager.hyprland.importantPrefixes;
+      }}
       ${baseHyprConfig}
-
-      ${inputs.home-manager.lib.hm.generators.toHyprconf {attrs = userHyprConfig;}}
     ''
     else ''
-      ${baseHyprConfig}
-
       ${monitorHyprConfig}
+      ${baseHyprConfig}
     ''
   );
 in {
