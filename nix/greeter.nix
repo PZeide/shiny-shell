@@ -2,6 +2,7 @@ self: {
   config,
   pkgs,
   lib,
+  inputs,
   ...
 }: let
   inherit (pkgs.stdenv.hostPlatform) system;
@@ -76,7 +77,7 @@ self: {
     then ''
       ${baseHyprConfig}
 
-      ${lib.hm.generators.toHyprconf {attrs = userHyprConfig;}}
+      ${inputs.home-manager.lib.hm.generators.toHyprconf {attrs = userHyprConfig;}}
     ''
     else ''
       ${baseHyprConfig}
