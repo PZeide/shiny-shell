@@ -9,6 +9,7 @@ Singleton {
   id: root
 
   property alias appearance: adapter.appearance
+  property alias bar: adapter.bar
   property alias brightness: adapter.brightness
   property alias launcher: adapter.launcher
   property alias locale: adapter.locale
@@ -30,6 +31,7 @@ Singleton {
       id: adapter
 
       property AppearanceConfig appearance: AppearanceConfig {}
+      property BarConfig bar: BarConfig {}
       property BrightnessConfig brightness: BrightnessConfig {}
       property LauncherConfig launcher: LauncherConfig {}
       property LocaleConfig locale: LocaleConfig {}

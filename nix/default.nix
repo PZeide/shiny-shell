@@ -17,6 +17,7 @@
   libqalculate,
   app2unit,
   xdg-terminal-exec,
+  gpu-screen-recorder,
   ...
 }: let
   plugin = stdenv.mkDerivation {
@@ -51,6 +52,7 @@
   runtimeDeps = [
     app2unit
     xdg-terminal-exec
+    gpu-screen-recorder
   ];
 
   fontConfig = makeFontsConf {

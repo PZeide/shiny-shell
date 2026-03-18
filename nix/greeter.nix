@@ -41,7 +41,7 @@ self: {
     }
 
     xwayland {
-      enabled = false;
+      enabled = false
     }
 
     env = SHINYSHELL_CONFIG,${shinyShellConf}
@@ -135,6 +135,7 @@ in {
       settings = {
         default_session = {
           command = "${cfg.hyprlandPackage}/bin/start-hyprland -- --config ${hyprConf}";
+          user = "greeter";
         };
       };
     };

@@ -13,6 +13,7 @@ import Quickshell
 import Quickshell.Hyprland
 import qs.services
 import qs.config
+import qs.layers.bar
 import qs.layers.launcher
 import qs.layers.lockscreen
 import qs.layers.overview
@@ -23,6 +24,7 @@ ShellRoot {
   settings.watchFiles: Quickshell.env("SHINYSHELL_ENVIRONMENT") === "dev"
 
   Wallpaper {}
+  Bar {}
 
   LazyLoader {
     activeAsync: Config.launcher.enabled
@@ -62,8 +64,9 @@ ShellRoot {
     Audio;
     Battery;
     Brightness;
-    Notifications;
+    //Notifications;
     Player;
     Session;
+    ScreenRecorder;
   }
 }

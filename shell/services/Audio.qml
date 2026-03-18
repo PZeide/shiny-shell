@@ -2,7 +2,9 @@ pragma ComponentBehavior: Bound
 pragma Singleton
 
 import Quickshell
+import Quickshell.Io
 import Quickshell.Services.Pipewire
+import qs.utils
 
 Singleton {
   id: root
@@ -39,5 +41,32 @@ Singleton {
 
   PwObjectTracker {
     objects: [Pipewire.defaultAudioSink, Pipewire.defaultAudioSource, Pipewire.nodes]
+  }
+
+  IpcHandler {
+    id: ipc
+    target: "audio"
+
+    function toggleOutputMute(): string {
+      root.defaultSink.audio.muted = !root.defaultSink.audio.muted;
+      return Helpers.success("ok");
+    }
+
+    function toggleInputMute(): string {
+      root.defaultSource.audio.muted = !root.defaultSource.audio.muted;
+      return Helpers.success("ok");
+    }
+
+    function increateOutputVolume(): string {
+      // INCREASE / DECREASE for input also + allow custom modifs like brightness
+
+      root.defaultSink.audio.volume = Math.min(1, root.defaultSink.audio.volume + 0.05);
+      return Helpers.success("ok");
+    }
+
+    function decreaseOutputVolume(): string {
+      root.defaultSink.audio.volume = Math.max(0, root.defaultSink.audio.volume - 0.05);
+      return Helpers.success("ok");
+    }
   }
 }

@@ -10,8 +10,14 @@ Item {
 
   property alias contentItem: contentLayout.contentItem
 
-  implicitHeight: parent.height
-  implicitWidth: contentLayout.implicitWidth + contentLayout.anchors.leftMargin + contentLayout.anchors.rightMargin
+  implicitHeight: contentLayout.implicitHeight + contentLayout.anchors.topMargin + contentLayout.anchors.bottomMargin
+  implicitWidth: parent.width
+
+  ShinyRectangle {
+    anchors.fill: root
+    color: Config.appearance.color.surfaceContainer
+    radius: Config.appearance.rounding.xs
+  }
 
   Behavior on implicitWidth {
     EffectNumberAnimation {}
@@ -19,12 +25,6 @@ Item {
 
   Behavior on implicitHeight {
     EffectNumberAnimation {}
-  }
-
-  ShinyRectangle {
-    anchors.fill: root
-    color: Config.appearance.color.surfaceContainerHigh
-    radius: Config.appearance.rounding.xs
   }
 
   Item {
@@ -41,7 +41,7 @@ Item {
 
     anchors.centerIn: parent
     anchors.margins: Config.appearance.padding.xs
-    implicitWidth: contentItem.implicitWidth
-    implicitHeight: root.implicitHeight - anchors.topMargin - anchors.bottomMargin
+    implicitWidth: root.implicitWidth - anchors.leftMargin - anchors.rightMargin
+    implicitHeight: contentItem.implicitHeight
   }
 }

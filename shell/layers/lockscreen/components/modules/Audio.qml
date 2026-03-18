@@ -8,7 +8,7 @@ import qs.layers.lockscreen.components as LockComponents
 
 Loader {
   active: Audio?.defaultSink?.audio !== null
-  width: (item as Item)?.width || 0
+  width: (item as Item)?.implicitWidth || 0
   height: parent.height
 
   sourceComponent: LockComponents.SystemModuleWrapper {
