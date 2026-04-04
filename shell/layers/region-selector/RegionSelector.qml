@@ -14,10 +14,7 @@ import qs.utils.animations
 ShinyLayerAnimationHelper {
   id: root
 
-  property ShellScreen notificationWindow: null
   property real layerOpacity: 0
-  property real notificationOpacity: 0
-  property real notificationScale: 1.07
 
   enter: Transition {
     EffectNumberAnimation {
@@ -25,20 +22,6 @@ ShinyLayerAnimationHelper {
       property: "layerOpacity"
       from: root.layerOpacity
       to: 0.45
-    }
-
-    EffectNumberAnimation {
-      target: root
-      property: "notificationOpacity"
-      from: root.notificationOpacity
-      to: 1
-    }
-
-    ExpressiveFastNumberAnimation {
-      target: root
-      property: "notificationScale"
-      from: root.notificationScale
-      to: 1
     }
   }
 
@@ -48,20 +31,6 @@ ShinyLayerAnimationHelper {
       property: "layerOpacity"
       from: root.layerOpacity
       to: 0
-    }
-
-    EffectNumberAnimation {
-      target: root
-      property: "notificationOpacity"
-      from: root.notificationOpacity
-      to: 0
-    }
-
-    ExpressiveFastNumberAnimation {
-      target: root
-      property: "notificationScale"
-      from: root.notificationScale
-      to: 1.07
     }
   }
 
@@ -127,37 +96,6 @@ ShinyLayerAnimationHelper {
             Component.onCompleted: focusField()
           }
         }
-      }
-    }
-  }
-
-  PolkitAgent {
-    id: agent
-
-    onIsActiveChanged: {
-      if (isActive) {
-        root.updateNotificationWindow();
-        root.openLayer();
-      } else {
-        root.closeLayer();
-      }
-    }
-
-    onIsRegisteredChanged: {
-      if (isRegistered) {
-        console.info("Polkit agent registered");
-      } else {
-        console.warn("Polkit agent unregistered");
-      }
-    }
-  }
-
-  Connections {
-    target: Quickshell
-
-    function onScreensChanged() {
-      if (!Quickshell.screens.values.includes(root.notificationWindow)) {
-        root.updateNotificationWindow();
       }
     }
   }

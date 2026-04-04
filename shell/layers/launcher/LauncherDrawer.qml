@@ -86,7 +86,7 @@ ShinyRectangle {
       anchors.bottom: parent.bottom
       implicitWidth: parent.implicitWidth
       placeholderText: "Search..."
-      iconName: "search"
+      sIcon.name: "search"
       focus: true
 
       Synchronizer on text {

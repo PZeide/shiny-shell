@@ -49,9 +49,9 @@ ShinyRectangle {
       Layout.fillHeight: true
       Layout.preferredWidth: height
       variant: ShinyButton.Variant.Ghost
-      iconName: "power_settings_new"
-      iconFont.pointSize: Config.appearance.font.size.xl
-      iconFont.weight: Font.Bold
+      sIcon.name: "power_settings_new"
+      sIconFont.pointSize: Config.appearance.font.size.xl
+      sIconFont.weight: Font.Bold
 
       onClicked: actionMenu.open()
 
@@ -62,19 +62,19 @@ ShinyRectangle {
 
         ShinyMenuItem {
           text: "Shutdown"
-          iconName: "mode_off_on"
+          sIcon.name: "mode_off_on"
           onClicked: Session.shutdown()
         }
 
         ShinyMenuItem {
           text: "Restart"
-          iconName: "restart_alt"
+          sIcon.name: "restart_alt"
           onClicked: Session.reboot()
         }
 
         ShinyMenuItem {
           text: "Sleep"
-          iconName: "bedtime"
+          sIcon.name: "bedtime"
           onClicked: Session.suspend()
         }
       }

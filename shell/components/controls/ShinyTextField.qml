@@ -1,19 +1,19 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls as C
+import Shiny.Helpers
 import qs.config
 import qs.components
+import qs.utils
 import qs.utils.animations
 
-TextField {
+C.TextField {
   id: root
 
-  readonly property bool hasIcon: iconName !== ""
-  property string iconName: ""
-  property real iconFill: 0
-  property int iconGrade: 0
-  property alias iconFont: icon.font
+  property icon sIcon: Helpers.emptyIcon()
+  property alias sIconFont: icon.font
+  readonly property bool hasIcon: sIcon.name !== ""
   property alias radius: backgroundRectangle.radius
   property alias topLeftRadius: backgroundRectangle.topLeftRadius
   property alias topRightRadius: backgroundRectangle.topRightRadius
@@ -137,9 +137,9 @@ TextField {
   ShinyIcon {
     id: icon
     visible: root.hasIcon
-    icon: root.iconName
-    fill: root.iconFill
-    grade: root.iconGrade
+    icon: root.sIcon.name
+    fill: root.sIcon.fill
+    grade: root.sIcon.grade
     font.pointSize: Config.appearance.font.size.lg
     anchors.left: parent.left
     anchors.leftMargin: root.hasIcon ? Config.appearance.padding.lg : 0

@@ -35,6 +35,7 @@ endfunction()
 
 add_subdirectory(brightness)
 add_subdirectory(greeter)
+add_subdirectory(helpers)
 add_subdirectory(launcher)
 add_subdirectory(location)
 add_subdirectory(session)

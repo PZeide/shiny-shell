@@ -25,10 +25,42 @@ self: {
   shinyShellConf = pkgs.writeText "shiny-shell-greeter.json" (builtins.toJSON userShinyShellSettings);
 
   baseHyprConfig = ''
+    general {
+      gaps_in = 0
+      gaps_out = 0
+      border_size = 0
+    }
+
+    decoration {
+      rounding = 0
+
+      blur {
+        enabled = false
+      }
+
+      shadow {
+        enabled = false
+      }
+
+      animations {
+        enabled = false
+      }
+    }
+
     misc {
       disable_hyprland_logo = true
       disable_splash_rendering = true
       disable_autoreload = true
+      background_color = rgb(000000)
+    }
+
+    xwayland {
+      enabled = false
+    }
+
+    cursor {
+      invisible = true
+      no_hardware_cursors = 0
     }
 
     ecosystem {
@@ -36,19 +68,11 @@ self: {
       no_donation_nag = true
     }
 
-    cursor {
-      invisible = true
-    }
-
-    xwayland {
-      enabled = false
-    }
-
     env = SHINYSHELL_CONFIG,${shinyShellConf}
     env = SHINYSHELL_GREETER_SESSION,${cfg.session}
     env = SHINYSHELL_GREETER_USER,${cfg.user}
 
-    exec-once = ${cfg.package}/bin/shiny-shell-greeter && pkill Hyprland
+    exec-once = ${cfg.package}/bin/shiny-shell-greeter; ${cfg.hyprlandPackage}/bin/hyprctl dispatch exit
   '';
 
   monitorHyprConfig = ''

@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Templates
+import QtQuick.Templates as T
 import qs.config
 import qs.components
 import qs.utils.animations
@@ -31,7 +31,7 @@ ShinyCooperativeSlider {
   implicitWidth: implicitTrackWidth
   implicitHeight: Math.max(implicitDefaultTrackHeight, implicitHoveredTrackHeight, implicitPressedTrackHeight)
   stepSize: 0
-  snapMode: Slider.NoSnap
+  snapMode: T.Slider.NoSnap
 
   // Disable key presses it causes more troubles than it solves
   Keys.onPressed: event => event.accepted = focus

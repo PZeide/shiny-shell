@@ -84,52 +84,16 @@ Singleton {
         return Helpers.fail("Failed to find device");
       }
 
-      const currentBrightness = controller.brightness;
-      let targetBrightness;
-
-      const parseFloatStrict = str => {
-        // Only digits and a single dot allowed
-        const validFloatRegex = /^\d+(\.\d+)?$/;
-        if (validFloatRegex.test(str)) {
-          return parseFloat(str);
-        }
-
-        return NaN;
-      };
-
-      command = command.trim();
-      if (command.startsWith("+")) {
-        if (command.endsWith("%")) {
-          const value = parseFloatStrict(command.slice(1, -1));
-          targetBrightness = currentBrightness + (value / 100);
-        } else {
-          const value = parseFloatStrict(command.slice(1));
-          targetBrightness = currentBrightness + value;
-        }
-      } else if (command.endsWith("-")) {
-        if (command.endsWith("%-")) {
-          const value = parseFloatStrict(command.slice(0, -2));
-          targetBrightness = currentBrightness - (value / 100);
-        } else {
-          const value = parseFloatStrict(command.slice(0, -1));
-          targetBrightness = currentBrightness - value;
-        }
-      } else if (command.endsWith("%")) {
-        const value = parseFloatStrict(command.slice(0, -1));
-        targetBrightness = value / 100;
-      } else {
-        const value = parseFloatStrict(command);
-        targetBrightness = value;
+      const result = Helpers.parseDecimalCommand(command.trim(), controller.brightness);
+      if (isNaN(result)) {
+        return Helpers.fail(`Invalid brightness: ${command} (i.e: 0.1, +0.1, -0.1, 10%, +10%, -10%)`);
       }
 
-      if (isNaN(targetBrightness)) {
-        return Helpers.fail(`Invalid command: ${command} (i.e: 0.1, +0.1, 0.1-, 10%, +10%, 10%-)`);
-      }
-
-      root.setDeviceBrightness(controller, targetBrightness);
+      const clampedBrightness = Math.min(Math.max(result, 0), 1);
+      root.setDeviceBrightness(controller, clampedBrightness);
       return Helpers.success({
         device: controller.device,
-        target: targetBrightness,
+        target: clampedBrightness,
         smooth: Config.brightness.smooth
       });
     }

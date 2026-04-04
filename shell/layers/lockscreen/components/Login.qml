@@ -55,7 +55,7 @@ ShinyRectangle {
       Layout.fillHeight: true
       implicitWidth: 240
       enabled: root.fieldEnabled
-      iconName: "lock"
+      sIcon.name: "lock"
       placeholderText: "Enter password"
       echoMode: TextInput.Password
       inputMethodHints: Qt.ImhHiddenText | Qt.ImhSensitiveData | Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase

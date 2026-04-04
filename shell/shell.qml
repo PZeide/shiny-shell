@@ -1,3 +1,5 @@
+//@ pragma ShellId shiny-shell
+//@ pragma AppId com.shiny-shell
 //@ pragma Env QS_NO_RELOAD_POPUP=1
 //@ pragma Env QSG_RHI_BACKEND=vulkan
 //@ pragma Env QSG_RENDER_LOOP=threaded
@@ -66,7 +68,7 @@ ShellRoot {
     Brightness;
     //Notifications;
     Player;
-    Session;
     ScreenRecorder;
+    Session;
   }
 }

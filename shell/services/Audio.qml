@@ -49,24 +49,58 @@ Singleton {
 
     function toggleOutputMute(): string {
       root.defaultSink.audio.muted = !root.defaultSink.audio.muted;
-      return Helpers.success("ok");
+      return Helpers.success(root.defaultSink.audio.muted);
     }
 
     function toggleInputMute(): string {
       root.defaultSource.audio.muted = !root.defaultSource.audio.muted;
-      return Helpers.success("ok");
+      return Helpers.success(root.defaultSource.audio.muted);
     }
 
-    function increateOutputVolume(): string {
-      // INCREASE / DECREASE for input also + allow custom modifs like brightness
+    function outputVolume(command: string): string {
+      const result = Helpers.parseDecimalCommand(command.trim(), root.defaultSink.audio.volume);
+      if (isNaN(result)) {
+        return Helpers.fail(`Invalid brightness: ${command} (i.e: 0.1, +0.1, -0.1, 10%, +10%, -10%)`);
+      }
 
-      root.defaultSink.audio.volume = Math.min(1, root.defaultSink.audio.volume + 0.05);
-      return Helpers.success("ok");
+      const clampedVolume = Math.min(Math.max(0, result), 1);
+      root.defaultSink.audio.volume = clampedVolume;
+      return Helpers.success(clampedVolume);
     }
 
-    function decreaseOutputVolume(): string {
-      root.defaultSink.audio.volume = Math.max(0, root.defaultSink.audio.volume - 0.05);
-      return Helpers.success("ok");
+    function inputVolume(command: string): string {
+      const result = Helpers.parseDecimalCommand(command.trim(), root.defaultSource.audio.volume);
+      if (isNaN(result)) {
+        return Helpers.fail(`Invalid volume: ${command} (i.e: 0.1, +0.1, -0.1, 10%, +10%, -10%)`);
+      }
+
+      const clampedVolume = Math.min(Math.max(0, result), 1);
+      root.defaultSource.audio.volume = clampedVolume;
+      return Helpers.success(clampedVolume);
+    }
+
+    function status(): string {
+      const result = {};
+
+      if (root.defaultSink) {
+        result.output = {
+          name: root.defaultSink.name,
+          description: root.defaultSink.description,
+          muted: root.defaultSink.audio.muted,
+          volume: root.defaultSink.audio.volume
+        };
+      }
+
+      if (root.defaultSource) {
+        result.input = {
+          name: root.defaultSource.name,
+          description: root.defaultSource.description,
+          muted: root.defaultSource.audio.muted,
+          volume: root.defaultSource.audio.volume
+        };
+      }
+
+      return Helpers.success(result);
     }
   }
 }

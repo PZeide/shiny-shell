@@ -1,20 +1,19 @@
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls as C
 import qs.config
 import qs.components
 import qs.utils
 import qs.utils.animations
 
-ToolTip {
+C.ToolTip {
   id: root
 
   verticalPadding: Config.appearance.padding.xs
   horizontalPadding: Config.appearance.padding.sm
   font.family: Config.appearance.font.family.sans
   font.pointSize: Config.appearance.font.size.sm
-  closePolicy: Popup.NoAutoClose
+  closePolicy: C.Popup.NoAutoClose
   modal: false
-  dim: false
   delay: 300
 
   background: ShinyRectangle {
@@ -44,7 +43,7 @@ ToolTip {
 
     EffectNumberAnimation {
       property: "scale"
-      from: 0.75
+      from: 0.85
       to: 1
     }
   }
@@ -59,7 +58,7 @@ ToolTip {
     EffectNumberAnimation {
       property: "scale"
       from: 1
-      to: 0.75
+      to: 0.85
     }
   }
 }

@@ -1,24 +1,23 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Templates
+import QtQuick.Templates as T
 import QtQuick.Layouts
+import Shiny.Helpers
 import qs.components
 import qs.config
 import qs.utils
 import qs.utils.animations
 
-MenuItem {
+T.MenuItem {
   id: root
 
-  readonly property bool hasIcon: iconName !== ""
-  property string iconName: ""
-  property real iconFill: 0
-  property int iconGrade: 0
-  property alias iconFont: icon.font
+  property icon sIcon: Helpers.emptyIcon()
+  property alias sIconFont: icon.font
+  readonly property bool hasIcon: sIcon.name !== ""
 
-  implicitHeight: 36
-  implicitWidth: contentLayout.implicitWidth + leftPadding + rightPadding
+  implicitWidth: contentItem.implicitWidth + leftPadding + rightPadding
+  implicitHeight: 28 + topPadding + bottomPadding
   verticalPadding: Config.appearance.padding.xs
   horizontalPadding: Config.appearance.padding.sm
   implicitTextPadding: (icon.visible ? (icon.implicitWidth + spacing) : 0) + (checkCircle.visible ? (checkCircle.implicitWidth + spacing) : 0)
@@ -41,7 +40,6 @@ MenuItem {
   }
 
   contentItem: RowLayout {
-    id: contentLayout
     anchors.verticalCenter: parent.verticalCenter
     spacing: root.spacing
 
@@ -49,9 +47,9 @@ MenuItem {
       id: icon
       Layout.alignment: Qt.AlignLeft
       visible: root.hasIcon && !root.checkable
-      icon: root.iconName
-      fill: root.iconFill
-      grade: root.iconGrade
+      icon: root.sIcon.name
+      fill: root.sIcon.fill
+      grade: root.sIcon.grade
       font.pointSize: Config.appearance.font.size.lg
       color: root.enabled ? Config.appearance.color.overSurface : Colors.transparentize(Config.appearance.color.overSurface, 0.3)
 
