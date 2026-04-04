@@ -41,10 +41,10 @@ self: {
       shadow {
         enabled = false
       }
+    }
 
-      animations {
-        enabled = false
-      }
+    animations {
+      enabled = false
     }
 
     misc {
