@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Wayland
 import Quickshell.Hyprland
 import Quickshell.Services.Polkit
+import qs.services
 import qs.config
 import qs.components
 import qs.components.misc
@@ -66,12 +67,12 @@ ShinyLayerAnimationHelper {
   }
 
   function updateNotificationWindow() {
-    if (Hyprland.focusedMonitor) {
-      const shellScreen = Quickshell.screens.find(s => s.name == Hyprland.focusedMonitor.name);
+    if (HyprCompositor.activeMonitor) {
+      const shellScreen = Quickshell.screens.find(s => s.name == HyprCompositor.activeMonitor.name);
       if (shellScreen) {
         root.notificationWindow = shellScreen;
       } else {
-        console.warn(`No shell screen found for focused monitor ${Hyprland.focusedMonitor.name}`);
+        console.warn(`No shell screen found for focused monitor ${HyprCompositor.activeMonitor.name}`);
         root.notificationWindow = Quickshell.screens[0];
       }
     } else {

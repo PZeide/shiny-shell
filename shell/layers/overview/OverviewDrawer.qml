@@ -1,9 +1,9 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQml.Models
 import Quickshell
 import Quickshell.Hyprland
+import qs.services
 import qs.components
 import qs.config
 
@@ -11,10 +11,9 @@ ShinyRectangle {
   id: root
 
   required property ShellScreen screen
-
-  readonly property HyprlandMonitor monitor: Hyprland.monitorFor(screen)
+  readonly property HyprlandMonitor monitor: HyprCompositor.monitorFor(screen)
   // Rotation and flip state of monitor https://wayland-client-d.dpldocs.info/source/wayland.client.protocol.d.html#L3329
-  readonly property int monitorTransform: monitor.lastIpcObject.transform
+  readonly property int monitorTransform: monitor.lastIpcObject.transform ?? 0
   readonly property real monitorTransformedWidth: monitorTransform % 2 === 0 ? monitor.width : monitor.height
   readonly property real monitorTransformedHeight: monitorTransform % 2 === 0 ? monitor.height : monitor.width
   // Amount of space claimed and reserved by layers
@@ -66,12 +65,12 @@ ShinyRectangle {
             radius: Config.appearance.rounding.corner * Config.overview.scale
 
             onWorkspaceClicked: {
-              Hyprland.dispatch(`workspace ${workspaceId}`);
+              HyprCompositor.dispatch(`workspace ${workspaceId}`);
               root.shouldClose();
             }
 
             onReceiveWindow: window => {
-              Hyprland.dispatch(`movetoworkspacesilent ${workspaceId}, address:0x${window.address}`);
+              HyprCompositor.dispatch(`movetoworkspacesilent ${workspaceId}, address:0x${window.address}`);
             }
           }
         }
@@ -88,7 +87,7 @@ ShinyRectangle {
 
     ScriptModel {
       id: windowsModel
-      values: Hyprland.toplevels.values.filter(window => {
+      values: HyprCompositor.toplevels.values.filter(window => {
         if (window === null || window.workspace === null || window.wayland === null) {
           return false;
         }
@@ -141,11 +140,11 @@ ShinyRectangle {
         implicitHeight: waylandWindow.fullscreen ? root.overviewWorkspaceHeight : windowHeight * Config.overview.scale
 
         onShouldFocus: {
-          Hyprland.dispatch(`focuswindow address:0x${window.address}`);
+          HyprCompositor.dispatch(`focuswindow address:0x${window.address}`);
           root.shouldClose();
         }
 
-        onShouldClose: Hyprland.dispatch(`closewindow address:0x${window.address}`)
+        onShouldClose: HyprCompositor.dispatch(`closewindow address:0x${window.address}`)
       }
     }
   }

@@ -2,8 +2,10 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell.Hyprland
+import qs.services
 import qs.components
 import qs.config
+import qs.utils
 import qs.utils.animations
 
 ShinyRectangle {
@@ -12,7 +14,7 @@ ShinyRectangle {
   required property int workspaceId
   required property real workspaceX
   required property real workspaceY
-  readonly property HyprlandWorkspace workspace: Hyprland.workspaces.values.find(w => w.id === workspaceId)
+  readonly property HyprlandWorkspace workspace: HyprCompositor.workspaces.values.find(w => w.id === workspaceId)
 
   readonly property bool hasForeignDrag: {
     if (!dropArea.containsDrag)
@@ -27,15 +29,9 @@ ShinyRectangle {
 
   color: Config.appearance.color.surfaceContainer
   opacity: root.hasForeignDrag ? 0.6 : 1
-  border.width: 2
-  border.color: workspace.active ? Config.appearance.color.primary : "transparent"
 
   Behavior on opacity {
     EffectNumberAnimation {}
-  }
-
-  Behavior on border.color {
-    EffectColorAnimation {}
   }
 
   ShinyText {

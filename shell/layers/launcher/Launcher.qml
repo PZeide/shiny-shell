@@ -6,6 +6,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Hyprland
+import qs.services
 import qs.components.containers
 import qs.components.misc
 import qs.config
@@ -16,7 +17,7 @@ Item {
   id: root
 
   function getActiveLayerHelper(): ShinyLayerAnimationHelper {
-    return variant.instances.find(instance => instance.modelData.name === Hyprland.focusedMonitor?.name);
+    return variant.instances.find(instance => instance.modelData.name === HyprCompositor.activeMonitor?.name);
   }
 
   Variants {

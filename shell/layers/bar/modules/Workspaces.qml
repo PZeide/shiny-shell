@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Hyprland
+import qs.services
 import qs.config
 import qs.components
 import qs.utils.animations
@@ -14,8 +15,8 @@ BarModuleWrapper {
 
   required property ShellScreen screen
 
-  readonly property HyprlandMonitor monitor: Hyprland.monitorFor(screen)
-  readonly property int monitorWorkspacesCount: Hyprland.workspaces.values.filter(w => w.monitor == monitor && w.id >= 0).length
+  readonly property HyprlandMonitor monitor: HyprCompositor.monitorFor(screen)
+  readonly property int monitorWorkspacesCount: HyprCompositor.workspaces.values.filter(w => w.monitor == monitor && w.id >= 0).length
   readonly property int workspacesShown: Config.bar.workspaces.count > 0 ? Config.bar.workspaces.count : monitorWorkspacesCount
   readonly property int workspaceGroup: Math.floor(((monitor.activeWorkspace?.id ?? 1) - 1) / Config.bar.workspaces.count)
 
@@ -43,7 +44,7 @@ BarModuleWrapper {
           required property int index
 
           readonly property int workspaceId: root.workspaceGroup * root.workspacesShown + index + 1
-          readonly property HyprlandWorkspace maybeWorkspace: Hyprland.workspaces.values.find(w => w.id === workspaceId) ?? null
+          readonly property HyprlandWorkspace maybeWorkspace: HyprCompositor.workspaces.values.find(w => w.id === workspaceId) ?? null
           readonly property bool isOccupied: maybeWorkspace?.toplevels.values.length > 0
           readonly property bool isActive: maybeWorkspace?.active ?? false
 
@@ -69,7 +70,7 @@ BarModuleWrapper {
             clickOpacity: 0.45
             hoverOpacity: 0.25
 
-            onPressed: Hyprland.dispatch(`workspace ${workspaceRectangle.workspaceId}`)
+            onPressed: HyprCompositor.dispatch(`workspace ${workspaceRectangle.workspaceId}`)
           }
         }
       }

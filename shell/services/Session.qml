@@ -66,7 +66,7 @@ Singleton {
       root.lock();
       break;
     case "dpms":
-      Hyprland.dispatch("dpms off");
+      HyprCompositor.dispatch("dpms off");
       break;
     case "setbrightness":
       if (args.length < 1) {
@@ -107,7 +107,7 @@ Singleton {
 
     switch (command) {
     case "dpms":
-      Hyprland.dispatch("dpms on");
+      HyprCompositor.dispatch("dpms on");
       break;
     case "setbrightness":
       for (const controller of Brightness.devices) {

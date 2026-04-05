@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Hyprland
 import Shiny.Brightness
+import qs.services
 import qs.config
 import qs.utils
 
@@ -41,7 +42,7 @@ Singleton {
     if (devices.length === 1)
       return devices[0];
 
-    const focused = Hyprland.focusedMonitor?.name ?? null;
+    const focused = HyprCompositor.activeMonitor?.name ?? null;
     let edpFallback = null;
 
     for (const controller of devices) {
