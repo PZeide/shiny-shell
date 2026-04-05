@@ -17,7 +17,6 @@ import qs.config
 import qs.layers.bar
 import qs.layers.launcher
 import qs.layers.lockscreen
-import qs.layers.overview
 import qs.layers.polkit
 import qs.layers.region_selector
 import qs.layers.wallpaper
@@ -36,11 +35,6 @@ ShellRoot {
   LazyLoader {
     activeAsync: Config.lockScreen.enabled
     LockScreen {}
-  }
-
-  LazyLoader {
-    activeAsync: Config.overview.enabled
-    Overview {}
   }
 
   LazyLoader {
