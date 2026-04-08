@@ -101,7 +101,7 @@ in
 
       install -Dm755 $src/scripts/shiny-hyprland-share-picker.sh $out/bin/shiny-hyprland-share-picker
       wrapProgram $out/bin/shiny-hyprland-share-picker \
-        --prefix PATH : "${lib.makeBinPath [jq]}"
+        --prefix PATH : "${lib.makeBinPath [jq]}:$out/bin"
     '';
 
     passthru = {
