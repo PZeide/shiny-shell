@@ -100,27 +100,27 @@ ShinyRectangle {
               radius: Config.appearance.rounding.sm
 
               Layout.preferredWidth: {
-                const effectiveWidth = element.modelData.lastIpcObject.size[0];
-                const effectiveHeight = element.modelData.lastIpcObject.size[1];
+                const effectiveWidth = element.modelData?.lastIpcObject?.size?.[0] ?? 0;
+                const effectiveHeight = element.modelData?.lastIpcObject?.size?.[1] ?? 0;
                 return Math.min(height * (effectiveWidth / effectiveHeight), parent.width);
               }
 
               ScreencopyView {
                 anchors.fill: parent
-                captureSource: element.modelData.wayland
+                captureSource: element.modelData?.wayland
                 live: true
               }
 
               IconImage {
                 anchors.centerIn: parent
-                source: Icons.findFromClass(element.modelData.lastIpcObject.class)
+                source: Icons.findFromClass(element.modelData?.lastIpcObject?.class)
                 implicitSize: Math.min(wrapper.width, wrapper.height) * 0.4
               }
             }
 
             ShinyText {
               Layout.fillWidth: true
-              text: element.modelData.title
+              text: element.modelData?.title
               font.pointSize: Config.appearance.font.size.sm
               font.weight: Font.Black
               wrapMode: Text.NoWrap
@@ -130,7 +130,7 @@ ShinyRectangle {
 
             ShinyText {
               Layout.fillWidth: true
-              text: `${element.modelData.lastIpcObject.class}`
+              text: `${element.modelData?.lastIpcObject?.class}`
               font.pointSize: Config.appearance.font.size.xs
               wrapMode: Text.NoWrap
               elide: Text.ElideRight

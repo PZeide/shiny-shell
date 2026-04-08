@@ -48,11 +48,15 @@ Item {
       readonly property var options: modelData.options
 
       availableMonitors: HyprCompositor.monitors.values.filter(monitor => {
+        if (!monitor) {
+          return false;
+        }
+
         return options.availableMonitors === undefined || options.availableMonitors === "*" || options.availableMonitors.includes(monitor.description);
       })
 
       availableWindows: HyprCompositor.toplevels.values.filter(window => {
-        if (window.lastIpcObject.class === "com.shiny-shell") {
+        if (!window || window.lastIpcObject?.class === "com.shiny-shell") {
           return false;
         }
 

@@ -89,11 +89,10 @@ while IFS= read -r line || break; do
 	custom)
 		MON=$(echo "$line" | jq -r '.result.region.monitor // empty')
 		X=$(echo "$line" | jq -r '.result.region.x // empty')
-		Y=$(echo "$line" | jq -r '.result.region.y / empty')
+		Y=$(echo "$line" | jq -r '.result.region.y // empty')
 		W=$(echo "$line" | jq -r '.result.region.width // empty')
 		H=$(echo "$line" | jq -r '.result.region.height // empty')
 		if [[ -z "$MON" || -z "$X" || -z "$Y" || -z "$W" || -z "$H" ]]; then
-            echo "$X $Y $W $H"
 			echo "error" >&2
 			exit 1
 		fi
