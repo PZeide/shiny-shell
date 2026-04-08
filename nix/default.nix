@@ -18,6 +18,7 @@
   app2unit,
   xdg-terminal-exec,
   gpu-screen-recorder,
+  jq,
   ...
 }: let
   plugin = stdenv.mkDerivation {
@@ -98,14 +99,9 @@ in
         --set FONTCONFIG_FILE "${fontConfig}" \
        	--add-flags "-p $out/share/shiny-shell/greeter.qml"
 
-      for script in ../scripts/*; do
-        if [ -f "$script" ]; then
-          script_name=$(basename "$script")
-          # Strip the .sh extension
-          script_name="''${script_name%.sh}"
-          install -Dm755 "$script" "$out/bin/$script_name"
-        fi
-      done
+      install -Dm755 $src/scripts/shiny-hyprland-share-picker.sh $out/bin/shiny-hyprland-share-picker
+      wrapProgram $out/bin/shiny-hyprland-share-picker \
+        --prefix PATH : "${lib.makeBinPath [jq]}"
     '';
 
     passthru = {
