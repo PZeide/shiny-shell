@@ -12,13 +12,7 @@ OPTIONS=$(jq -cn \
 	--argjson allowRestoreTokenDefault "$ALLOW_TOKEN" \
 	'{allowRestoreTokenDefault: $allowRestoreTokenDefault}')
 
-#RESPONSE=$(shiny-shell ipc call share-picker request "$OPTIONS" 2>/dev/null) || {
-#	echo "error" >&2
-#	exit 1
-#}
-
-RESPONSE=$(shiny-shell -vv ipc call share-picker request "$OPTIONS" 2>&1) || {
-    echo "$RESPONSE" >> /home/thibaud/test.txt
+RESPONSE=$(shiny-shell ipc --any-display call share-picker request "$OPTIONS" 2>/dev/null) || {
 	echo "error" >&2
 	exit 1
 }
@@ -113,7 +107,7 @@ while IFS= read -r line || break; do
 
 	exit 0
 
-done < <(shiny-shell ipc listen share-picker result 2>/dev/null)
+done < <(shiny-shell ipc --any-display listen share-picker result 2>/dev/null)
 
 # Listener exited without delivering our result (shell shutdown, etc.)
 echo "cancelled" >&2
