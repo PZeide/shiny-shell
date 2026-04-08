@@ -18,16 +18,52 @@ Variants {
     screen: modelData
     color: Config.appearance.color.surface
 
-    ShinyButton {
-      id: tooltipButton
+    FlexboxLayout {
       anchors.centerIn: parent
-      implicitWidth: 180
-      implicitHeight: 40
-      text: "Hover to show tooltip"
+      gap: Config.appearance.spacing.sm
 
-      ShinyTooltip {
-        visible: tooltipButton.hovered
-        text: "This is a tooltip"
+      ShinyButton {
+        id: leftButton
+        text: "Placement: LEFT"
+
+        ShinyTooltip {
+          visible: leftButton.hovered
+          text: "This is a tooltip"
+          placement: ShinyTooltip.Placement.Left
+        }
+      }
+
+      ShinyButton {
+        id: rightButton
+        text: "Placement: RIGHT"
+
+        ShinyTooltip {
+          visible: rightButton.hovered
+          text: "This is a tooltip"
+          placement: ShinyTooltip.Placement.Right
+        }
+      }
+
+      ShinyButton {
+        id: topButton
+        text: "Placement: TOP"
+
+        ShinyTooltip {
+          visible: topButton.hovered
+          text: "This is a tooltip"
+          placement: ShinyTooltip.Placement.Top
+        }
+      }
+
+      ShinyButton {
+        id: bottomButton
+        text: "Placement: BOTTOM"
+
+        ShinyTooltip {
+          visible: bottomButton.hovered
+          text: "This is a tooltip"
+          placement: ShinyTooltip.Placement.Bottom
+        }
       }
     }
   }

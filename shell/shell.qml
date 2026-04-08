@@ -19,6 +19,7 @@ import qs.layers.launcher
 import qs.layers.lockscreen
 import qs.layers.polkit
 import qs.layers.region_selector
+import qs.layers.share_picker
 import qs.layers.wallpaper
 
 ShellRoot {
@@ -26,6 +27,7 @@ ShellRoot {
 
   Wallpaper {}
   Bar {}
+  RegionSelector {}
 
   LazyLoader {
     activeAsync: Config.launcher.enabled
@@ -43,8 +45,8 @@ ShellRoot {
   }
 
   LazyLoader {
-    activeAsync: Config.regionSelector.enabled
-    RegionSelector {}
+    activeAsync: Config.sharePicker.enabled
+    SharePicker {}
   }
 
   Component.onCompleted: {

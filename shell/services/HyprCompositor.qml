@@ -28,6 +28,10 @@ Singleton {
     return Hyprland.monitorFor(screen);
   }
 
+  function toShellScreen(monitor: HyprlandMonitor): ShellScreen {
+    return Quickshell.screens.find(s => s.name === monitor.name);
+  }
+
   function optionValueFor(key: string): var {
     return root.options.find(o => o.value === key)?.data?.current ?? null;
   }

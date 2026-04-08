@@ -14,10 +14,10 @@ T.AbstractButton {
   id: root
 
   enum Variant {
-    Primary = 0,
-    Secondary = 1,
-    Ghost = 2,
-    Danger = 3
+    Primary,
+    Secondary,
+    Ghost,
+    Danger
   }
 
   property int variant: ShinyButton.Variant.Primary
@@ -32,6 +32,8 @@ T.AbstractButton {
   property alias bottomLeftRadius: background.bottomLeftRadius
   property alias bottomRightRadius: background.bottomRightRadius
 
+  font.family: Config.appearance.font.family.sans
+  font.pointSize: Config.appearance.font.size.md
   implicitWidth: contentItem.implicitWidth + leftPadding + rightPadding
   implicitHeight: contentItem.implicitHeight + topPadding + bottomPadding
   verticalPadding: Config.appearance.padding.sm
@@ -74,10 +76,6 @@ T.AbstractButton {
       horizontalAlignment: Text.AlignHCenter
       verticalAlignment: Text.AlignVCenter
       font.pointSize: Config.appearance.font.size.lg
-
-      Behavior on color {
-        EffectColorAnimation {}
-      }
     }
 
     ShinyText {
@@ -88,10 +86,6 @@ T.AbstractButton {
       font: root.font
       color: root.enabled ? root.configuration.content.default : root.configuration.content.disabled
       verticalAlignment: Text.AlignVCenter
-
-      Behavior on color {
-        EffectColorAnimation {}
-      }
     }
   }
 }

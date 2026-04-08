@@ -5,7 +5,6 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
-import Quickshell.Hyprland
 import Shiny.Session
 import qs.services
 import qs.utils
@@ -159,8 +158,8 @@ Singleton {
     enabled: false
     window: ShinyWindow {
       name: "inhibitor"
-      implicitWidth: 0
       implicitHeight: 0
+      implicitWidth: 0
     }
   }
 

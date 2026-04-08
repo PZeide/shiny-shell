@@ -1,10 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Controls
-import Quickshell
-import Quickshell.Services.SystemTray
+import qs.services
 import qs.config
 import qs.components
 import qs.components.controls
@@ -18,7 +16,13 @@ BarModuleWrapper {
     anchors.fill: parent
     layerRadius: Config.appearance.rounding.xs
 
-    onPressed: console.info("pressed")
+    onPressed: {
+      if (ScreenRecorder.isRecording) {
+        ScreenRecorder.stopRecording();
+      } else {
+        ScreenRecorder.startRecording();
+      }
+    }
   }
 
   ShinyTooltip {
@@ -34,7 +38,7 @@ BarModuleWrapper {
       anchors.centerIn: parent
       icon: "screen_record"
       font.pointSize: Config.appearance.font.size.md
-      color: Config.appearance.color.overSurface
+      color: ScreenRecorder.isRecording ? "red" : Config.appearance.color.overSurface
     }
   }
 }

@@ -22,6 +22,8 @@ T.MenuItem {
   horizontalPadding: Config.appearance.padding.sm
   implicitTextPadding: (icon.visible ? (icon.implicitWidth + spacing) : 0) + (checkCircle.visible ? (checkCircle.implicitWidth + spacing) : 0)
   spacing: Config.appearance.spacing.xs
+  font.family: Config.appearance.font.family.sans
+  font.pointSize: Config.appearance.font.size.md
 
   background: ShinyRectangle {
     radius: Config.appearance.rounding.xs
@@ -52,10 +54,6 @@ T.MenuItem {
       grade: root.sIcon.grade
       font.pointSize: Config.appearance.font.size.lg
       color: root.enabled ? Config.appearance.color.overSurface : Colors.transparentize(Config.appearance.color.overSurface, 0.3)
-
-      Behavior on color {
-        EffectColorAnimation {}
-      }
     }
 
     ShinyRectangle {
@@ -93,7 +91,7 @@ T.MenuItem {
     ShinyText {
       Layout.fillWidth: true
       text: root.text
-      font.pointSize: Config.appearance.font.size.md
+      font: root.font
       color: root.enabled ? Config.appearance.color.overSurface : Colors.transparentize(Config.appearance.color.overSurface, 0.3)
       leftPadding: root.textPadding - root.implicitTextPadding
       wrapMode: Text.NoWrap
@@ -106,10 +104,6 @@ T.MenuItem {
       icon: "chevron_right"
       font.pointSize: Config.appearance.font.size.lg
       color: root.enabled ? Config.appearance.color.overSurface : Colors.transparentize(Config.appearance.color.overSurface, 0.3)
-
-      Behavior on color {
-        EffectColorAnimation {}
-      }
     }
   }
 }

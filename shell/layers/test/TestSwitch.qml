@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
 import qs.config
@@ -22,27 +23,23 @@ Variants {
       anchors.centerIn: parent
       spacing: 30
 
-      property var buttonVariants: [
+      property var switchVariants: [
         {
           name: "Primary",
-          value: ShinyButton.Variant.Primary
+          value: ShinySwitch.Variant.Primary
         },
         {
           name: "Secondary",
-          value: ShinyButton.Variant.Secondary
+          value: ShinySwitch.Variant.Secondary
         },
         {
-          name: "Ghost",
-          value: ShinyButton.Variant.Ghost
-        },
-        {
-          name: "Danger",
-          value: ShinyButton.Variant.Danger
+          name: "Tertiary",
+          value: ShinySwitch.Variant.Tertiary
         }
       ]
 
       Repeater {
-        model: layout.buttonVariants
+        model: layout.switchVariants
 
         delegate: RowLayout {
           id: row
@@ -51,46 +48,39 @@ Variants {
 
           required property var modelData
 
-          ShinyButton {
-            text: row.modelData.name + " Enabled"
+          ShinySwitch {
             variant: row.modelData.value
             enabled: true
-            font.weight: Font.Bold
           }
 
-          ShinyButton {
-            text: row.modelData.name + " Disabled"
+          ShinySwitch {
             variant: row.modelData.value
             enabled: false
           }
 
-          ShinyButton {
-            text: row.modelData.name + " Checkable"
+          ShinySwitch {
             variant: row.modelData.value
-            enabled: true
-            checkable: true
+            enabled: false
+            checked: true
           }
 
-          ShinyButton {
-            text: row.modelData.name + " Icon"
-            sIcon.name: "star"
+          ShinySwitch {
             variant: row.modelData.value
             enabled: true
+            sIcon.name: "home"
           }
 
-          ShinyButton {
-            display: ShinyButton.IconOnly
-            sIcon.name: "star"
+          ShinySwitch {
             variant: row.modelData.value
-            enabled: true
+            enabled: false
+            sIcon.name: "home"
           }
 
-          ShinyButton {
-            display: ShinyButton.TextUnderIcon
-            text: row.modelData.name + " Vertical"
-            sIcon.name: "star"
+          ShinySwitch {
             variant: row.modelData.value
             enabled: true
+            sCheckedIcon.name: "check"
+            sUncheckedIcon.name: "close"
           }
         }
       }

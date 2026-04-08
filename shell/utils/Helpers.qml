@@ -1,8 +1,10 @@
 pragma ComponentBehavior: Bound
 pragma Singleton
 
+import QtQuick
 import Quickshell
 import Shiny.Helpers
+import qs.services
 
 Singleton {
   function emptyIcon(): icon {
@@ -17,14 +19,14 @@ Singleton {
     return JSON.stringify({
       status: "ok",
       data
-    }, null, 2);
+    });
   }
 
   function fail(message: string): string {
     return JSON.stringify({
       status: "error",
       message
-    }, null, 2);
+    });
   }
 
   function parseFloatStrict(str: string): double {
@@ -59,5 +61,16 @@ Singleton {
     }
 
     return targetValue;
+  }
+
+  function focusedShellScreen(): ShellScreen {
+    if (HyprCompositor.activeMonitor) {
+      const shellScreen = HyprCompositor.toShellScreen(HyprCompositor.activeMonitor);
+      if (shellScreen) {
+        return shellScreen;
+      }
+    }
+
+    return Quickshell.screens[0];
   }
 }

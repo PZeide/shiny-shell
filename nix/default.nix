@@ -70,7 +70,11 @@ in
     version = "${rev}";
     src = lib.fileset.toSource {
       root = ./..;
-      fileset = lib.fileset.union ./../CMakeLists.txt ./../shell;
+      fileset = lib.fileset.unions [
+        ./../CMakeLists.txt
+        ./../shell
+        ./../scripts
+      ];
     };
 
     nativeBuildInputs = [cmake ninja makeWrapper qt6.wrapQtAppsHook];
@@ -93,6 +97,15 @@ in
         --prefix PATH : "${lib.makeBinPath runtimeDeps}" \
         --set FONTCONFIG_FILE "${fontConfig}" \
        	--add-flags "-p $out/share/shiny-shell/greeter.qml"
+
+        for script in ../scripts/*; do
+          if [ -f "$script" ]; then
+            script_name=$(basename "$script")
+            # Strip the .sh extension
+            script_name="''${script_name%.sh}"
+            install -Dm755 "$script" "$out/bin/$script_name"
+          fi
+        done
     '';
 
     passthru = {

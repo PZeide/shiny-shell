@@ -9,7 +9,7 @@ import qs.utils
 Singleton {
   readonly property var configurations: ({
       // Primary
-      [ShinyButton.Primary]: {
+      [ShinyButton.Variant.Primary]: {
         default: {
           background: {
             default: Config.appearance.color.primary,
@@ -36,7 +36,7 @@ Singleton {
         }
       },
       // Secondary
-      [ShinyButton.Secondary]: {
+      [ShinyButton.Variant.Secondary]: {
         default: {
           background: {
             default: Config.appearance.color.secondaryContainer,
@@ -63,7 +63,7 @@ Singleton {
         }
       },
       // Ghost
-      [ShinyButton.Ghost]: {
+      [ShinyButton.Variant.Ghost]: {
         default: {
           background: {
             default: "transparent",
@@ -90,7 +90,7 @@ Singleton {
         }
       },
       // Danger
-      [ShinyButton.Danger]: {
+      [ShinyButton.Variant.Danger]: {
         default: {
           background: {
             default: Config.appearance.color.errorContainer,

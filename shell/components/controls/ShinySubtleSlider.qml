@@ -4,12 +4,19 @@ import QtQuick
 import QtQuick.Templates as T
 import qs.config
 import qs.components
+import qs.components.controls.styles
 import qs.utils.animations
 
 ShinyCooperativeSlider {
   id: root
 
-  property real implicitTrackWidth: 50
+  enum Variant {
+    Primary,
+    Secondary
+  }
+
+  property int variant: ShinySubtleSlider.Variant.Primary
+  readonly property var configuration: ShinySliderStyles.configurations[variant]
   property real implicitDefaultTrackHeight: 6
   property real implicitHoveredTrackHeight: 10
   property real implicitPressedTrackHeight: 12
@@ -18,18 +25,16 @@ ShinyCooperativeSlider {
   property real implicitDefaultHandleHeight: implicitHoveredTrackHeight + 6
   property real implicitPressedHandleHeight: implicitPressedTrackHeight + 8
   property real trackRadius: implicitDefaultTrackHeight / 2
-  property color trackColor: Config.appearance.color.secondaryContainer
-  property color highlightColor: Config.appearance.color.primary
-  property color handleColor: Config.appearance.color.primaryFixed
   property bool showTooltip: false
+  property int tooltipPlacement: ShinyTooltip.Placement.Top
   property string tooltipText: `${Math.round(value * 100)}%`
 
   hoverEnabled: root.enabled
   orientation: Qt.Horizontal
   from: 0
   to: 1
-  implicitWidth: implicitTrackWidth
-  implicitHeight: Math.max(implicitDefaultTrackHeight, implicitHoveredTrackHeight, implicitPressedTrackHeight)
+  implicitWidth: 200 + leftPadding + rightPadding
+  implicitHeight: Math.max(implicitDefaultTrackHeight, implicitHoveredTrackHeight, implicitPressedTrackHeight) + topPadding + bottomPadding
   stepSize: 0
   snapMode: T.Slider.NoSnap
 
@@ -51,17 +56,19 @@ ShinyCooperativeSlider {
 
   background: ShinyRectangle {
     anchors.verticalCenter: parent.verticalCenter
-    color: root.trackColor
+    color: root.enabled ? root.configuration.track.default : root.configuration.track.disabled
     radius: root.trackRadius
     y: root.height / 2 - height / 2
-    width: root.width
+
     height: {
+      const padding = root.topPadding + root.bottomPadding;
+
       if (root.pressed) {
-        return root.implicitPressedTrackHeight;
+        return root.implicitPressedTrackHeight + padding;
       } else if (root.hovered) {
-        return root.implicitHoveredTrackHeight;
+        return root.implicitHoveredTrackHeight + padding;
       } else {
-        return root.implicitDefaultTrackHeight;
+        return root.implicitDefaultTrackHeight + padding;
       }
     }
 
@@ -74,11 +81,11 @@ ShinyCooperativeSlider {
       anchors.top: parent.top
       anchors.bottom: parent.bottom
       width: root.visualPosition * parent.width
-      color: root.highlightColor
+      color: root.enabled ? root.configuration.highlight.default : root.configuration.highlight.disabled
       topLeftRadius: root.trackRadius
       bottomLeftRadius: root.trackRadius
-      topRightRadius: Config.appearance.rounding.xxs
-      bottomRightRadius: Config.appearance.rounding.xxs
+      topRightRadius: root.trackRadius / 2
+      bottomRightRadius: root.trackRadius / 2
     }
   }
 
@@ -87,7 +94,8 @@ ShinyCooperativeSlider {
     x: root.visualPosition * (root.width - width)
     y: root.height / 2 - height / 2
     radius: Config.appearance.rounding.full
-    color: root.handleColor
+    color: root.enabled ? root.configuration.handle.default : root.configuration.handle.disabled
+    opacity: root.hovered || root.pressed ? 1 : 0
 
     implicitWidth: {
       if (root.pressed) {
@@ -114,6 +122,10 @@ ShinyCooperativeSlider {
       EffectNumberAnimation {}
     }
 
+    Behavior on opacity {
+      EffectNumberAnimation {}
+    }
+
     Behavior on x {
       enabled: !root.hovered && !root.pressed
       EffectNumberAnimation {}
@@ -121,6 +133,7 @@ ShinyCooperativeSlider {
 
     ShinyTooltip {
       visible: root.showTooltip && (root.hovered || root.pressed)
+      placement: root.tooltipPlacement
       text: root.tooltipText
       delay: 0
     }

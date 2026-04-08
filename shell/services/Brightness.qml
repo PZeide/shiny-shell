@@ -75,19 +75,19 @@ Singleton {
       if (controller !== null) {
         return Helpers.success(root.formatController(controller));
       } else {
-        return Helpers.fail("Failed to find device");
+        return Helpers.fail("failed to find device");
       }
     }
 
     function set(device: string, command: string): string {
       const controller = device === "%default%" ? root.forDefaultDevice() : root.forDevice(device);
       if (controller === null) {
-        return Helpers.fail("Failed to find device");
+        return Helpers.fail("failed to find device");
       }
 
       const result = Helpers.parseDecimalCommand(command.trim(), controller.brightness);
       if (isNaN(result)) {
-        return Helpers.fail(`Invalid brightness: ${command} (i.e: 0.1, +0.1, -0.1, 10%, +10%, -10%)`);
+        return Helpers.fail(`invalid brightness: ${command} (i.e: 0.1, +0.1, -0.1, 10%, +10%, -10%)`);
       }
 
       const clampedBrightness = Math.min(Math.max(result, 0), 1);

@@ -3,23 +3,48 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
-import Quickshell.Io
 import qs.components.misc
 import qs.components.containers
-import qs.utils
+import qs.layers.region_selector
 import qs.utils.animations
 
 ShinyLayerAnimationHelper {
   id: root
 
+  property var currentRequest: null
   property real layerOpacity: 0
+
+  function process(request: var) {
+    if (root.currentRequest) {
+      console.warn("Cannot process new request, current request is still pending");
+      return;
+    }
+
+    root.currentRequest = request;
+    openLayer();
+  }
+
+  onStateChanged: state => {
+    if (state === "closed") {
+      if (root.currentRequest !== null && !root.currentRequest.resolved) {
+        console.warn("Selector closed but request has not been resolved");
+        root.currentRequest.callback(null);
+      }
+
+      root.currentRequest = null;
+
+      if (RegionSelection.requests.length > 0) {
+        root.process(RegionSelection.pump());
+      }
+    }
+  }
 
   enter: Transition {
     EffectNumberAnimation {
       target: root
       property: "layerOpacity"
       from: root.layerOpacity
-      to: 0.45
+      to: 0.55
     }
   }
 
@@ -29,6 +54,16 @@ ShinyLayerAnimationHelper {
       property: "layerOpacity"
       from: root.layerOpacity
       to: 0
+    }
+  }
+
+  Connections {
+    target: RegionSelection
+
+    function onRequestReceived() {
+      if (root.currentRequest === null) {
+        root.process(RegionSelection.pump());
+      }
     }
   }
 
@@ -65,34 +100,33 @@ ShinyLayerAnimationHelper {
           anchors.fill: parent
           opacity: root.layerOpacity
           screen: window.modelData
-          freeze: false
-          snapWindows: false
-          snapLayers: false
+          freeze: root.currentRequest?.options?.freeze ?? false
+          hintWindows: root.currentRequest?.options?.hintWindows ?? true
+          hintLayers: root.currentRequest?.options?.hintLayers ?? true
 
-          onSelected: root.closeLayer()
-          onCancelled: root.closeLayer()
+          onSelected: region => {
+            root.closeLayer();
+            if (!root.currentRequest) {
+              console.warn("Selection completed, but no current request");
+              return;
+            }
+
+            root.currentRequest.callback(region);
+            root.currentRequest.resolved = true;
+          }
+
+          onCancelled: {
+            root.closeLayer();
+            if (!root.currentRequest) {
+              console.warn("Selection cancelled, but no current request");
+              return;
+            }
+
+            root.currentRequest.callback(null);
+            root.currentRequest.resolved = true;
+          }
         }
       }
-    }
-  }
-
-  IpcHandler {
-    id: ipc
-    target: "region-selector"
-
-    function toggle(): string {
-      root.toggleLayer();
-      return Helpers.success("ok");
-    }
-
-    function open(): string {
-      root.openLayer();
-      return Helpers.success("ok");
-    }
-
-    function close(): string {
-      root.closeLayer();
-      return Helpers.success("ok");
     }
   }
 }

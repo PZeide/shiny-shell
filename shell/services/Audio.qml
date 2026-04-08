@@ -60,7 +60,7 @@ Singleton {
     function outputVolume(command: string): string {
       const result = Helpers.parseDecimalCommand(command.trim(), root.defaultSink.audio.volume);
       if (isNaN(result)) {
-        return Helpers.fail(`Invalid brightness: ${command} (i.e: 0.1, +0.1, -0.1, 10%, +10%, -10%)`);
+        return Helpers.fail(`invalid volume: ${command} (i.e: 0.1, +0.1, -0.1, 10%, +10%, -10%)`);
       }
 
       const clampedVolume = Math.min(Math.max(0, result), 1);
@@ -71,7 +71,7 @@ Singleton {
     function inputVolume(command: string): string {
       const result = Helpers.parseDecimalCommand(command.trim(), root.defaultSource.audio.volume);
       if (isNaN(result)) {
-        return Helpers.fail(`Invalid volume: ${command} (i.e: 0.1, +0.1, -0.1, 10%, +10%, -10%)`);
+        return Helpers.fail(`invalid volume: ${command} (i.e: 0.1, +0.1, -0.1, 10%, +10%, -10%)`);
       }
 
       const clampedVolume = Math.min(Math.max(0, result), 1);

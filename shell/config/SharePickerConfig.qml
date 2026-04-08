@@ -4,5 +4,5 @@ import QtQuick
 import Quickshell.Io
 
 JsonObject {
-  property list<string> excludeLayers: []
+  property bool enabled: true
 }

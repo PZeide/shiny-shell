@@ -15,11 +15,11 @@ Singleton {
   property alias locale: adapter.locale
   property alias lockScreen: adapter.lockScreen
   property alias notification: adapter.notification
-  property alias overview: adapter.overview
   property alias player: adapter.player
   property alias polkit: adapter.polkit
   property alias regionSelector: adapter.regionSelector
   property alias session: adapter.session
+  property alias sharePicker: adapter.sharePicker
   property alias wallpaper: adapter.wallpaper
 
   FileView {
@@ -38,11 +38,11 @@ Singleton {
       property LocaleConfig locale: LocaleConfig {}
       property LockScreenConfig lockScreen: LockScreenConfig {}
       property NotificationConfig notification: NotificationConfig {}
-      property OverviewConfig overview: OverviewConfig {}
       property PlayerConfig player: PlayerConfig {}
       property PolkitConfig polkit: PolkitConfig {}
       property RegionSelectorConfig regionSelector: RegionSelectorConfig {}
       property SessionConfig session: SessionConfig {}
+      property SharePickerConfig sharePicker: SharePickerConfig {}
       property WallpaperConfig wallpaper: WallpaperConfig {}
     }
   }

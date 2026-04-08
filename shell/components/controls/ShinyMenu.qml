@@ -18,6 +18,9 @@ T.Menu {
   rightInset: 1
   closePolicy: T.Popup.CloseOnPressOutside | T.Popup.CloseOnEscape
   modal: false
+  font.family: Config.appearance.font.family.sans
+  font.weight: Font.Bold
+  font.pointSize: Config.appearance.font.size.xs
 
   background: ShinyRectangle {
     color: Config.appearance.color.surfaceContainerHighest
@@ -33,8 +36,7 @@ T.Menu {
       visible: root.title !== ""
       text: root.title
       color: Config.appearance.color.overSurfaceVariant
-      font.weight: Font.Bold
-      font.pointSize: Config.appearance.font.size.xs
+      font: root.font
     }
 
     ListView {
