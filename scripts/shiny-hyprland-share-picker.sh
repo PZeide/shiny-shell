@@ -3,19 +3,27 @@
 # Bridges the custom shiny-shell share-picker IPC protocol to the
 # hyprland-share-picker input / output expected by xdg-desktop-portal-hyprland.
 
+echo "1" >> /home/thibaud/test.txt
+
 ALLOW_TOKEN=false
 for arg in "$@"; do
 	[[ "$arg" == "--allow-token" ]] && ALLOW_TOKEN=true
 done
 
+echo "2" >> /home/thibaud/test.txt
+
 OPTIONS=$(jq -cn \
 	--argjson allowRestoreTokenDefault "$ALLOW_TOKEN" \
 	'{allowRestoreTokenDefault: $allowRestoreTokenDefault}')
+
+echo "3" >> /home/thibaud/test.txt
 
 RESPONSE=$(shiny-shell ipc call share-picker request "$OPTIONS" 2>/dev/null) || {
 	echo "error" >&2
 	exit 1
 }
+
+echo "4" >> /home/thibaud/test.txt
 
 STATUS=$(echo "$RESPONSE" | jq -r '.status // empty')
 if [[ "$STATUS" != "ok" ]]; then
@@ -23,11 +31,15 @@ if [[ "$STATUS" != "ok" ]]; then
 	exit 1
 fi
 
+echo "5" >> /home/thibaud/test.txt
+
 REQUEST_ID=$(echo "$RESPONSE" | jq -r '.data // empty')
 if [[ -z "$REQUEST_ID" ]]; then
 	echo "error" >&2
 	exit 1
 fi
+
+echo "6" >> /home/thibaud/test.txt
 
 while IFS= read -r line || break; do
 	[[ -z "$line" ]] && continue
