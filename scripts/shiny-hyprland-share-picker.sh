@@ -35,6 +35,8 @@ while IFS= read -r line || break; do
 	[[ -z "$line" ]] && continue
 
 	KEY=$(echo "$line" | jq -r '.key // empty' 2>/dev/null)
+	echo "$REQUEST_ID" >> /home/thibaud/test.txt
+	echo "$KEY" >> /home/thibaud/test.txt
 	[[ "$KEY" != "$REQUEST_ID" ]] && continue
 
 	RESULT_STATUS=$(echo "$line" | jq -r '.status // empty')
