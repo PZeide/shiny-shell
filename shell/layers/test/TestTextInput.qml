@@ -37,6 +37,12 @@ Variants {
         enabled: false
       }
 
+      ShinyTextField {
+        placeholderText: "Big input"
+        implicitWidth: 250
+        implicitHeight: 80
+      }
+
       ShinyButton {
         variant: ShinyButton.Variant.Secondary
         text: "Unfocus"

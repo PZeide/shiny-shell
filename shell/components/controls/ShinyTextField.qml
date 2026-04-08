@@ -26,6 +26,7 @@ T.TextField {
   selectionColor: Config.appearance.color.surfaceVariant
   selectedTextColor: Config.appearance.color.overSurface
   placeholderTextColor: Config.appearance.color.outlineVariant
+  verticalAlignment: TextInput.AlignVCenter
   cursorVisible: activeFocus
   renderType: Text.NativeRendering
   font.family: Config.appearance.font.family.sans
