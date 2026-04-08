@@ -12,7 +12,13 @@ OPTIONS=$(jq -cn \
 	--argjson allowRestoreTokenDefault "$ALLOW_TOKEN" \
 	'{allowRestoreTokenDefault: $allowRestoreTokenDefault}')
 
-RESPONSE=$(shiny-shell ipc call share-picker request "$OPTIONS" 2>/dev/null) || {
+#RESPONSE=$(shiny-shell ipc call share-picker request "$OPTIONS" 2>/dev/null) || {
+#	echo "error" >&2
+#	exit 1
+#}
+
+RESPONSE=$(shiny-shell ipc call share-picker request "$OPTIONS" 2>&1) || {
+    echo "$RESPONSE" >> /home/thibaud/test.txt
 	echo "error" >&2
 	exit 1
 }
