@@ -93,6 +93,7 @@ while IFS= read -r line || break; do
 		W=$(echo "$line" | jq -r '.result.region.width // empty')
 		H=$(echo "$line" | jq -r '.result.region.height // empty')
 		if [[ -z "$MON" || -z "$X" || -z "$Y" || -z "$W" || -z "$H" ]]; then
+            echo "$X $Y $W $H"
 			echo "error" >&2
 			exit 1
 		fi

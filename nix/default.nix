@@ -98,14 +98,14 @@ in
         --set FONTCONFIG_FILE "${fontConfig}" \
        	--add-flags "-p $out/share/shiny-shell/greeter.qml"
 
-        for script in ../scripts/*; do
-          if [ -f "$script" ]; then
-            script_name=$(basename "$script")
-            # Strip the .sh extension
-            script_name="''${script_name%.sh}"
-            install -Dm755 "$script" "$out/bin/$script_name"
-          fi
-        done
+      for script in ../scripts/*; do
+        if [ -f "$script" ]; then
+          script_name=$(basename "$script")
+          # Strip the .sh extension
+          script_name="''${script_name%.sh}"
+          install -Dm755 "$script" "$out/bin/$script_name"
+        fi
+      done
     '';
 
     passthru = {
