@@ -65,6 +65,7 @@ while IFS= read -r line || break; do
 		fi
 
 		echo "[SELECTION]${SELECTION_FLAGS}/screen:${MONITOR}"
+		exit 0
 		;;
 	window)
 		WINDOW=$(echo "$line" | jq -r '.result.window // empty')
@@ -89,6 +90,7 @@ while IFS= read -r line || break; do
 		fi
 
 		echo "[SELECTION]${SELECTION_FLAGS}/window:${XDPH_ID}"
+		exit 0
 		;;
 	custom)
 		MON=$(echo "$line" | jq -r '.result.region.monitor // empty')
@@ -102,14 +104,13 @@ while IFS= read -r line || break; do
 		fi
 
 		echo "[SELECTION]${SELECTION_FLAGS}/region:${MON}@${X},${Y},${W},${H}"
+		exit 0
 		;;
 	*)
 		echo "error" >&2
 		exit 1
 		;;
 	esac
-
-	exit 0
 
 done < <(shiny-shell ipc --any-display listen share-picker result 2>/dev/null)
 
