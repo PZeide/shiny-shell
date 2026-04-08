@@ -5,12 +5,7 @@
 
 # Because of how cursed is the CProcess in hyprutils we have to make sure that
 # all background jobs are killed or else the script will hang.
-cleanup() {
-    kill $(jobs -p) 2>/dev/null
-    wait 2>/dev/null
-}
-
-trap cleanup EXIT
+trap 'pkill -P $$ 2>/dev/null' EXIT
 
 ALLOW_TOKEN=false
 for arg in "$@"; do
