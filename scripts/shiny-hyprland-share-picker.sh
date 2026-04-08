@@ -3,6 +3,15 @@
 # Bridges the custom shiny-shell share-picker IPC protocol to the
 # hyprland-share-picker input / output expected by xdg-desktop-portal-hyprland.
 
+# Because of how cursed is the CProcess in hyprutils we have to make sure that
+# all background jobs are killed or else the script will hang.
+cleanup() {
+    kill $(jobs -p) 2>/dev/null
+    wait 2>/dev/null
+}
+
+trap cleanup EXIT
+
 ALLOW_TOKEN=false
 for arg in "$@"; do
 	[[ "$arg" == "--allow-token" ]] && ALLOW_TOKEN=true
@@ -32,11 +41,8 @@ fi
 while IFS= read -r line || break; do
 	[[ -z "$line" ]] && continue
 
-    echo "got $KEY $REQUEST_ID" >> /home/thibaud/test.txt
 	KEY=$(echo "$line" | jq -r '.key // empty' 2>/dev/null)
 	[[ "$KEY" != "$REQUEST_ID" ]] && continue
-
-    echo "matching" >> /home/thibaud/test.txt
 
 	RESULT_STATUS=$(echo "$line" | jq -r '.status // empty')
 
@@ -55,8 +61,6 @@ while IFS= read -r line || break; do
 	SELECTION_FLAGS=""
 	[[ "$RESTORE" == "true" ]] && SELECTION_FLAGS="r"
 
-	echo "processing" >> /home/thibaud/test.txt
-
 	case "$TYPE" in
 	monitor)
 		MONITOR=$(echo "$line" | jq -r '.result.monitor // empty')
@@ -65,9 +69,7 @@ while IFS= read -r line || break; do
 			exit 1
 		fi
 
-        echo "priting result" >> /home/thibaud/test.txt
 		echo "[SELECTION]${SELECTION_FLAGS}/screen:${MONITOR}"
-		echo "exiting soon" >> /home/thibaud/test.txt
 		exit 0
 		;;
 	window)
