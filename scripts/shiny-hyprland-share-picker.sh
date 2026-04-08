@@ -29,7 +29,9 @@ if [[ -z "$REQUEST_ID" ]]; then
 	exit 1
 fi
 
+echo "listening" >> /home/thibaud/test.txt
 while IFS= read -r line || break; do
+    echo "received $line" >> /home/thibaud/test.txt
 	[[ -z "$line" ]] && continue
 
 	KEY=$(echo "$line" | jq -r '.key // empty' 2>/dev/null)
