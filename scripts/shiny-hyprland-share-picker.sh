@@ -17,7 +17,7 @@ OPTIONS=$(jq -cn \
 #	exit 1
 #}
 
-RESPONSE=$(shiny-shell -v ipc call share-picker request "$OPTIONS" 2>&1) || {
+RESPONSE=$(shiny-shell -vv ipc call share-picker request "$OPTIONS" 2>&1) || {
     echo "$RESPONSE" >> /home/thibaud/test.txt
 	echo "error" >&2
 	exit 1
