@@ -6,7 +6,6 @@ import Quickshell.Widgets
 import Quickshell.Wayland
 import Quickshell.Hyprland
 import qs.config
-import qs.services
 import qs.components
 import qs.components.controls
 import qs.utils
@@ -15,7 +14,7 @@ import qs.utils.animations
 ShinyRectangle {
   id: root
 
-  required property list<HyprlandToplevel> availableWindows
+  required property var availableWindows
   readonly property int elementsPerRow: 3
   readonly property int elementWidth: Math.floor((width - layout.columnSpacing * 2 - view.leftPadding - view.rightPadding) / elementsPerRow)
   readonly property int elementHeight: 150
@@ -100,20 +99,20 @@ ShinyRectangle {
               radius: Config.appearance.rounding.sm
 
               Layout.preferredWidth: {
-                const effectiveWidth = element.modelData?.lastIpcObject?.size?.[0] ?? 0;
-                const effectiveHeight = element.modelData?.lastIpcObject?.size?.[1] ?? 0;
+                const effectiveWidth = element.modelData.lastIpcObject.size[0];
+                const effectiveHeight = element.modelData.lastIpcObject.size[1];
                 return Math.min(height * (effectiveWidth / effectiveHeight), parent.width);
               }
 
               ScreencopyView {
                 anchors.fill: parent
-                captureSource: element.modelData?.wayland
+                captureSource: element.modelData.wayland
                 live: true
               }
 
               IconImage {
                 anchors.centerIn: parent
-                source: Icons.findFromClass(element.modelData?.lastIpcObject?.class)
+                source: Icons.findFromClass(element.modelData.lastIpcObject.class)
                 implicitSize: Math.min(wrapper.width, wrapper.height) * 0.4
               }
             }

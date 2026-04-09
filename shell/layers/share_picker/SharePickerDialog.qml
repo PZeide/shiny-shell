@@ -5,7 +5,6 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Qt.labs.synchronizer
 import Quickshell
-import Quickshell.Hyprland
 import qs.utils
 import qs.config
 import qs.components
@@ -15,8 +14,8 @@ import qs.layers.region_selector
 Item {
   id: root
 
-  required property list<HyprlandMonitor> availableMonitors
-  required property list<HyprlandToplevel> availableWindows
+  required property var availableMonitors
+  required property var availableWindows
   required property bool allowCustomRegion
   property bool allowRestoreToken: false
 
@@ -67,14 +66,14 @@ Item {
 
         ShinyTabButton {
           id: monitorButton
-          enabled: root.availableMonitors.length > 0
+          enabled: root.availableMonitors.values.length > 0
           text: "Monitor"
           sIcon.name: "computer"
         }
 
         ShinyTabButton {
           id: windowButton
-          enabled: root.availableWindows.length > 0
+          enabled: root.availableWindows.values.length > 0
           text: "Window"
           sIcon.name: "select_window"
         }

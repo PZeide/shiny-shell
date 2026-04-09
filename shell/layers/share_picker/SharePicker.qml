@@ -44,24 +44,38 @@ Item {
     }
 
     delegate: SharePickerDialog {
+      id: dialog
+
       required property var modelData
       readonly property var options: modelData.options
 
-      availableMonitors: HyprCompositor.monitors.values.filter(monitor => {
-        if (!monitor) {
-          return false;
-        }
+      availableMonitors: ScriptModel {
+        values: HyprCompositor.monitors.values.filter(monitor => {
+          if (!monitor || !monitor.lastIpcObject) {
+            return false;
+          }
 
-        return options.availableMonitors === undefined || options.availableMonitors === "*" || options.availableMonitors.includes(monitor.description);
-      })
+          if (dialog.options.availableMonitors === undefined || dialog.options.availableMonitors === "*") {
+            return true;
+          }
 
-      availableWindows: HyprCompositor.toplevels.values.filter(window => {
-        if (!window || window.lastIpcObject?.class === "com.shiny-shell") {
-          return false;
-        }
+          return dialog.options.availableMonitors.includes(monitor.description);
+        })
+      }
 
-        return options.availableWindows === undefined || options.availableWindows === "*" || options.availableWindows.includes(window.address);
-      })
+      availableWindows: ScriptModel {
+        values: HyprCompositor.toplevels.values.filter(window => {
+          if (!window || !window.lastIpcObject || window.lastIpcObject.class === "com.shiny-shell") {
+            return false;
+          }
+
+          if (dialog.options.availableWindows === undefined || dialog.options.availableWindows === "*") {
+            return true;
+          }
+
+          return dialog.options.availableWindows.includes(window.address);
+        })
+      }
 
       allowCustomRegion: options.allowCustomRegion === undefined || options.allowCustomRegion
       allowRestoreToken: options.allowRestoreTokenDefault ?? false

@@ -94,7 +94,7 @@ ShinyRectangle {
           width: item.data.lastIpcObject.size[0],
           height: item.data.lastIpcObject.size[1]
         });
-      } else {
+      } else if (item.type === "layer") {
         return regionComponent.createObject(root, {
           source: "layer",
           screen: root.screen,
@@ -191,8 +191,8 @@ ShinyRectangle {
         root.selected(regionComponent.createObject(root, {
           source: "user",
           screen: root.screen,
-          x: userSelectionStartX,
-          y: userSelectionStartY,
+          x: Math.min(userSelectionStartX, userSelectionEndX),
+          y: Math.min(userSelectionStartY, userSelectionEndY),
           width: Math.abs(userSelectionEndX - userSelectionStartX),
           height: Math.abs(userSelectionEndY - userSelectionStartY)
         }));

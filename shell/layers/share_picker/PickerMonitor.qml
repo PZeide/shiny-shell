@@ -13,7 +13,7 @@ import qs.utils.animations
 ShinyRectangle {
   id: root
 
-  required property list<HyprlandMonitor> availableMonitors
+  required property var availableMonitors
   readonly property int elementsPerRow: 3
   readonly property int elementWidth: Math.floor((width - layout.columnSpacing * 2 - view.leftPadding - view.rightPadding) / elementsPerRow)
   readonly property int elementHeight: 150
