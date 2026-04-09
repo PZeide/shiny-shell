@@ -30,7 +30,8 @@ Item {
 
     readonly property size windowSize: Qt.size(700, 500)
 
-    title: "Share picker"
+    implicitWidth: windowSize.width
+    implicitHeight: windowSize.height
     minimumSize: windowSize
     maximumSize: windowSize
     color: Config.appearance.color.surface
@@ -65,21 +66,18 @@ Item {
         }
 
         ShinyTabButton {
-          id: monitorButton
           enabled: root.availableMonitors.values.length > 0
           text: "Monitor"
           sIcon.name: "computer"
         }
 
         ShinyTabButton {
-          id: windowButton
           enabled: root.availableWindows.values.length > 0
           text: "Window"
           sIcon.name: "select_window"
         }
 
         ShinyTabButton {
-          id: customButton
           enabled: root.allowCustomRegion
           text: "Custom"
           sIcon.name: "activity_zone"

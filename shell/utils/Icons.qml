@@ -5,9 +5,9 @@ import QtQuick
 import Quickshell
 
 Singleton {
-  function findFromClass(clazz: string): string {
+  function findFromClass(clazz: string): var {
     if (!clazz)
-      return "image-missing";
+      return "image://icon/image-missing";
 
     let icon = Quickshell.iconPath(clazz, true);
     if (icon)
@@ -24,6 +24,6 @@ Singleton {
     if (icon)
       return icon;
 
-    return "image-missing";
+    return "image://icon/image-missing";
   }
 }

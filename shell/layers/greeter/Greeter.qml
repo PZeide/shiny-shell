@@ -32,15 +32,19 @@ Item {
       WlrLayershell.layer: WlrLayer.Overlay
       WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
 
-      MouseArea {
-        anchors.fill: parent
-        cursorShape: Qt.BlankCursor
-        onClicked: Qt.quit()
-      }
-
       GreeterSurface {
         id: surface
         context: context
+      }
+
+      MouseArea {
+        anchors.fill: parent
+        cursorShape: Qt.BlankCursor
+        acceptedButtons: Qt.AllButtons
+        hoverEnabled: true
+        onPressed: event => event.accepted = true
+        onReleased: event => event.accepted = true
+        onPositionChanged: event => event.accepted = true
       }
     }
   }

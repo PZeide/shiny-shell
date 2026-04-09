@@ -65,7 +65,7 @@ Item {
 
       availableWindows: ScriptModel {
         values: HyprCompositor.toplevels.values.filter(window => {
-          if (!window || !window.lastIpcObject || window.lastIpcObject.class === "com.shiny-shell") {
+          if (!window || !window.lastIpcObject || !window.lastIpcObject.class || window.lastIpcObject.class === "com.shiny-shell") {
             return false;
           }
 
