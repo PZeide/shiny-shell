@@ -2,6 +2,7 @@ self: {
   config,
   pkgs,
   lib,
+  inputs,
   ...
 }: let
   inherit (pkgs.stdenv.hostPlatform) system;
@@ -24,10 +25,42 @@ self: {
   shinyShellConf = pkgs.writeText "shiny-shell-greeter.json" (builtins.toJSON userShinyShellSettings);
 
   baseHyprConfig = ''
+    general {
+      gaps_in = 0
+      gaps_out = 0
+      border_size = 0
+    }
+
+    decoration {
+      rounding = 0
+
+      blur {
+        enabled = false
+      }
+
+      shadow {
+        enabled = false
+      }
+    }
+
+    animations {
+      enabled = false
+    }
+
     misc {
       disable_hyprland_logo = true
       disable_splash_rendering = true
       disable_autoreload = true
+      background_color = rgb(000000)
+    }
+
+    xwayland {
+      enabled = false
+    }
+
+    cursor {
+      invisible = true
+      no_hardware_cursors = 0
     }
 
     ecosystem {
@@ -35,19 +68,11 @@ self: {
       no_donation_nag = true
     }
 
-    cursor {
-      invisible = true
-    }
-
-    xwayland {
-      enabled = false;
-    }
-
     env = SHINYSHELL_CONFIG,${shinyShellConf}
     env = SHINYSHELL_GREETER_SESSION,${cfg.session}
     env = SHINYSHELL_GREETER_USER,${cfg.user}
 
-    exec-once = ${cfg.package}/bin/shiny-shell-greeter && pkill Hyprland
+    exec-once = ${cfg.package}/bin/shiny-shell-greeter; ${cfg.hyprlandPackage}/bin/hyprctl dispatch exit
   '';
 
   monitorHyprConfig = ''
@@ -74,14 +99,15 @@ self: {
   hyprConf = pkgs.writeText "shiny-shell-greeter-hyprland.conf" (
     if cfg.useHyprlandUserOptions
     then ''
+      ${inputs.home-manager.lib.hm.generators.toHyprconf {
+        attrs = userHyprConfig;
+        importantPrefixes = config.home-manager.users.${cfg.user}.wayland.windowManager.hyprland.importantPrefixes;
+      }}
       ${baseHyprConfig}
-
-      ${lib.hm.generators.toHyprconf {attrs = userHyprConfig;}}
     ''
     else ''
-      ${baseHyprConfig}
-
       ${monitorHyprConfig}
+      ${baseHyprConfig}
     ''
   );
 in {
@@ -133,6 +159,7 @@ in {
       settings = {
         default_session = {
           command = "${cfg.hyprlandPackage}/bin/start-hyprland -- --config ${hyprConf}";
+          user = "greeter";
         };
       };
     };

@@ -1,9 +1,9 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Templates
+import QtQuick.Templates as T
 
-Slider {
+T.Slider {
   id: root
 
   property real cooperativeValue: value

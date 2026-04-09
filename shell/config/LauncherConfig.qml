@@ -11,7 +11,7 @@ JsonObject {
   property WebSearchConfig webSearch: WebSearchConfig {}
 
   component ApplicationsConfig: JsonObject {
-    property bool useSystemd: true
+    property bool useSystemd: false
     property string terminal: ""
     property real scoreThreshold: 0.6
     property real scorePrefixBoost: 0.12

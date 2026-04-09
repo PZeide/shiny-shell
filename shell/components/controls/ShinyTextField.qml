@@ -1,35 +1,38 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Templates as T
+import Shiny.Helpers
 import qs.config
 import qs.components
+import qs.utils
 import qs.utils.animations
 
-TextField {
+T.TextField {
   id: root
 
-  readonly property bool hasIcon: iconName !== ""
-  property string iconName: ""
-  property real iconFill: 0
-  property int iconGrade: 0
-  property alias iconFont: icon.font
+  property icon sIcon: Helpers.emptyIcon()
+  property alias sIconFont: icon.font
+  readonly property bool hasIcon: sIcon.name !== ""
   property alias radius: backgroundRectangle.radius
   property alias topLeftRadius: backgroundRectangle.topLeftRadius
   property alias topRightRadius: backgroundRectangle.topRightRadius
   property alias bottomLeftRadius: backgroundRectangle.bottomLeftRadius
   property alias bottomRightRadius: backgroundRectangle.bottomRightRadius
 
+  implicitWidth: 100 + leftPadding + rightPadding
+  implicitHeight: 20 + topPadding + bottomPadding
   color: enabled ? Config.appearance.color.overSurface : Config.appearance.color.outline
   selectionColor: Config.appearance.color.surfaceVariant
   selectedTextColor: Config.appearance.color.overSurface
   placeholderTextColor: Config.appearance.color.outlineVariant
+  verticalAlignment: TextInput.AlignVCenter
   cursorVisible: activeFocus
   renderType: Text.NativeRendering
   font.family: Config.appearance.font.family.sans
   font.pointSize: Config.appearance.font.size.md
   padding: Config.appearance.padding.lg
-  leftPadding: hasIcon ? icon.width + Config.appearance.padding.lg * 2 : padding
+  leftPadding: hasIcon ? icon.width + icon.anchors.leftMargin + (padding / 2) : padding
 
   cursorDelegate: ShinyRectangle {
     id: cursor
@@ -44,20 +47,27 @@ TextField {
       running: root.cursorVisible && cursor.shouldBlink
       loops: Animation.Infinite
 
+      onStopped: cursor.opacity = 0
+      onStarted: cursor.opacity = 1
+
       PauseAnimation {
-        duration: 300
+        duration: 400
       }
 
-      StandardOutNumberAnimation {
+      NumberAnimation {
+        duration: 120
+        easing.type: Easing.InQuad
         from: 1
         to: 0
       }
 
       PauseAnimation {
-        duration: 500
+        duration: 400
       }
 
-      StandardInNumberAnimation {
+      NumberAnimation {
+        duration: 200
+        easing.type: Easing.OutQuad
         from: 0
         to: 1
       }
@@ -65,7 +75,7 @@ TextField {
 
     Timer {
       id: delayBlink
-      interval: 1000
+      interval: 300
       onTriggered: cursor.shouldBlink = true
     }
 
@@ -89,7 +99,6 @@ TextField {
 
   background: ShinyClippingRectangle {
     color: "transparent"
-    radius: backgroundRectangle.radius
     topLeftRadius: backgroundRectangle.topLeftRadius
     topRightRadius: backgroundRectangle.topRightRadius
     bottomLeftRadius: backgroundRectangle.bottomLeftRadius
@@ -137,13 +146,23 @@ TextField {
   ShinyIcon {
     id: icon
     visible: root.hasIcon
-    icon: root.iconName
-    fill: root.iconFill
-    grade: root.iconGrade
+    icon: root.sIcon.name
+    fill: root.sIcon.fill
+    grade: root.sIcon.grade
     font.pointSize: Config.appearance.font.size.lg
     anchors.left: parent.left
-    anchors.leftMargin: root.hasIcon ? Config.appearance.padding.lg : 0
+    anchors.leftMargin: root.hasIcon ? root.padding : 0
     anchors.verticalCenter: parent.verticalCenter
     color: enabled ? Config.appearance.color.overSurfaceVariant : Config.appearance.color.outline
+  }
+
+  ShinyText {
+    visible: root.text === ""
+    anchors.left: parent.left
+    anchors.leftMargin: root.leftPadding
+    anchors.verticalCenter: parent.verticalCenter
+    font: root.font
+    text: root.placeholderText
+    color: root.placeholderTextColor
   }
 }

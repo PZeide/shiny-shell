@@ -72,7 +72,7 @@ ShinyRectangle {
         enabled: root.enabled
         echoMode: TextInput.Password
         inputMethodHints: Qt.ImhHiddenText | Qt.ImhSensitiveData | Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
-        iconName: "lock"
+        sIcon.name: "lock"
         placeholderText: "Password"
 
         onAccepted: root.flow.submit(text)
@@ -94,8 +94,6 @@ ShinyRectangle {
 
       ShinyButton {
         enabled: root.enabled
-        implicitWidth: 100
-        implicitHeight: 35
         variant: ShinyButton.Variant.Secondary
         text: "Cancel"
 
@@ -104,11 +102,9 @@ ShinyRectangle {
 
       ShinyButton {
         enabled: root.enabled
-        implicitWidth: 130
-        implicitHeight: 35
         variant: ShinyButton.Variant.Primary
         text: "Authenticate"
-        iconName: "vpn_key"
+        sIcon.name: "vpn_key"
 
         onClicked: root.flow.submit(field.text)
       }

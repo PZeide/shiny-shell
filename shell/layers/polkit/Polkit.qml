@@ -3,8 +3,8 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
-import Quickshell.Hyprland
 import Quickshell.Services.Polkit
+import qs.utils
 import qs.config
 import qs.components
 import qs.components.misc
@@ -66,18 +66,7 @@ ShinyLayerAnimationHelper {
   }
 
   function updateNotificationWindow() {
-    if (Hyprland.focusedMonitor) {
-      const shellScreen = Quickshell.screens.find(s => s.name == Hyprland.focusedMonitor.name);
-      if (shellScreen) {
-        root.notificationWindow = shellScreen;
-      } else {
-        console.warn(`No shell screen found for focused monitor ${Hyprland.focusedMonitor.name}`);
-        root.notificationWindow = Quickshell.screens[0];
-      }
-    } else {
-      console.warn("No focused monitor found");
-      root.notificationWindow = Quickshell.screens[0];
-    }
+    root.notificationWindow = Helpers.focusedShellScreen();
   }
 
   Loader {
@@ -148,6 +137,16 @@ ShinyLayerAnimationHelper {
         console.info("Polkit agent registered");
       } else {
         console.warn("Polkit agent unregistered");
+      }
+    }
+  }
+
+  Connections {
+    target: Quickshell
+
+    function onScreensChanged() {
+      if (!Quickshell.screens.values.includes(root.notificationWindow)) {
+        root.updateNotificationWindow();
       }
     }
   }

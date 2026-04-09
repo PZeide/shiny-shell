@@ -17,6 +17,8 @@
   libqalculate,
   app2unit,
   xdg-terminal-exec,
+  gpu-screen-recorder,
+  jq,
   ...
 }: let
   plugin = stdenv.mkDerivation {
@@ -51,6 +53,7 @@
   runtimeDeps = [
     app2unit
     xdg-terminal-exec
+    gpu-screen-recorder
   ];
 
   fontConfig = makeFontsConf {
@@ -68,7 +71,11 @@ in
     version = "${rev}";
     src = lib.fileset.toSource {
       root = ./..;
-      fileset = lib.fileset.union ./../CMakeLists.txt ./../shell;
+      fileset = lib.fileset.unions [
+        ./../CMakeLists.txt
+        ./../shell
+        ./../scripts
+      ];
     };
 
     nativeBuildInputs = [cmake ninja makeWrapper qt6.wrapQtAppsHook];
@@ -91,6 +98,10 @@ in
         --prefix PATH : "${lib.makeBinPath runtimeDeps}" \
         --set FONTCONFIG_FILE "${fontConfig}" \
        	--add-flags "-p $out/share/shiny-shell/greeter.qml"
+
+      install -Dm755 $src/scripts/shiny-hyprland-share-picker.sh $out/bin/shiny-hyprland-share-picker
+      wrapProgram $out/bin/shiny-hyprland-share-picker \
+        --prefix PATH : "${lib.makeBinPath [jq]}:$out/bin"
     '';
 
     passthru = {

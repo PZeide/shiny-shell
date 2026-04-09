@@ -89,7 +89,7 @@ Singleton {
         return Helpers.success(result);
       }
 
-      return Helpers.fail("No player available");
+      return Helpers.fail("no player available");
     }
 
     function play(): string {
@@ -98,7 +98,7 @@ Singleton {
         return Helpers.success(root.preferred.dbusName);
       }
 
-      return Helpers.fail("No player available");
+      return Helpers.fail("no player available");
     }
 
     function pause(): string {
@@ -107,7 +107,7 @@ Singleton {
         return Helpers.success(root.preferred.dbusName);
       }
 
-      return Helpers.fail("No player available");
+      return Helpers.fail("no player available");
     }
 
     function playPause(): string {
@@ -116,7 +116,7 @@ Singleton {
         return Helpers.success(root.preferred.dbusName);
       }
 
-      return Helpers.fail("No player available");
+      return Helpers.fail("no player available");
     }
 
     function stop(): string {
@@ -125,7 +125,7 @@ Singleton {
         return Helpers.success(root.preferred.dbusName);
       }
 
-      return Helpers.fail("No player available");
+      return Helpers.fail("no player available");
     }
 
     function next(): string {
@@ -134,7 +134,7 @@ Singleton {
         return Helpers.success(root.preferred.dbusName);
       }
 
-      return Helpers.fail("No player available");
+      return Helpers.fail("no player available");
     }
 
     function previous(): string {
@@ -143,7 +143,7 @@ Singleton {
         return Helpers.success(root.preferred.dbusName);
       }
 
-      return Helpers.fail("No player available");
+      return Helpers.fail("no player available");
     }
   }
 }

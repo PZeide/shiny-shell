@@ -106,7 +106,7 @@ ShinyRectangle {
         property bool moveSupported: root.hasTrack && root.player.canSeek && root.player.positionSupported
 
         enabled: positionSupported && moveSupported
-        implicitTrackWidth: 240
+        implicitWidth: 240
         cooperativeValue: positionSupported ? root.player.position / root.player.length : 1
         showTooltip: positionSupported
         tooltipText: positionSupported ? `${Formatting.numericDuration(value * root.player.length)} / ${Formatting.numericDuration(root.player.length)}` : ""

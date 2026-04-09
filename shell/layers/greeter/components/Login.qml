@@ -112,10 +112,10 @@ ShinyRectangle {
         Layout.fillHeight: true
         implicitWidth: 240
         enabled: root.acceptAuthentication
-        iconName: "lock"
         font.pointSize: Config.appearance.font.size.md
-        iconFont.pointSize: Config.appearance.font.size.lg
-        iconGrade: 1000
+        sIcon.name: "lock"
+        sIcon.grade: 1000
+        sIconFont.pointSize: Config.appearance.font.size.lg
         placeholderText: "Enter password"
         echoMode: TextInput.Password
         inputMethodHints: Qt.ImhHiddenText | Qt.ImhSensitiveData | Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase

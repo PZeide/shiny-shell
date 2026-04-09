@@ -5,7 +5,6 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
-import Quickshell.Hyprland
 import Shiny.Session
 import qs.services
 import qs.utils
@@ -66,7 +65,7 @@ Singleton {
       root.lock();
       break;
     case "dpms":
-      Hyprland.dispatch("dpms off");
+      HyprCompositor.dispatch("dpms off");
       break;
     case "setbrightness":
       if (args.length < 1) {
@@ -107,7 +106,7 @@ Singleton {
 
     switch (command) {
     case "dpms":
-      Hyprland.dispatch("dpms on");
+      HyprCompositor.dispatch("dpms on");
       break;
     case "setbrightness":
       for (const controller of Brightness.devices) {
@@ -159,8 +158,8 @@ Singleton {
     enabled: false
     window: ShinyWindow {
       name: "inhibitor"
-      implicitWidth: 0
       implicitHeight: 0
+      implicitWidth: 0
     }
   }
 

@@ -1,98 +1,47 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Templates
+import QtQuick.Templates as T
 import QtQuick.Layouts
+import Shiny.Helpers
 import qs.components
+import qs.components.controls.styles
 import qs.utils
 import qs.utils.animations
 import qs.config
 
-AbstractButton {
+T.AbstractButton {
   id: root
 
   enum Variant {
-    Primary = 0,
-    Secondary = 1,
-    Ghost = 2,
-    Danger = 3
+    Primary,
+    Secondary,
+    Ghost,
+    Danger
   }
 
-  readonly property var _configurations: ({
-      // Primary
-      0: {
-        background: {
-          default: Config.appearance.color.primary,
-          hover: Colors.transparentize(Config.appearance.color.primary, 0.3),
-          down: Colors.transparentize(Config.appearance.color.primary, 0.4),
-          disabled: Colors.transparentize(Config.appearance.color.primary, 0.4)
-        },
-        content: {
-          default: Config.appearance.color.overPrimary,
-          disabled: Colors.transparentize(Config.appearance.color.overPrimary, 0.3)
-        }
-      },
-      // Secondary
-      1: {
-        background: {
-          default: Config.appearance.color.secondaryContainer,
-          hover: Colors.transparentize(Config.appearance.color.secondaryContainer, 0.3),
-          down: Colors.transparentize(Config.appearance.color.secondaryContainer, 0.4),
-          disabled: Colors.transparentize(Config.appearance.color.secondaryContainer, 0.4)
-        },
-        content: {
-          default: Config.appearance.color.overSecondaryContainer,
-          disabled: Colors.transparentize(Config.appearance.color.overSecondaryContainer, 0.3)
-        }
-      },
-      // Ghost
-      2: {
-        background: {
-          default: "transparent",
-          hover: Colors.transparentize(Config.appearance.color.primary, 0.92),
-          down: Colors.transparentize(Config.appearance.color.primary, 0.85),
-          disabled: "transparent"
-        },
-        content: {
-          default: Config.appearance.color.primary,
-          disabled: Colors.transparentize(Config.appearance.color.primary, 0.3)
-        }
-      },
-      // Danger
-      3: {
-        background: {
-          default: Config.appearance.color.errorContainer,
-          hover: Colors.transparentize(Config.appearance.color.errorContainer, 0.3),
-          down: Colors.transparentize(Config.appearance.color.errorContainer, 0.4),
-          disabled: Colors.transparentize(Config.appearance.color.errorContainer, 0.4)
-        },
-        content: {
-          default: Config.appearance.color.overErrorContainer,
-          disabled: Colors.transparentize(Config.appearance.color.overErrorContainer, 0.3)
-        }
-      }
-    })
-
   property int variant: ShinyButton.Variant.Primary
-  readonly property var configuration: _configurations[variant]
-  readonly property bool hasIcon: iconName !== ""
-  property string iconName: ""
-  property real iconFill: 0
-  property int iconGrade: 0
-  property alias iconFont: icon.font
-  property alias radius: backgroundRectangle.radius
-  property alias topLeftRadius: backgroundRectangle.topLeftRadius
-  property alias topRightRadius: backgroundRectangle.topRightRadius
-  property alias bottomLeftRadius: backgroundRectangle.bottomLeftRadius
-  property alias bottomRightRadius: backgroundRectangle.bottomRightRadius
+  readonly property var configuration: ShinyButtonStyles.configurations[variant][root.checkable && !root.checked ? "unchecked" : "default"]
+  readonly property bool square: root.display === T.AbstractButton.IconOnly
+  property icon sIcon: Helpers.emptyIcon()
+  property alias sIconFont: icon.font
+  readonly property bool hasIcon: sIcon.name !== ""
+  property alias radius: background.radius
+  property alias topLeftRadius: background.topLeftRadius
+  property alias topRightRadius: background.topRightRadius
+  property alias bottomLeftRadius: background.bottomLeftRadius
+  property alias bottomRightRadius: background.bottomRightRadius
 
-  verticalPadding: Config.appearance.padding.xs
-  horizontalPadding: Config.appearance.padding.sm
+  font.family: Config.appearance.font.family.sans
+  font.pointSize: Config.appearance.font.size.md
+  implicitWidth: contentItem.implicitWidth + leftPadding + rightPadding
+  implicitHeight: contentItem.implicitHeight + topPadding + bottomPadding
+  verticalPadding: Config.appearance.padding.sm
+  horizontalPadding: root.square ? Config.appearance.padding.sm : Config.appearance.padding.md
   spacing: Config.appearance.spacing.xs
 
   background: ShinyRectangle {
-    id: backgroundRectangle
-    anchors.fill: parent
+    id: background
     radius: Config.appearance.rounding.xs
 
     color: {
@@ -106,42 +55,37 @@ AbstractButton {
         return root.configuration.background.default;
       }
     }
-
-    Behavior on color {
-      EffectColorAnimation {}
-    }
   }
 
-  contentItem: Item {
-    RowLayout {
-      anchors.centerIn: parent
-      spacing: root.spacing
+  contentItem: FlexboxLayout {
+    anchors.centerIn: parent
+    gap: root.spacing
+    direction: root.display === T.AbstractButton.TextUnderIcon ? FlexboxLayout.Column : FlexboxLayout.Row
+    alignItems: FlexboxLayout.AlignCenter
+    justifyContent: FlexboxLayout.JustifyCenter
 
-      ShinyIcon {
-        id: icon
-        visible: root.hasIcon
-        icon: root.iconName
-        fill: root.iconFill
-        grade: root.iconGrade
-        font.pointSize: Config.appearance.font.size.lg
-        color: root.enabled ? root.configuration.content.default : root.configuration.content.disabled
+    ShinyIcon {
+      id: icon
+      Layout.preferredWidth: root.square ? Math.max(icon.implicitWidth, icon.implicitHeight) : icon.implicitWidth
+      Layout.preferredHeight: root.square ? Math.max(icon.implicitWidth, icon.implicitHeight) : Math.max(icon.implicitHeight, text.implicitHeight)
+      visible: root.hasIcon && root.display !== T.AbstractButton.TextOnly
+      icon: root.sIcon.name
+      fill: root.sIcon.fill
+      grade: root.sIcon.grade
+      color: root.enabled ? root.configuration.content.default : root.configuration.content.disabled
+      horizontalAlignment: Text.AlignHCenter
+      verticalAlignment: Text.AlignVCenter
+      font.pointSize: Config.appearance.font.size.lg
+    }
 
-        Behavior on color {
-          EffectColorAnimation {}
-        }
-      }
-
-      ShinyText {
-        id: text
-        visible: root.text !== ""
-        text: root.text
-        font: root.font
-        color: root.enabled ? root.configuration.content.default : root.configuration.content.disabled
-
-        Behavior on color {
-          EffectColorAnimation {}
-        }
-      }
+    ShinyText {
+      id: text
+      Layout.preferredHeight: Math.max(text.implicitHeight, icon.implicitHeight)
+      visible: root.text !== "" && root.display !== T.AbstractButton.IconOnly
+      text: root.text
+      font: root.font
+      color: root.enabled ? root.configuration.content.default : root.configuration.content.disabled
+      verticalAlignment: Text.AlignVCenter
     }
   }
 }

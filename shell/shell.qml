@@ -1,3 +1,5 @@
+//@ pragma ShellId shiny-shell
+//@ pragma AppId com.shiny-shell
 //@ pragma Env QS_NO_RELOAD_POPUP=1
 //@ pragma Env QSG_RHI_BACKEND=vulkan
 //@ pragma Env QSG_RENDER_LOOP=threaded
@@ -10,19 +12,22 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
-import Quickshell.Hyprland
 import qs.services
 import qs.config
+import qs.layers.bar
 import qs.layers.launcher
 import qs.layers.lockscreen
-import qs.layers.overview
 import qs.layers.polkit
+import qs.layers.region_selector
+import qs.layers.share_picker
 import qs.layers.wallpaper
 
 ShellRoot {
   settings.watchFiles: Quickshell.env("SHINYSHELL_ENVIRONMENT") === "dev"
 
   Wallpaper {}
+  Bar {}
+  RegionSelector {}
 
   LazyLoader {
     activeAsync: Config.launcher.enabled
@@ -35,25 +40,13 @@ ShellRoot {
   }
 
   LazyLoader {
-    activeAsync: Config.overview.enabled
-    Overview {}
-  }
-
-  LazyLoader {
     activeAsync: Config.polkit.enabled
     Polkit {}
   }
 
-  Connections {
-    target: Hyprland
-
-    readonly property list<string> refreshToplevelsEvents: ["openwindow", "closewindow", "movewindow", "movewindow2", "workspace", "workspacev2", "focusedmon", "focusedmonv2", "activewindow", "activewindowv2", "changefloatingmode", "fullscreen", "moveintogroup", "moveoutofgroup"]
-
-    function onRawEvent(event) {
-      if (refreshToplevelsEvents.includes(event.name)) {
-        Hyprland.refreshToplevels();
-      }
-    }
+  LazyLoader {
+    activeAsync: Config.sharePicker.enabled
+    SharePicker {}
   }
 
   Component.onCompleted: {
@@ -62,8 +55,12 @@ ShellRoot {
     Audio;
     Battery;
     Brightness;
-    Notifications;
+    Clock;
+    Host;
+    HyprCompositor;
+    //Notifications;
     Player;
+    ScreenRecorder;
     Session;
   }
 }

@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.config
 import qs.components
+import qs.utils.animations
 
 Item {
   id: root
@@ -11,6 +12,14 @@ Item {
 
   implicitHeight: parent.height
   implicitWidth: contentLayout.implicitWidth + contentLayout.anchors.leftMargin + contentLayout.anchors.rightMargin
+
+  Behavior on implicitWidth {
+    EffectNumberAnimation {}
+  }
+
+  Behavior on implicitHeight {
+    EffectNumberAnimation {}
+  }
 
   ShinyRectangle {
     anchors.fill: root

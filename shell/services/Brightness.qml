@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Hyprland
 import Shiny.Brightness
+import qs.services
 import qs.config
 import qs.utils
 
@@ -41,7 +42,7 @@ Singleton {
     if (devices.length === 1)
       return devices[0];
 
-    const focused = Hyprland.focusedMonitor?.name ?? null;
+    const focused = HyprCompositor.activeMonitor?.name ?? null;
     let edpFallback = null;
 
     for (const controller of devices) {
@@ -74,62 +75,26 @@ Singleton {
       if (controller !== null) {
         return Helpers.success(root.formatController(controller));
       } else {
-        return Helpers.fail("Failed to find device");
+        return Helpers.fail("failed to find device");
       }
     }
 
     function set(device: string, command: string): string {
       const controller = device === "%default%" ? root.forDefaultDevice() : root.forDevice(device);
       if (controller === null) {
-        return Helpers.fail("Failed to find device");
+        return Helpers.fail("failed to find device");
       }
 
-      const currentBrightness = controller.brightness;
-      let targetBrightness;
-
-      const parseFloatStrict = str => {
-        // Only digits and a single dot allowed
-        const validFloatRegex = /^\d+(\.\d+)?$/;
-        if (validFloatRegex.test(str)) {
-          return parseFloat(str);
-        }
-
-        return NaN;
-      };
-
-      command = command.trim();
-      if (command.startsWith("+")) {
-        if (command.endsWith("%")) {
-          const value = parseFloatStrict(command.slice(1, -1));
-          targetBrightness = currentBrightness + (value / 100);
-        } else {
-          const value = parseFloatStrict(command.slice(1));
-          targetBrightness = currentBrightness + value;
-        }
-      } else if (command.endsWith("-")) {
-        if (command.endsWith("%-")) {
-          const value = parseFloatStrict(command.slice(0, -2));
-          targetBrightness = currentBrightness - (value / 100);
-        } else {
-          const value = parseFloatStrict(command.slice(0, -1));
-          targetBrightness = currentBrightness - value;
-        }
-      } else if (command.endsWith("%")) {
-        const value = parseFloatStrict(command.slice(0, -1));
-        targetBrightness = value / 100;
-      } else {
-        const value = parseFloatStrict(command);
-        targetBrightness = value;
+      const result = Helpers.parseDecimalCommand(command.trim(), controller.brightness);
+      if (isNaN(result)) {
+        return Helpers.fail(`invalid brightness: ${command} (i.e: 0.1, +0.1, -0.1, 10%, +10%, -10%)`);
       }
 
-      if (isNaN(targetBrightness)) {
-        return Helpers.fail(`Invalid command: ${command} (i.e: 0.1, +0.1, 0.1-, 10%, +10%, 10%-)`);
-      }
-
-      root.setDeviceBrightness(controller, targetBrightness);
+      const clampedBrightness = Math.min(Math.max(result, 0), 1);
+      root.setDeviceBrightness(controller, clampedBrightness);
       return Helpers.success({
         device: controller.device,
-        target: targetBrightness,
+        target: clampedBrightness,
         smooth: Config.brightness.smooth
       });
     }

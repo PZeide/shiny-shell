@@ -1,25 +1,26 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Templates
+import QtQuick.Templates as T
 import QtQuick.Layouts
 import qs.components
 import qs.config
 import qs.utils
 import qs.utils.animations
 
-Menu {
+T.Menu {
   id: root
-
   implicitWidth: contentItem.implicitWidth + leftPadding + rightPadding
   implicitHeight: contentItem.implicitHeight + topPadding + bottomPadding
   verticalPadding: Config.appearance.padding.sm
-  horizontalPadding: Config.appearance.padding.sm + leftInset + rightInset
+  horizontalPadding: Config.appearance.padding.sm
   leftInset: 1
   rightInset: 1
-  closePolicy: Popup.CloseOnPressOutside | Popup.CloseOnEscape
+  closePolicy: T.Popup.CloseOnPressOutside | T.Popup.CloseOnEscape
   modal: false
-  dim: false
+  font.family: Config.appearance.font.family.sans
+  font.weight: Font.Bold
+  font.pointSize: Config.appearance.font.size.xs
 
   background: ShinyRectangle {
     color: Config.appearance.color.surfaceContainerHighest
@@ -35,8 +36,7 @@ Menu {
       visible: root.title !== ""
       text: root.title
       color: Config.appearance.color.overSurfaceVariant
-      font.weight: Font.Bold
-      font.pointSize: Config.appearance.font.size.xs
+      font: root.font
     }
 
     ListView {
@@ -68,7 +68,7 @@ Menu {
 
     EffectNumberAnimation {
       property: "scale"
-      from: 0.75
+      from: 0.95
       to: 1
     }
   }
@@ -83,7 +83,7 @@ Menu {
     EffectNumberAnimation {
       property: "scale"
       from: 1
-      to: 0.75
+      to: 0.95
     }
   }
 

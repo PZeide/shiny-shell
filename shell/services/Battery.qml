@@ -48,7 +48,7 @@ Singleton {
 
     function status(): string {
       if (!root.isAvailable) {
-        return Helpers.fail("Battery not available");
+        return Helpers.fail("battery not available");
       }
 
       return Helpers.success({
