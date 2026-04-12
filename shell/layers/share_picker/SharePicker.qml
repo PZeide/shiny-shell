@@ -55,11 +55,7 @@ Item {
             return false;
           }
 
-          if (dialog.options.availableMonitors === undefined || dialog.options.availableMonitors === "*") {
-            return true;
-          }
-
-          return dialog.options.availableMonitors.includes(monitor.description);
+          return dialog.options.allowMonitors === undefined || dialog.options.allowMonitors;
         })
       }
 
@@ -69,11 +65,7 @@ Item {
             return false;
           }
 
-          if (dialog.options.availableWindows === undefined || dialog.options.availableWindows === "*") {
-            return true;
-          }
-
-          return dialog.options.availableWindows.includes(window.address);
+          return dialog.options.allowWindows === undefined || dialog.options.allowWindows;
         })
       }
 
