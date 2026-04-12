@@ -20,7 +20,7 @@ Item {
   property bool allowRestoreToken: false
 
   signal selectedMonitor(monitor: string)
-  signal selectedWindow(window: string)
+  signal selectedWindow(windowAddress: string, stableId: string)
   signal selectedCustomRegion(region: RectangularRegion)
   signal cancelled
 
@@ -119,7 +119,7 @@ Item {
         PickerWindow {
           availableWindows: root.availableWindows
 
-          onSelectedWindow: window => root.selectedWindow(window.address)
+          onSelectedWindow: window => root.selectedWindow(window.address, window.lastIpcObject.stableId)
         }
 
         PickerCustom {}

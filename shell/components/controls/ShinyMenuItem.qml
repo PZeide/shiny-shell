@@ -7,7 +7,6 @@ import Shiny.Helpers
 import qs.components
 import qs.config
 import qs.utils
-import qs.utils.animations
 
 T.MenuItem {
   id: root

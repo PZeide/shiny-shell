@@ -65,7 +65,7 @@ Item {
 
       availableWindows: ScriptModel {
         values: HyprCompositor.toplevels.values.filter(window => {
-          if (!window || !window.lastIpcObject || !window.lastIpcObject.class || window.lastIpcObject.class === "com.shiny-shell") {
+          if (!window || !window.lastIpcObject || !window.lastIpcObject.stableId || !window.lastIpcObject.class || window.lastIpcObject.class === "com.shiny-shell") {
             return false;
           }
 
@@ -86,10 +86,11 @@ Item {
           monitor
         })
 
-      onSelectedWindow: window => root.handleResult(modelData.key, {
+      onSelectedWindow: (windowAddress, stableId) => root.handleResult(modelData.key, {
           type: "window",
           allowRestoreToken,
-          window
+          windowAddress,
+          stableId
         })
 
       onSelectedCustomRegion: region => root.handleResult(modelData.key, {

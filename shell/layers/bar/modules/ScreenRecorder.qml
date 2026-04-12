@@ -38,7 +38,7 @@ BarModuleWrapper {
       anchors.centerIn: parent
       icon: "screen_record"
       font.pointSize: Config.appearance.font.size.md
-      color: ScreenRecorder.isRecording ? "red" : Config.appearance.color.overSurface
+      color: ScreenRecorder.isRecording ? Config.appearance.color.error : Config.appearance.color.overSurface
     }
   }
 }

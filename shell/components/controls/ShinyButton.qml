@@ -7,7 +7,6 @@ import Shiny.Helpers
 import qs.components
 import qs.components.controls.styles
 import qs.utils
-import qs.utils.animations
 import qs.config
 
 T.AbstractButton {

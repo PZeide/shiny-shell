@@ -5,18 +5,20 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import qs.utils
-import qs.layers.share_picker
+import qs.config
 
 Singleton {
   id: root
 
-  property bool isAvailable: false
+  readonly property bool isAvailable: Config.screenRecorder.enabled
   readonly property alias isRecording: gsrProcess.running
 
   function startRecording() {
     if (!root.isAvailable || root.isRecording) {
       return;
     }
+
+    gsrProcess.exec({});
   }
 
   function stopRecording() {
@@ -28,19 +30,32 @@ Singleton {
   }
 
   Process {
-    id: availabilityCheckProcess
-    command: ["which", "gpu-screen-recorder"]
-    onExited: exitCode => {
-      if (exitCode === 0) {
-        console.info("gpu-screen-recorder is available");
-        root.isAvailable = true;
-      }
-    }
-  }
-
-  Process {
     id: gsrProcess
-    command: ["gpu-screen-recorder", "-w", "portal", "-c", "mp4"]
+
+    command: {
+      const base = ["gpu-screen-recorder", "-w", "portal"];
+      base.push("-c", Config.screenRecorder.container);
+      base.push("-k", Config.screenRecorder.videoCodec);
+      base.push("-ac", Config.screenRecorder.audioCodec);
+      base.push("-f", String(Config.screenRecorder.fps));
+
+      const audio = [];
+
+      if (Config.screenRecorder.audioOutput) {
+        audio.push("default_output");
+      }
+
+      if (Config.screenRecorder.audioInput) {
+        audio.push("default_input");
+      }
+
+      if (audio.length > 0) {
+        base.push("-a", audio.join("|"));
+      }
+
+      base.push("-o", `${Config.screenRecorder.videoDirectory}/${Config.screenRecorder.videoFilename}`);
+      return base;
+    }
   }
 
   IpcHandler {
@@ -73,6 +88,4 @@ Singleton {
       return Helpers.success("ok");
     }
   }
-
-  Component.onCompleted: availabilityCheckProcess.exec({})
 }

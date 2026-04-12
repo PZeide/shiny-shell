@@ -2,7 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import qs.config
-import qs.utils
 import qs.utils.animations
 
 Text {

@@ -18,6 +18,7 @@ Singleton {
   property alias player: adapter.player
   property alias polkit: adapter.polkit
   property alias regionSelector: adapter.regionSelector
+  property alias screenRecorder: adapter.screenRecorder
   property alias session: adapter.session
   property alias sharePicker: adapter.sharePicker
   property alias wallpaper: adapter.wallpaper
@@ -41,6 +42,7 @@ Singleton {
       property PlayerConfig player: PlayerConfig {}
       property PolkitConfig polkit: PolkitConfig {}
       property RegionSelectorConfig regionSelector: RegionSelectorConfig {}
+      property ScreenRecorderConfig screenRecorder: ScreenRecorderConfig {}
       property SessionConfig session: SessionConfig {}
       property SharePickerConfig sharePicker: SharePickerConfig {}
       property WallpaperConfig wallpaper: WallpaperConfig {}

@@ -56,11 +56,13 @@ Item {
     }
 
     function onAuthFailure(message) {
-      root.showError(message);
+      root.password = "";
+      root.showError("Incorrect password");
     }
 
     function onError(error) {
-      root.showError(error);
+      root.password = "";
+      root.showError(`Error: ${error}`);
     }
 
     function onReadyToLaunch() {

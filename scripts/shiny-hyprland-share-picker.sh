@@ -68,7 +68,7 @@ while IFS= read -r line || break; do
 		exit 0
 		;;
 	window)
-		WINDOW=$(echo "$line" | jq -r '.result.window // empty')
+		WINDOW=$(echo "$line" | jq -r '.result.windowAddress // empty')
 		if [[ -z "$WINDOW" ]]; then
 			echo "error" >&2
 			exit 1

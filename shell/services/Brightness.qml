@@ -3,7 +3,6 @@ pragma Singleton
 
 import Quickshell
 import Quickshell.Io
-import Quickshell.Hyprland
 import Shiny.Brightness
 import qs.services
 import qs.config
@@ -64,6 +63,7 @@ Singleton {
 
   IpcHandler {
     id: ipc
+    enabled: root.isAvailable
     target: "brightness"
 
     function list(): string {
