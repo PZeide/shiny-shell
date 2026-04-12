@@ -55,7 +55,7 @@ Item {
             return false;
           }
 
-          return dialog.options.allowMonitors === undefined || dialog.options.allowMonitors;
+          return dialog.options.allowMonitor === undefined || dialog.options.allowMonitor;
         })
       }
 
@@ -65,7 +65,7 @@ Item {
             return false;
           }
 
-          return dialog.options.allowWindows === undefined || dialog.options.allowWindows;
+          return dialog.options.allowWindow === undefined || dialog.options.allowWindow;
         })
       }
 
