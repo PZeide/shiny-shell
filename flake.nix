@@ -47,6 +47,7 @@
           packages = with pkgs; [
             # Fonts for development tools
             vegur
+            migu
             iosevka
             material-symbols
             nerd-fonts.symbols-only

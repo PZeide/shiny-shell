@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
 import Quickshell
 import Quickshell.Hyprland
 import qs.services
@@ -24,10 +23,11 @@ BarModuleWrapper {
   readonly property real workspaceImplicitHeight: workspaceImplicitWidth
   readonly property real workspaceActiveImplicitHeight: workspaceImplicitHeight * 2
 
-  contentItem: ColumnLayout {
+  contentItem: Item {
     id: layout
     anchors.centerIn: parent
-    spacing: Config.appearance.spacing.xs
+    implicitWidth: root.workspaceImplicitWidth
+    implicitHeight: (root.monitorWorkspacesCount - 1) * (root.workspaceImplicitHeight + Config.appearance.spacing.xs) + root.workspaceActiveImplicitHeight
 
     Repeater {
       model: root.monitorWorkspacesCount
@@ -42,13 +42,30 @@ BarModuleWrapper {
         readonly property bool isOccupied: maybeWorkspace?.toplevels.values.length > 0
         readonly property bool isActive: maybeWorkspace?.active ?? false
 
-        Layout.alignment: Qt.AlignHCenter
-        Layout.preferredWidth: root.workspaceImplicitWidth
-        Layout.preferredHeight: isActive ? root.workspaceActiveImplicitHeight : root.workspaceImplicitHeight
+        property real targetCenterY: {
+          const sp = Config.appearance.spacing.xs;
+          const k = (root.monitor.activeWorkspace?.id ?? 1) - root.workspaceGroup * root.monitorWorkspacesCount - 1;
+          let yBefore = 0.0;
+
+          for (let j = 0; j < index; j++) {
+            yBefore += (j === k ? root.workspaceActiveImplicitHeight : root.workspaceImplicitHeight) + sp;
+          }
+
+          return yBefore + (index === k ? root.workspaceActiveImplicitHeight : root.workspaceImplicitHeight) / 2;
+        }
+
+        Behavior on targetCenterY {
+          EffectNumberAnimation {}
+        }
+
+        width: root.workspaceImplicitWidth
+        height: isActive ? root.workspaceActiveImplicitHeight : root.workspaceImplicitHeight
+        x: 0
+        y: targetCenterY - height / 2
         color: isActive ? Config.appearance.color.primary : Config.appearance.color.surfaceContainerHigh
         radius: Config.appearance.rounding.xxs
 
-        Behavior on Layout.preferredHeight {
+        Behavior on height {
           EffectNumberAnimation {}
         }
 
@@ -60,6 +77,7 @@ BarModuleWrapper {
           text: Config.bar.workspaces.showKanji ? Formatting.numberToKanji(workspaceRectangle.index + 1) : String(workspaceRectangle.index + 1)
           font.pointSize: Config.appearance.font.size.xs
           font.weight: Font.DemiBold
+          font.family: Config.bar.workspaces.showKanji ? Config.appearance.font.family.jp : Config.appearance.font.family.sans
           color: workspaceRectangle.isActive ? Config.appearance.color.overPrimary : Config.appearance.color.overSurface
 
           Behavior on opacity {

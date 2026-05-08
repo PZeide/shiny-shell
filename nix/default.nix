@@ -9,6 +9,7 @@
   qt6,
   quickshell,
   vegur,
+  migu,
   iosevka,
   material-symbols,
   nerd-fonts,
@@ -60,6 +61,7 @@
     # Default fonts
     fontDirectories = [
       vegur
+      migu
       iosevka
       material-symbols
       nerd-fonts.symbols-only

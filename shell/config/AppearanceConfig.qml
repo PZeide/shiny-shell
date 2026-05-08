@@ -75,6 +75,7 @@ JsonObject {
 
   component FontFamilyConfig: JsonObject {
     property string sans: "Vegur"
+    property string jp: "Migu 2M"
     property string mono: "Iosevka"
     property string iconNerd: "Symbols Nerd Font"
     property string iconMaterial: "Material Symbols Rounded"

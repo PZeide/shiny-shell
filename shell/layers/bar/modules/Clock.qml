@@ -41,6 +41,7 @@ BarModuleWrapper {
 
         font.pointSize: isAmPm ? (Config.bar.clock.showApKanji ? Config.appearance.font.size.xxs : Config.appearance.font.size.xs) : Config.appearance.font.size.lg
         font.weight: Font.DemiBold
+        font.family: isAmPm && Config.bar.clock.showApKanji ? Config.appearance.font.family.jp : Config.appearance.font.family.sans
         color: isAmPm ? Config.appearance.color.primary : Config.appearance.color.overSurface
       }
     }
