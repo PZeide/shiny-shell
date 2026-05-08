@@ -13,28 +13,7 @@ Singleton {
 
   readonly property bool isAvailable: Config.brightness.enabled
   readonly property list<BrightnessDevice> devices: controllers.instances.filter(device => device.available)
-
-  Variants {
-    id: controllers
-    model: Quickshell.screens.filter(device => !Config.brightness.devicesBlacklist.includes(device.name))
-
-    BrightnessDevice {
-      property ShellScreen modelData
-
-      device: modelData.name
-    }
-  }
-
-  function setDeviceBrightness(device: BrightnessDevice, value: double) {
-    const safeValue = Math.min(Math.max(value, 0), 1);
-    if (Config.brightness.smooth) {
-      device.commitBrightnessSmooth(safeValue);
-    } else {
-      device.commitBrightness(safeValue);
-    }
-  }
-
-  function forDefaultDevice(): BrightnessDevice {
+  readonly property BrightnessDevice defaultDevice: {
     if (devices.length === 0)
       return null;
 
@@ -57,6 +36,26 @@ Singleton {
     return edpFallback;
   }
 
+  Variants {
+    id: controllers
+    model: Quickshell.screens.filter(device => !Config.brightness.devicesBlacklist.includes(device.name))
+
+    BrightnessDevice {
+      property ShellScreen modelData
+
+      device: modelData.name
+    }
+  }
+
+  function setDeviceBrightness(device: BrightnessDevice, value: double) {
+    const safeValue = Math.min(Math.max(value, 0), 1);
+    if (Config.brightness.smooth) {
+      device.commitBrightnessSmooth(safeValue);
+    } else {
+      device.commitBrightness(safeValue);
+    }
+  }
+
   function forDevice(name: string): BrightnessDevice {
     return devices.find(controller => controller.device === name);
   }
@@ -71,7 +70,7 @@ Singleton {
     }
 
     function get(device: string): string {
-      const controller = device === "%default%" ? root.forDefaultDevice() : root.forDevice(device);
+      const controller = device === "%default%" ? root.defaultDevice : root.forDevice(device);
       if (controller !== null) {
         return Helpers.success(root.formatController(controller));
       } else {
@@ -80,7 +79,7 @@ Singleton {
     }
 
     function set(device: string, command: string): string {
-      const controller = device === "%default%" ? root.forDefaultDevice() : root.forDevice(device);
+      const controller = device === "%default%" ? root.defaultDevice : root.forDevice(device);
       if (controller === null) {
         return Helpers.fail("failed to find device");
       }

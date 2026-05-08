@@ -16,11 +16,10 @@ RectangularShadow {
 
   anchors.fill: target
   cached: true
-  // FIXME in QT6.11
-  //topLeftRadius: target instanceof Rectangle ? (target as Rectangle).topLeftRadius : 0
-  //topRightRadius: target instanceof Rectangle ? (target as Rectangle).topRightRadius : 0
-  //bottomLeftRadius: target instanceof Rectangle ? (target as Rectangle).bottomLeftRadius : 0
-  //bottomRightRadius: target instanceof Rectangle ? (target as Rectangle).bottomRightRadius : 0
+  topLeftRadius: target instanceof Rectangle ? (target as Rectangle).topLeftRadius : 0
+  topRightRadius: target instanceof Rectangle ? (target as Rectangle).topRightRadius : 0
+  bottomLeftRadius: target instanceof Rectangle ? (target as Rectangle).bottomLeftRadius : 0
+  bottomRightRadius: target instanceof Rectangle ? (target as Rectangle).bottomRightRadius : 0
   blur: 10
   spread: 1
   color: Colors.transparentize(Config.appearance.color.shadow, 0.5)

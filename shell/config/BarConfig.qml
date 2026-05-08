@@ -12,10 +12,11 @@ JsonObject {
   property WorkspacesConfig workspaces: WorkspacesConfig {}
 
   component ClockConfig: JsonObject {
-    property list<string> parts: ["h a", "mm", "AP"]
+    property list<string> parts: ["h a", "AP", "mm"]
+    property bool showApKanji: true
   }
 
   component WorkspacesConfig: JsonObject {
-    property int count: 0
+    property bool showKanji: true
   }
 }

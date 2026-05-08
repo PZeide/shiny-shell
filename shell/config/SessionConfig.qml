@@ -7,7 +7,6 @@ import qs.utils
 JsonObject {
   property string username: "User"
   property string facePath: Paths.assetPath("images/face.png")
-  property bool controlEnabled: true
   property string shutdownCommand: "systemctl poweroff"
   property string rebootCommand: "systemctl reboot"
   property string suspendCommand: "systemctl suspend"

@@ -11,7 +11,6 @@ ShinyText {
 
   text: icon
   font.family: Config.appearance.font.family.iconMaterial
-  font.hintingPreference: Font.PreferFullHinting
   font.variableAxes: {
     "FILL": fill.toFixed(1),
     "GRAD": grade,

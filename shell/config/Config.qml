@@ -15,6 +15,7 @@ Singleton {
   property alias locale: adapter.locale
   property alias lockScreen: adapter.lockScreen
   property alias notification: adapter.notification
+  property alias osd: adapter.osd
   property alias player: adapter.player
   property alias polkit: adapter.polkit
   property alias regionSelector: adapter.regionSelector
@@ -39,6 +40,7 @@ Singleton {
       property LocaleConfig locale: LocaleConfig {}
       property LockScreenConfig lockScreen: LockScreenConfig {}
       property NotificationConfig notification: NotificationConfig {}
+      property OsdConfig osd: OsdConfig {}
       property PlayerConfig player: PlayerConfig {}
       property PolkitConfig polkit: PolkitConfig {}
       property RegionSelectorConfig regionSelector: RegionSelectorConfig {}

@@ -15,7 +15,7 @@ BarModuleWrapper {
   }
 
   contentItem: ColumnLayout {
-    spacing: Config.appearance.spacing.xxs
+    spacing: Config.appearance.spacing.xs
 
     Repeater {
       model: Config.bar.clock.parts
@@ -28,15 +28,20 @@ BarModuleWrapper {
 
         text: {
           const format = Qt.formatTime(Clock.date, modelData);
-          if (!isAmPm) {
+          if (isAmPm) {
+            if (Config.bar.clock.showApKanji) {
+              return format.toLowerCase() === "am" ? "午前" : "午後";
+            }
+
+            return format;
+          } else {
             return format.replace(/ (AM|PM|am|pm)/, "");
           }
-
-          return format;
         }
 
-        font.pointSize: isAmPm ? Config.appearance.font.size.xs : Config.appearance.font.size.lg
-        font.weight: 400
+        font.pointSize: isAmPm ? (Config.bar.clock.showApKanji ? Config.appearance.font.size.xxs : Config.appearance.font.size.xs) : Config.appearance.font.size.lg
+        font.weight: Font.DemiBold
+        color: isAmPm ? Config.appearance.color.primary : Config.appearance.color.overSurface
       }
     }
   }

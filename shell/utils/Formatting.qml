@@ -99,4 +99,35 @@ Singleton {
   function dateShort(): string {
     return Qt.formatDate(Clock.date, Config.locale.dateShortFormat);
   }
+
+  function numberToKanji(n) {
+    if (!Number.isInteger(n) || n < 0 || n > 100) {
+      throw new Error("Input must be an integer between 0 and 100.");
+    }
+
+    const digits = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
+
+    if (n === 0)
+      return digits[0];
+    if (n === 100)
+      return "百";
+
+    const tens = Math.floor(n / 10);
+    const ones = n % 10;
+
+    let result = "";
+
+    if (tens > 0) {
+      if (tens > 1) {
+        result += digits[tens];
+      }
+      result += "十";
+    }
+
+    if (ones > 0) {
+      result += digits[ones];
+    }
+
+    return result;
+  }
 }

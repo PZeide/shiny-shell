@@ -59,7 +59,7 @@ ShinyRectangle {
         Layout.preferredHeight: sessionText.implicitHeight + Config.appearance.padding.xxs * 2
         visible: root.session !== null
         color: Config.appearance.color.surfaceContainer
-        radius: Config.appearance.rounding.xxs
+        radius: Config.appearance.rounding.xxxs
 
         ShinyText {
           id: sessionText

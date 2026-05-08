@@ -17,6 +17,7 @@ import qs.config
 import qs.layers.bar
 import qs.layers.launcher
 import qs.layers.lockscreen
+import qs.layers.osd
 import qs.layers.polkit
 import qs.layers.region_selector
 import qs.layers.share_picker
@@ -37,6 +38,11 @@ ShellRoot {
   LazyLoader {
     activeAsync: Config.lockScreen.enabled
     LockScreen {}
+  }
+
+  LazyLoader {
+    activeAsync: Config.osd.enabled
+    Osd {}
   }
 
   LazyLoader {

@@ -77,8 +77,8 @@ Loader {
           color: root.batteryCaution ? Config.appearance.color.error : Config.appearance.color.primary
           topLeftRadius: Config.appearance.rounding.xs
           bottomLeftRadius: Config.appearance.rounding.xs
-          topRightRadius: Config.appearance.rounding.xxs
-          bottomRightRadius: Config.appearance.rounding.xxs
+          topRightRadius: Config.appearance.rounding.xxxs
+          bottomRightRadius: Config.appearance.rounding.xxxs
 
           ShinyIcon {
             x: chargingIconAnchor.x

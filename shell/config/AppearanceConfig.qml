@@ -81,6 +81,7 @@ JsonObject {
   }
 
   component FontSizeConfig: JsonObject {
+    property int xxs: 8
     property int xs: 10
     property int sm: 11
     property int md: 12
@@ -91,7 +92,8 @@ JsonObject {
   }
 
   component RoundingConfig: JsonObject {
-    property int xxs: 3
+    property int xxxs: 3
+    property int xxs: 6
     property int xs: 9
     property int sm: 12
     property int md: 17
