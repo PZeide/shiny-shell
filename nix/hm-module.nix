@@ -33,7 +33,7 @@ in {
         After = ["graphical-session.target"];
         PartOf = ["graphical-session.target"];
         X-Restart-Triggers = lib.mkIf (cfg.settings != {}) [
-          "${config.xdg.configFile."shiny-shell/config.json".source}"
+          "${config.xdg.configFile."shiny/shell-config.json".source}"
         ];
       };
 
@@ -47,7 +47,7 @@ in {
       Install.WantedBy = ["graphical-session.target"];
     };
 
-    xdg.configFile."shiny-shell/config.json".text = builtins.toJSON cfg.settings;
+    xdg.configFile."shiny/shell-config.json".text = builtins.toJSON cfg.settings;
 
     home.packages = [cfg.package];
   };

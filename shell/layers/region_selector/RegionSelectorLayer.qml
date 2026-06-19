@@ -22,7 +22,6 @@ ShinyRectangle {
   readonly property int pressAndHoldThreshold: 50
   readonly property list<string> excludeLayers: ["shiny:region-selector", "shiny:inhibitor", "shiny:wallpaper", "shiny:bar", "shiny:corner-topleft", "shiny:corner-topright", "shiny:corner-bottomleft", "shiny:corner-bottomright", ...Config.regionSelector.excludeLayers]
   property bool selectionMade: false
-  readonly property int hyprlandRounding: HyprCompositor.optionValueFor("decoration:rounding")
   readonly property HyprlandMonitor hyprlandMonitor: HyprCompositor.monitorFor(screen)
   readonly property list<HyprlandToplevel> windows: hyprlandMonitor.activeWorkspace?.toplevels?.values ?? []
   readonly property list<HyprlandLayer> layers: HyprCompositor.layers.filter(layer => {
@@ -141,7 +140,6 @@ ShinyRectangle {
       opacity: !root.selectionMade && !area.isHolding && area.hoveredRegion === modelData ? 1 : 0
       border.color: Config.appearance.color.secondary
       border.width: 2
-      radius: modelData.source === "window" ? root.hyprlandRounding : 0
 
       Behavior on opacity {
         EffectNumberAnimation {}

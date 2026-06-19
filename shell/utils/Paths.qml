@@ -6,7 +6,7 @@ import Quickshell
 import Qt.labs.platform
 
 Singleton {
-  readonly property string appSufix: "/shiny-shell"
+  readonly property string appSufix: "/shiny"
   readonly property url homeUrl: StandardPaths.writableLocation(StandardPaths.HomeLocation)
   readonly property url cacheUrl: StandardPaths.writableLocation(StandardPaths.GenericCacheLocation) + appSufix
   readonly property url configUrl: StandardPaths.writableLocation(StandardPaths.GenericConfigLocation) + appSufix

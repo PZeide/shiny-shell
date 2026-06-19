@@ -54,7 +54,7 @@ Item {
       ShinySubtleSlider {
         id: slider
         implicitWidth: 150
-        value: root.value
+        cooperativeValue: root.value
         showTooltip: true
 
         onMoved: root.sliderValueChanged(value)

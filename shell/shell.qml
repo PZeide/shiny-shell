@@ -29,6 +29,7 @@ ShellRoot {
   Wallpaper {}
   Bar {}
   RegionSelector {}
+  SharePicker {}
 
   LazyLoader {
     activeAsync: Config.launcher.enabled
@@ -50,11 +51,6 @@ ShellRoot {
     Polkit {}
   }
 
-  LazyLoader {
-    activeAsync: Config.sharePicker.enabled
-    SharePicker {}
-  }
-
   Component.onCompleted: {
     console.info("Late initialize services");
 
@@ -64,7 +60,6 @@ ShellRoot {
     Clock;
     Host;
     HyprCompositor;
-    //Notifications;
     Player;
     ScreenRecorder;
     Session;

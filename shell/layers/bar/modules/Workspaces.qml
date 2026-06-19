@@ -106,7 +106,7 @@ BarModuleWrapper {
           clickOpacity: 0.45
           hoverOpacity: 0.25
 
-          onPressed: HyprCompositor.dispatch(`workspace ${workspaceRectangle.workspaceId}`)
+          onPressed: workspaceRectangle.maybeWorkspace?.activate()
         }
       }
     }

@@ -33,7 +33,7 @@ Singleton {
   }
 
   function optionValueFor(key: string): var {
-    return root.options.find(o => o.value === key)?.data?.current ?? null;
+    return root.options.find(o => o.name === key)?.current ?? null;
   }
 
   function refreshMonitors() {

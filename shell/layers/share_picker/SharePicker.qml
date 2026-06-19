@@ -2,45 +2,38 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
-import Quickshell.Io
 import qs.services
-import qs.utils
 
 Item {
   id: root
 
   property list<var> requests: []
 
-  function processRequest(request: var) {
-    requests.push(request);
+  function completeRequest(request: var, result: var, cancelled: bool): void {
+    if (!root.requests.some(activeRequest => activeRequest.key === request.key)) {
+      return;
+    }
+
+    root.requests = root.requests.filter(activeRequest => activeRequest.key !== request.key);
+
+    if (cancelled) {
+      SharePickerController.cancel(request);
+    } else {
+      SharePickerController.resolve(request, result);
+    }
   }
 
-  function handleResult(key: string, result: var) {
-    for (let i = 0; i < requests.length; i++) {
-      if (requests[i].key === key) {
-        requests.splice(i, 1);
+  Connections {
+    target: SharePickerController
 
-        if (result !== null) {
-          ipc.result(JSON.stringify({
-            key,
-            status: "selected",
-            result
-          }));
-        } else {
-          ipc.result(JSON.stringify({
-            key,
-            status: "cancelled"
-          }));
-        }
-
-        return;
-      }
+    function onRequestStarted(request: var) {
+      root.requests = [...root.requests, request];
     }
   }
 
   Repeater {
     model: ScriptModel {
-      values: root.requests.filter(request => request)
+      values: root.requests
     }
 
     delegate: SharePickerDialog {
@@ -72,20 +65,21 @@ Item {
       allowCustomRegion: options.allowCustomRegion === undefined || options.allowCustomRegion
       allowRestoreToken: options.allowRestoreTokenDefault ?? false
 
-      onSelectedMonitor: monitor => root.handleResult(modelData.key, {
+      onSelectedMonitor: monitor => root.completeRequest(modelData, {
           type: "monitor",
           allowRestoreToken,
           monitor
-        })
+        }, false)
 
-      onSelectedWindow: (windowAddress, stableId) => root.handleResult(modelData.key, {
+      onSelectedWindow: (stableId, clazz, title) => root.completeRequest(modelData, {
           type: "window",
           allowRestoreToken,
-          windowAddress,
-          stableId
-        })
+          stableId,
+          clazz,
+          title
+        }, false)
 
-      onSelectedCustomRegion: region => root.handleResult(modelData.key, {
+      onSelectedCustomRegion: region => root.completeRequest(modelData, {
           type: "custom",
           allowRestoreToken,
           region: {
@@ -95,26 +89,9 @@ Item {
             width: region.width,
             height: region.height
           }
-        })
+        }, false)
 
-      onCancelled: root.handleResult(modelData.key, null)
-    }
-  }
-
-  IpcHandler {
-    id: ipc
-    target: "share-picker"
-
-    signal result(result: string)
-
-    function request(options: string): string {
-      const key = Math.random().toString(36).substring(2, 15);
-      root.processRequest({
-        key,
-        options: JSON.parse(options)
-      });
-
-      return Helpers.success(key);
+      onCancelled: root.completeRequest(modelData, null, true)
     }
   }
 }

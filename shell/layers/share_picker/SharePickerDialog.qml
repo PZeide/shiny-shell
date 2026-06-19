@@ -20,7 +20,7 @@ Item {
   property bool allowRestoreToken: false
 
   signal selectedMonitor(monitor: string)
-  signal selectedWindow(windowAddress: string, stableId: string)
+  signal selectedWindow(stableId: string, clazz: string, title: string)
   signal selectedCustomRegion(region: RectangularRegion)
   signal cancelled
 
@@ -86,7 +86,7 @@ Item {
             let oldIndex = tabBar.currentIndex;
             window.visible = false;
 
-            RegionSelection.request(selection => {
+            RegionSelectorController.request(selection => {
               if (selection === null) {
                 console.info("Selection cancelled, restoring old index");
                 window.visible = true;
@@ -119,7 +119,7 @@ Item {
         PickerWindow {
           availableWindows: root.availableWindows
 
-          onSelectedWindow: window => root.selectedWindow(window.address, window.lastIpcObject.stableId)
+          onSelectedWindow: window => root.selectedWindow(window.lastIpcObject.stableId, window.lastIpcObject.class, window.title)
         }
 
         PickerCustom {}

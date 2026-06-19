@@ -12,6 +12,9 @@ ShinyLayerAnimationHelper {
   id: root
 
   property var currentRequest: null
+  property var pendingResult: null
+  property bool pendingCancelled: true
+  property bool completionPending: false
   property real layerOpacity: 0
 
   function process(request: var) {
@@ -21,20 +24,29 @@ ShinyLayerAnimationHelper {
     }
 
     root.currentRequest = request;
+    root.pendingResult = null;
+    root.pendingCancelled = true;
+    root.completionPending = false;
     openLayer();
   }
 
   onStateChanged: state => {
     if (state === "closed") {
-      if (root.currentRequest !== null && !root.currentRequest.resolved) {
-        console.warn("Selector closed but request has not been resolved");
-        root.currentRequest.callback(null);
-      }
-
+      const request = root.currentRequest;
+      const result = root.pendingResult;
+      const cancelled = root.pendingCancelled;
       root.currentRequest = null;
+      root.pendingResult = null;
+      root.pendingCancelled = true;
+      root.completionPending = false;
 
-      if (RegionSelection.requests.length > 0) {
-        root.process(RegionSelection.pump());
+      if (request !== null) {
+        if (cancelled) {
+          RegionSelectorController.cancel(request);
+        } else {
+          RegionSelectorController.resolve(request, result);
+          result.destroy();
+        }
       }
     }
   }
@@ -58,13 +70,17 @@ ShinyLayerAnimationHelper {
   }
 
   Connections {
-    target: RegionSelection
+    target: RegionSelectorController
 
-    function onRequestReceived() {
-      if (root.currentRequest === null) {
-        root.process(RegionSelection.pump());
-      }
+    function onRequestStarted(request: var) {
+      root.process(request);
     }
+  }
+
+  Component {
+    id: resultComponent
+
+    RectangularRegion {}
   }
 
   Loader {
@@ -105,25 +121,43 @@ ShinyLayerAnimationHelper {
           hintLayers: root.currentRequest?.options?.hintLayers ?? true
 
           onSelected: region => {
-            root.closeLayer();
             if (!root.currentRequest) {
               console.warn("Selection completed, but no current request");
               return;
             }
 
-            root.currentRequest.callback(region);
-            root.currentRequest.resolved = true;
+            if (root.completionPending) {
+              return;
+            }
+
+            root.completionPending = true;
+            root.pendingResult = resultComponent.createObject(root, {
+              source: region.source,
+              screen: region.screen,
+              x: region.x,
+              y: region.y,
+              width: region.width,
+              height: region.height
+            });
+
+            root.pendingCancelled = false;
+            root.closeLayer();
           }
 
           onCancelled: {
-            root.closeLayer();
             if (!root.currentRequest) {
               console.warn("Selection cancelled, but no current request");
               return;
             }
 
-            root.currentRequest.callback(null);
-            root.currentRequest.resolved = true;
+            if (root.completionPending) {
+              return;
+            }
+
+            root.completionPending = true;
+            root.pendingResult = null;
+            root.pendingCancelled = true;
+            root.closeLayer();
           }
         }
       }

@@ -21,11 +21,10 @@ Singleton {
   property alias regionSelector: adapter.regionSelector
   property alias screenRecorder: adapter.screenRecorder
   property alias session: adapter.session
-  property alias sharePicker: adapter.sharePicker
   property alias wallpaper: adapter.wallpaper
 
   FileView {
-    path: Quickshell.env("SHINYSHELL_CONFIG") ?? `${Paths.configUrl}/config.json`
+    path: Quickshell.env("SHINYSHELL_CONFIG") ?? `${Paths.configUrl}/shell-config.json`
     watchChanges: true
     onFileChanged: reload()
     onAdapterUpdated: writeAdapter()
@@ -46,7 +45,6 @@ Singleton {
       property RegionSelectorConfig regionSelector: RegionSelectorConfig {}
       property ScreenRecorderConfig screenRecorder: ScreenRecorderConfig {}
       property SessionConfig session: SessionConfig {}
-      property SharePickerConfig sharePicker: SharePickerConfig {}
       property WallpaperConfig wallpaper: WallpaperConfig {}
     }
   }
