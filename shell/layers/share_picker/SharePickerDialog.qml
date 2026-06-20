@@ -5,7 +5,6 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Qt.labs.synchronizer
 import Quickshell
-import Shiny.Wayland.Foreign
 import qs.utils
 import qs.config
 import qs.components
@@ -19,7 +18,6 @@ Item {
   required property var availableWindows
   required property bool allowCustomRegion
   property bool allowRestoreToken: false
-  property string dialogParentWindowHandle: ""
 
   signal selectedMonitor(monitor: string)
   signal selectedWindow(stableId: string, clazz: string, title: string)
@@ -31,23 +29,6 @@ Item {
     id: window
 
     readonly property size windowSize: Qt.size(700, 500)
-    property var foreignParent: null
-
-    function updateForeignParent(): void {
-      if (!root.dialogParentWindowHandle || root.dialogParentWindowHandle.length === 0) {
-        foreignParent = null;
-        return;
-      }
-
-      if (!WaylandForeignManager.available) {
-        return;
-      }
-
-      foreignParent = WaylandForeignManager.setParentOf(root.dialogParentWindowHandle, window);
-      if (foreignParent.failed) {
-        foreignParent = null;
-      }
-    }
 
     implicitWidth: windowSize.width
     implicitHeight: windowSize.height
@@ -190,28 +171,8 @@ Item {
       }
     }
 
-    Connections {
-      target: WaylandForeignManager
-
-      function onAvailableChanged() {
-        if (WaylandForeignManager.available && !window.foreignParent) {
-          window.updateForeignParent();
-        }
-      }
-    }
-
-    Connections {
-      target: window.foreignParent
-      ignoreUnknownSignals: true
-
-      function onInvalidated() {
-        window.foreignParent = null;
-      }
-    }
-
     Component.onCompleted: {
       screen = Helpers.focusedShellScreen();
-      Qt.callLater(updateForeignParent);
     }
   }
 }

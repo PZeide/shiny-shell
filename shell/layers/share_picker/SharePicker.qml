@@ -66,7 +66,6 @@ Item {
 
       allowCustomRegion: options.allowCustomRegion === undefined || options.allowCustomRegion
       allowRestoreToken: options.allowRestoreTokenDefault ?? false
-      dialogParentWindowHandle: options.dialog_parent_window_handle ?? ""
 
       onSelectedMonitor: monitor => root.completeRequest(modelData, {
           type: "monitor",
