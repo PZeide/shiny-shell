@@ -11,12 +11,14 @@ class Location : public QObject {
     QML_ELEMENT
     QML_UNCREATABLE("Location is retrieved from LocationProvider")
 
+    // clang-format off
     Q_PROPERTY(double latitude READ latitude CONSTANT)
     Q_PROPERTY(double longitude READ longitude CONSTANT)
     Q_PROPERTY(QString city READ city CONSTANT)
     Q_PROPERTY(QString region READ region CONSTANT)
     Q_PROPERTY(QString country READ country CONSTANT)
     Q_PROPERTY(QString countryCode READ countryCode CONSTANT)
+    // clang-format on
 
 public:
     explicit Location(double latitude, double longitude, QString city, QString region, QString country,

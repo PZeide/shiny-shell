@@ -25,8 +25,10 @@ constexpr uint TIME_THRESHOLD = 6 * 60;
 class LocationProvider : public QObject {
     Q_OBJECT
 
+    // clang-format off
     Q_PROPERTY(bool active READ active NOTIFY activeChanged)
     Q_PROPERTY(Shiny::Location::Location* location READ location NOTIFY locationChanged)
+    // clang-format on
 
 public:
     static LocationProvider* instance();
@@ -62,8 +64,10 @@ class LocationProviderQml : public QObject {
     QML_NAMED_ELEMENT(LocationProvider)
     QML_SINGLETON
 
+    // clang-format off
     Q_PROPERTY(bool active READ active NOTIFY activeChanged)
     Q_PROPERTY(Shiny::Location::Location* location READ location NOTIFY locationChanged)
+    // clang-format on
 
 public:
     explicit LocationProviderQml(QObject* parent = nullptr);

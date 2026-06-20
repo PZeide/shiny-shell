@@ -15,9 +15,11 @@ class SessionDesktopEntry : public QObject {
     QML_ELEMENT
     QML_UNCREATABLE("SessionDesktopEntry is retrieved from GreeterHelpers")
 
+    // clang-format off
     Q_PROPERTY(QList<QString> command READ command CONSTANT)
     Q_PROPERTY(QString name READ name CONSTANT)
     Q_PROPERTY(QString desktopName READ desktopName CONSTANT)
+    // clang-format on
 
 public:
     explicit SessionDesktopEntry(QList<QString> command, QString name, QString desktopName, QObject* parent = nullptr);

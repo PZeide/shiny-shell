@@ -18,7 +18,9 @@ const QDir SYSFS_BACKLIGHT = QDir("/sys/class/backlight/");
 class BrightnessManager : public QObject {
     Q_OBJECT
 
+    // clang-format off
     Q_PROPERTY(const QMap<QString, QDir> devices READ devices NOTIFY devicesChanged)
+    // clang-format on
 
 public:
     static BrightnessManager* instance();

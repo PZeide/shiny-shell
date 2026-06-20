@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import qs.services
+import qs.layers.share_picker
 
 Item {
   id: root
@@ -27,6 +28,7 @@ Item {
     target: SharePickerController
 
     function onRequestStarted(request: var) {
+      console.info(JSON.stringify(request));
       root.requests = [...root.requests, request];
     }
   }
@@ -64,6 +66,7 @@ Item {
 
       allowCustomRegion: options.allowCustomRegion === undefined || options.allowCustomRegion
       allowRestoreToken: options.allowRestoreTokenDefault ?? false
+      dialogParentWindowHandle: options.dialog_parent_window_handle ?? ""
 
       onSelectedMonitor: monitor => root.completeRequest(modelData, {
           type: "monitor",

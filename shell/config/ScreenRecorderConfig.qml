@@ -13,5 +13,5 @@ JsonObject {
   property bool audioOutput: true
   property bool audioInput: true
   property string videoDirectory: Quickshell.env("XDG_VIDEOS_DIR") ?? Quickshell.env("HOME") + "/Videos"
-  property string videoFilename: `yyyy-MM-dd HH-mm-ss.${container}`
+  property string videoFilename: "yyyy-MM-dd HH-mm-ss"
 }

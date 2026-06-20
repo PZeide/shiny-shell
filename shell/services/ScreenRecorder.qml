@@ -6,6 +6,7 @@ import Quickshell
 import Quickshell.Io
 import qs.utils
 import qs.config
+import qs.services
 
 Singleton {
   id: root
@@ -37,7 +38,10 @@ Singleton {
       base.push("-c", Config.screenRecorder.container);
       base.push("-k", Config.screenRecorder.videoCodec);
       base.push("-ac", Config.screenRecorder.audioCodec);
-      base.push("-f", String(Config.screenRecorder.fps));
+
+      if (Config.screenRecorder.fps > 0) {
+        base.push("-f", String(Config.screenRecorder.fps));
+      }
 
       const audio = [];
 
@@ -53,7 +57,8 @@ Singleton {
         base.push("-a", audio.join("|"));
       }
 
-      base.push("-o", `${Config.screenRecorder.videoDirectory}/${Config.screenRecorder.videoFilename}`);
+      const formattedFilename = Qt.formatDateTime(Clock.date, Config.screenRecorder.videoFilename);
+      base.push("-o", `${Config.screenRecorder.videoDirectory}/${formattedFilename}.${Config.screenRecorder.container}`);
       return base;
     }
   }
