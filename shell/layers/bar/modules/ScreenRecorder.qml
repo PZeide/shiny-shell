@@ -16,9 +16,9 @@ BarModuleWrapper {
     anchors.fill: parent
     layerRadius: Config.appearance.rounding.xs
 
-    onPressed: {
+    onPressed: event => {
       if (ScreenRecorder.isRecording) {
-        ScreenRecorder.stopRecording();
+        ScreenRecorder.stopRecording(event.modifiers & Qt.ShiftModifier);
       } else {
         ScreenRecorder.startRecording();
       }
@@ -28,7 +28,8 @@ BarModuleWrapper {
   ShinyTooltip {
     popupType: Popup.Window
     visible: layer.containsMouse
-    text: "test"
+    placement: ShinyTooltip.Placement.Right
+    text: ScreenRecorder.isRecording ? "Stop recording" : "Start recording"
   }
 
   contentItem: Item {
@@ -38,7 +39,7 @@ BarModuleWrapper {
       anchors.centerIn: parent
       icon: "screen_record"
       font.pointSize: Config.appearance.font.size.md
-      color: ScreenRecorder.isRecording ? Config.appearance.color.error : Config.appearance.color.overSurface
+      color: ScreenRecorder.isRecording ? Config.appearance.color.primary : Config.appearance.color.overSurface
     }
   }
 }

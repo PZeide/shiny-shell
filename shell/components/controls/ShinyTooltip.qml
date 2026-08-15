@@ -50,8 +50,8 @@ T.ToolTip {
   }
 
   margins: Config.appearance.spacing.xxs
-  implicitWidth: contentItem.implicitWidth + leftPadding + rightPadding
-  implicitHeight: contentItem.implicitHeight + topPadding + bottomPadding
+  implicitWidth: Math.ceil(textMetrics.advanceWidth) + leftPadding + rightPadding
+  implicitHeight: Math.ceil(textMetrics.height) + topPadding + bottomPadding
   verticalPadding: Config.appearance.padding.xs
   horizontalPadding: Config.appearance.padding.sm
   closePolicy: T.Popup.NoAutoClose
@@ -59,6 +59,12 @@ T.ToolTip {
   delay: 300
   font.family: Config.appearance.font.family.sans
   font.pointSize: Config.appearance.font.size.sm
+
+  TextMetrics {
+    id: textMetrics
+    text: root.text
+    font: root.font
+  }
 
   background: ShinyRectangle {
     color: Config.appearance.color.surfaceContainerHighest
@@ -68,6 +74,8 @@ T.ToolTip {
   }
 
   contentItem: ShinyText {
+    width: Math.ceil(root.availableWidth)
+    height: Math.ceil(root.availableHeight)
     text: root.text
     font: root.font
     color: Config.appearance.color.overSurface

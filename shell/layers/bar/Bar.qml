@@ -86,10 +86,10 @@ Variants {
             delegate: BarModules.ScreenRecorder {}
           }
 
-          /*DelegateChoice {
+          DelegateChoice {
             roleValue: "tray"
             delegate: BarModules.Tray {}
-            }*/
+          }
 
           DelegateChoice {
             roleValue: "workspaces"

@@ -13,53 +13,68 @@ Singleton {
 
   readonly property bool isAvailable: Config.screenRecorder.enabled
   readonly property alias isRecording: gsrProcess.running
+  property string outputFile: ""
+  property bool openOutputFile: false
 
   function startRecording() {
     if (!root.isAvailable || root.isRecording) {
       return;
     }
 
-    gsrProcess.exec({});
+    const command = ["gpu-screen-recorder", "-w", "portal"];
+    command.push("-c", Config.screenRecorder.container);
+    command.push("-k", Config.screenRecorder.videoCodec);
+    command.push("-ac", Config.screenRecorder.audioCodec);
+
+    if (Config.screenRecorder.fps > 0) {
+      command.push("-f", String(Config.screenRecorder.fps));
+    }
+
+    const audioOptions = [];
+
+    if (Config.screenRecorder.audioOutput) {
+      audioOptions.push("default_output");
+    }
+
+    if (Config.screenRecorder.audioInput) {
+      audioOptions.push("default_input");
+    }
+
+    if (audioOptions.length > 0) {
+      command.push("-a", audioOptions.join("|"));
+    }
+
+    const formattedFilename = Qt.formatDateTime(Clock.date, Config.screenRecorder.videoFilename);
+    const outputFile = `${Config.screenRecorder.videoDirectory}/${formattedFilename}.${Config.screenRecorder.container}`;
+    root.outputFile = outputFile;
+    command.push("-o", outputFile);
+
+    gsrProcess.exec({
+      command
+    });
   }
 
-  function stopRecording() {
+  function stopRecording(openOutputFile: bool) {
     if (!root.isAvailable || !root.isRecording) {
       return;
     }
 
+    root.openOutputFile = openOutputFile;
     gsrProcess.running = false;
   }
 
   Process {
     id: gsrProcess
 
-    command: {
-      const base = ["gpu-screen-recorder", "-w", "portal"];
-      base.push("-c", Config.screenRecorder.container);
-      base.push("-k", Config.screenRecorder.videoCodec);
-      base.push("-ac", Config.screenRecorder.audioCodec);
+    onExited: {
+      if (root.openOutputFile && root.outputFile !== "") {
+        if (!Qt.openUrlExternally(`file://${root.outputFile}`)) {
+          console.warn(`Failed to open output file: ${root.outputFile}`);
+        }
 
-      if (Config.screenRecorder.fps > 0) {
-        base.push("-f", String(Config.screenRecorder.fps));
+        root.outputFile = "";
+        root.openOutputFile = false;
       }
-
-      const audio = [];
-
-      if (Config.screenRecorder.audioOutput) {
-        audio.push("default_output");
-      }
-
-      if (Config.screenRecorder.audioInput) {
-        audio.push("default_input");
-      }
-
-      if (audio.length > 0) {
-        base.push("-a", audio.join("|"));
-      }
-
-      const formattedFilename = Qt.formatDateTime(Clock.date, Config.screenRecorder.videoFilename);
-      base.push("-o", `${Config.screenRecorder.videoDirectory}/${formattedFilename}.${Config.screenRecorder.container}`);
-      return base;
     }
   }
 

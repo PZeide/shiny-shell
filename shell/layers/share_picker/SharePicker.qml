@@ -28,7 +28,6 @@ Item {
     target: SharePickerController
 
     function onRequestStarted(request: var) {
-      console.info(JSON.stringify(request));
       root.requests = [...root.requests, request];
     }
   }

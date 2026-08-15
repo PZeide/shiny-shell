@@ -74,6 +74,7 @@ Loader {
             menu: trayItem.modelData.menu
           }
 
+          // FIXME Exit animation not working
           ShinyMenu {
             id: menu
             title: trayItem.modelData.title !== "" ? trayItem.modelData.title : trayItem.modelData.tooltipTitle
