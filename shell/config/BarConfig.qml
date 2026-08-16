@@ -4,9 +4,9 @@ import Quickshell.Io
 
 JsonObject {
   property int size: 42
-  property list<string> topModules: ["workspaces", "tray"]
+  property list<string> topModules: ["workspaces"]
   property list<string> centerModules: ["clock"]
-  property list<string> bottomModules: ["screen-recorder"]
+  property list<string> bottomModules: ["screenshot", "screen-recorder"]
 
   property ClockConfig clock: ClockConfig {}
   property WorkspacesConfig workspaces: WorkspacesConfig {}

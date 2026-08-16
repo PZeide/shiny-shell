@@ -14,6 +14,8 @@
 #include <qobject.h>
 #include <qobjectdefs.h>
 #include <qtmetamacros.h>
+#include <qurl.h>
+#include <quuid.h>
 #include <qvariant.h>
 #include <sys/types.h>
 
@@ -31,9 +33,25 @@ uint ScreenshotRequest::response() const { return m_response; }
 
 const QString ScreenshotRequest::uri() const { return m_uri; }
 
+const QString ScreenshotRequest::path() const { return QUrl(m_uri).toLocalFile(); }
+
 const QString ScreenshotRequest::errorMessage() const { return m_errorMessage; }
 
 void ScreenshotRequest::setError(const QString& message) { finish(2, QString(), message); }
+
+void ScreenshotRequest::cancel() {
+    if (m_finished || m_requestPath.isEmpty()) {
+        return;
+    }
+
+    auto bus = QDBusConnection::sessionBus();
+    bus.asyncCall(QDBusMessage::createMethodCall(PORTAL_SERVICE, m_requestPath, PORTAL_REQUEST_INTERFACE, "Close"));
+    bus.disconnect(PORTAL_SERVICE, m_requestPath, PORTAL_REQUEST_INTERFACE, "Response", this,
+                   SLOT(handleResponse(uint, QVariantMap)));
+    finish(1, QString(), QString());
+}
+
+void ScreenshotRequest::setRequestPath(const QString& requestPath) { m_requestPath = requestPath; }
 
 void ScreenshotRequest::handleResponse(uint response, QVariantMap results) {
     QString uri;
@@ -102,25 +120,47 @@ ScreenshotRequest* ScreenshotManager::screenshot(bool interactive) {
     QVariantMap options;
     options.insert("interactive", interactive);
 
+    const auto handleToken = QStringLiteral("shiny_screenshot_%1").arg(QUuid::createUuid().toString(QUuid::Id128));
+    options.insert("handle_token", handleToken);
+
+    auto senderName = bus.baseService();
+    if (senderName.startsWith(':')) {
+        senderName.remove(0, 1);
+    }
+    senderName.replace('.', '_');
+
+    const auto requestPath =
+        QStringLiteral("/org/freedesktop/portal/desktop/request/%1/%2").arg(senderName, handleToken);
+    request->setRequestPath(requestPath);
+    const bool connected = bus.connect(PORTAL_SERVICE, requestPath, PORTAL_REQUEST_INTERFACE, "Response", request,
+                                       SLOT(handleResponse(uint, QVariantMap)));
+    if (!connected) {
+        request->setError("Could not connect to screenshot portal response signal.");
+        return request;
+    }
+
     auto reply = portal.Screenshot(QString(), options);
     auto watcher = new QDBusPendingCallWatcher(reply, request);
-    QObject::connect(watcher, &QDBusPendingCallWatcher::finished, request, [request, watcher, bus]() mutable {
-        QDBusPendingReply<QDBusObjectPath> result = *watcher;
-        watcher->deleteLater();
+    QObject::connect(
+        watcher, &QDBusPendingCallWatcher::finished, request, [request, watcher, bus, requestPath]() mutable {
+            QDBusPendingReply<QDBusObjectPath> result = *watcher;
+            watcher->deleteLater();
 
-        if (result.isError()) {
-            request->setError(result.error().message());
-            return;
-        }
+            if (result.isError()) {
+                bus.disconnect(PORTAL_SERVICE, requestPath, PORTAL_REQUEST_INTERFACE, "Response", request,
+                               SLOT(handleResponse(uint, QVariantMap)));
+                request->setError(result.error().message());
+                return;
+            }
 
-        bool connected = bus.connect(PORTAL_SERVICE, result.value().path(), PORTAL_REQUEST_INTERFACE, "Response",
-                                     request, SLOT(handleResponse(uint, QVariantMap)));
-        if (!connected) {
-            request->setError("Could not connect to screenshot portal response signal.");
-        }
-    });
+            if (result.value().path() != requestPath) {
+                bus.disconnect(PORTAL_SERVICE, requestPath, PORTAL_REQUEST_INTERFACE, "Response", request,
+                               SLOT(handleResponse(uint, QVariantMap)));
+                request->setError(QStringLiteral("Screenshot portal returned an unexpected request path: %1")
+                                      .arg(result.value().path()));
+            }
+        });
 
     return request;
 }
-
 } // namespace Shiny::Screenshot

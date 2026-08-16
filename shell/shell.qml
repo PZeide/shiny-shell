@@ -61,6 +61,7 @@ ShellRoot {
     Host;
     HyprCompositor;
     Player;
+    Screenshot;
     ScreenRecorder;
     Session;
   }

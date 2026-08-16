@@ -87,6 +87,11 @@ Variants {
           }
 
           DelegateChoice {
+            roleValue: "screenshot"
+            delegate: BarModules.Screenshot {}
+          }
+
+          DelegateChoice {
             roleValue: "tray"
             delegate: BarModules.Tray {}
           }

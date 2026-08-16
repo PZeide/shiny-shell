@@ -27,6 +27,7 @@ class ScreenshotRequest : public QObject {
     Q_PROPERTY(bool failed READ failed NOTIFY failedChanged)
     Q_PROPERTY(uint response READ response NOTIFY responseChanged)
     Q_PROPERTY(QString uri READ uri NOTIFY uriChanged)
+    Q_PROPERTY(QString path READ path NOTIFY uriChanged)
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
     // clang-format on
 
@@ -37,9 +38,11 @@ public:
     bool failed() const;
     uint response() const;
     const QString uri() const;
+    const QString path() const;
     const QString errorMessage() const;
 
     void setError(const QString& message);
+    Q_INVOKABLE void cancel();
 
 signals:
     void finishedChanged();
@@ -56,13 +59,17 @@ private slots:
     void handleResponse(uint response, QVariantMap results);
 
 private:
+    friend class ScreenshotManager;
+
     void finish(uint response, const QString& uri, const QString& errorMessage);
+    void setRequestPath(const QString& requestPath);
 
     bool m_finished = false;
     bool m_failed = false;
     uint m_response = 0;
     QString m_uri;
     QString m_errorMessage;
+    QString m_requestPath;
 };
 
 class ScreenshotManager : public QObject {

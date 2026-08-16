@@ -19,6 +19,7 @@
   app2unit,
   xdg-terminal-exec,
   gpu-screen-recorder,
+  satty,
   jq,
   ...
 }: let
@@ -55,6 +56,7 @@
     app2unit
     xdg-terminal-exec
     gpu-screen-recorder
+    satty
   ];
 
   fontConfig = makeFontsConf {
