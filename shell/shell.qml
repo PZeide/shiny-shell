@@ -42,7 +42,7 @@ ShellRoot {
   }
 
   LazyLoader {
-    activeAsync: false
+    activeAsync: Config.osd.enabled
     Osd {}
   }
 
