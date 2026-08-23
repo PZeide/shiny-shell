@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Controls
 import qs.services
 import qs.config
 import qs.components
@@ -27,7 +26,6 @@ BarModuleWrapper {
   }
 
   ShinyTooltip {
-    popupType: Popup.Window
     visible: layer.containsMouse
     placement: ShinyTooltip.Placement.Right
     text: {

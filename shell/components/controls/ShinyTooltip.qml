@@ -1,13 +1,13 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Templates as T
+import Quickshell
 import qs.config
 import qs.components
 import qs.utils
 import qs.utils.animations
 
-T.ToolTip {
+Item {
   id: root
 
   enum Placement {
@@ -17,100 +17,127 @@ T.ToolTip {
     Right
   }
 
+  property Item anchorItem: parent
   property int placement: ShinyTooltip.Placement.Top
+  property real placementMargin: Config.appearance.spacing.xxs
+  property string text
+  property int delay: 300
+  property font font: Qt.font({
+    family: Config.appearance.font.family.sans,
+    pointSize: Config.appearance.font.size.sm
+  })
 
-  x: {
-    if (!parent)
-      return 0;
+  property real verticalPadding: Config.appearance.padding.xs
+  property real horizontalPadding: Config.appearance.padding.sm
 
-    switch (placement) {
-    case ShinyTooltip.Placement.Top:
-    case ShinyTooltip.Placement.Bottom:
-      return (parent.width - width) / 2;
-    case ShinyTooltip.Placement.Left:
-      return -width - leftMargin;
-    case ShinyTooltip.Placement.Right:
-      return parent.width + rightMargin;
+  property bool showInternal: false
+  property real tooltipOpacity: showInternal ? 1 : 0
+
+  visible: false
+
+  onVisibleChanged: {
+    if (visible) {
+      showTimer.restart();
+    } else {
+      showTimer.stop();
+      showInternal = false;
     }
   }
 
-  y: {
-    if (!parent)
-      return 0;
-
-    switch (placement) {
-    case ShinyTooltip.Placement.Top:
-      return -height - topMargin;
-    case ShinyTooltip.Placement.Bottom:
-      return parent.height + bottomMargin;
-    case ShinyTooltip.Placement.Left:
-    case ShinyTooltip.Placement.Right:
-      return (parent.height - height) / 2;
-    }
+  Behavior on tooltipOpacity {
+    EffectNumberAnimation {}
   }
 
-  margins: Config.appearance.spacing.xxs
-  implicitWidth: Math.ceil(textMetrics.advanceWidth) + leftPadding + rightPadding
-  implicitHeight: Math.ceil(textMetrics.height) + topPadding + bottomPadding
-  verticalPadding: Config.appearance.padding.xs
-  horizontalPadding: Config.appearance.padding.sm
-  closePolicy: T.Popup.NoAutoClose
-  modal: false
-  delay: 300
-  font.family: Config.appearance.font.family.sans
-  font.pointSize: Config.appearance.font.size.sm
+  Timer {
+    id: showTimer
+
+    interval: Math.max(0, root.delay)
+    onTriggered: root.showInternal = root.visible && root.text !== ""
+  }
 
   TextMetrics {
     id: textMetrics
+
     text: root.text
     font: root.font
   }
 
-  background: ShinyRectangle {
-    color: Config.appearance.color.surfaceContainerHighest
-    radius: Config.appearance.rounding.sm
-    border.width: 1
-    border.color: Colors.transparentize(Config.appearance.color.outline, 0.5)
-  }
+  PopupWindow {
+    id: popup
 
-  contentItem: ShinyText {
-    width: Math.ceil(root.availableWidth)
-    height: Math.ceil(root.availableHeight)
-    text: root.text
-    font: root.font
-    color: Config.appearance.color.overSurface
-    wrapMode: Text.NoWrap
-    maximumLineCount: 1
-    elide: Text.ElideRight
-    horizontalAlignment: Text.AlignHCenter
-    verticalAlignment: Text.AlignVCenter
-  }
+    implicitWidth: Math.ceil(textMetrics.advanceWidth) + root.horizontalPadding * 2
+    implicitHeight: Math.ceil(textMetrics.height) + root.verticalPadding * 2
+    color: "transparent"
+    visible: root.tooltipOpacity > 0
+    grabFocus: false
 
-  enter: Transition {
-    EffectNumberAnimation {
-      property: "opacity"
-      from: 0
-      to: 1
+    anchor {
+      window: root.anchorItem ? root.anchorItem.QsWindow.window : null
+      adjustment: PopupAdjustment.None
+      gravity: Edges.Bottom | Edges.Right
+
+      onAnchoring: {
+        if (!root.anchorItem)
+          return;
+
+        let x = 0;
+        let y = 0;
+
+        switch (root.placement) {
+        case ShinyTooltip.Placement.Top:
+          x = (root.anchorItem.width - popup.width) / 2;
+          y = -popup.height - root.placementMargin;
+          break;
+        case ShinyTooltip.Placement.Bottom:
+          x = (root.anchorItem.width - popup.width) / 2;
+          y = root.anchorItem.height + root.placementMargin;
+          break;
+        case ShinyTooltip.Placement.Left:
+          x = -popup.width - root.placementMargin;
+          y = (root.anchorItem.height - popup.height) / 2;
+          break;
+        case ShinyTooltip.Placement.Right:
+          x = root.anchorItem.width + root.placementMargin;
+          y = (root.anchorItem.height - popup.height) / 2;
+          break;
+        }
+
+        const position = root.anchorItem.QsWindow.contentItem.mapFromItem(root.anchorItem, x, y);
+        popup.anchor.rect.x = Math.round(position.x);
+        popup.anchor.rect.y = Math.round(position.y);
+      }
     }
 
-    EffectNumberAnimation {
-      property: "scale"
-      from: 0.85
-      to: 1
-    }
-  }
+    ShinyRectangle {
+      anchors.fill: parent
+      opacity: root.tooltipOpacity
+      color: Config.appearance.color.surfaceContainerHighest
+      radius: Config.appearance.rounding.sm
+      border.width: 1
+      border.color: Colors.transparentize(Config.appearance.color.outline, 0.5)
 
-  exit: Transition {
-    EffectNumberAnimation {
-      property: "opacity"
-      from: 1
-      to: 0
-    }
+      transform: Scale {
+        origin.x: popup.width / 2
+        origin.y: popup.height / 2
+        xScale: 0.85 + root.tooltipOpacity * 0.15
+        yScale: xScale
+      }
 
-    EffectNumberAnimation {
-      property: "scale"
-      from: 1
-      to: 0.85
+      ShinyText {
+        anchors.fill: parent
+        anchors.leftMargin: root.horizontalPadding
+        anchors.rightMargin: root.horizontalPadding
+        anchors.topMargin: root.verticalPadding
+        anchors.bottomMargin: root.verticalPadding
+        text: root.text
+        font: root.font
+        color: Config.appearance.color.overSurface
+        wrapMode: Text.NoWrap
+        maximumLineCount: 1
+        elide: Text.ElideRight
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+      }
     }
   }
 }
