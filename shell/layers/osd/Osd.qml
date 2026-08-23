@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
 import Shiny.Brightness
@@ -22,9 +23,10 @@ ShinyLayerAnimationHelper {
   }
 
   property ShellScreen panelWindow: null
-  property int currentType: -1
-  property int nextType: -1
-  property bool inhibitClose: false
+  property var activeTypes: []
+  property var inhibitedTypes: []
+  property var removingTypes: []
+  property int expiringType: -1
   property real panelOpacity: 0
   property real panelScale: 0.75
   property real appearanceFactor: 0
@@ -76,46 +78,129 @@ ShinyLayerAnimationHelper {
   }
 
   onStateChanged: {
-    if (root.state !== "closed")
-      return;
-
-    if (root.nextType !== -1) {
-      root.currentType = root.nextType;
-      root.nextType = -1;
-
-      Qt.callLater(() => {
-        timer.start();
-        root.updatePanelWindow();
-        root.openLayer();
-      });
-    } else {
-      root.currentType = -1;
+    if (root.state === "closed") {
+      root.activeTypes = [];
+      root.inhibitedTypes = [];
+      root.removingTypes = [];
+      root.expiringType = -1;
+      activeTypesModel.clear();
     }
   }
 
   function show(type: int) {
-    if (root.inhibitClose)
+    if (root.inhibitedTypes.includes(type))
       return;
 
-    if (currentType === -1) {
-      // No osd currently shown
-      currentType = type;
-      timer.start();
+    const removingIndex = root.removingTypes.indexOf(type);
+    if (removingIndex !== -1) {
+      const types = root.removingTypes.slice();
+      types.splice(removingIndex, 1);
+      root.removingTypes = types;
+    }
+
+    if (root.expiringType !== -1) {
+      if (root.expiringType !== type) {
+        root.activeTypes = [];
+        root.removingTypes = [];
+        activeTypesModel.clear();
+      }
+      root.expiringType = -1;
+    }
+
+    const alreadyShown = root.activeTypes.includes(type);
+
+    if (!alreadyShown) {
+      root.activeTypes = root.activeTypes.concat(type);
+      activeTypesModel.append({ osdType: type });
+    }
+
+    root.restartTimer(type);
+
+    if (!root.opened) {
       root.updatePanelWindow();
       root.openLayer();
+    }
+  }
+
+  function hide(type: int) {
+    const index = root.activeTypes.indexOf(type);
+    if (index === -1 || root.removingTypes.includes(type))
+      return;
+
+    const visibleTypes = root.activeTypes.filter(activeType => !root.removingTypes.includes(activeType));
+    if (visibleTypes.length === 1) {
+      // Keep the final panel around for the exit animation.
+      root.expiringType = type;
+      root.closeLayer();
       return;
     }
 
-    if (currentType === type) {
-      // Same type already shown, extends timeout
-      timer.restart();
-      return;
-    }
+    root.removingTypes = root.removingTypes.concat(type);
+  }
 
-    // Different type, we close the current osd and queue the next
-    timer.stop();
-    root.closeLayer();
-    root.nextType = type;
+  function finishHide(type: int) {
+    const removingIndex = root.removingTypes.indexOf(type);
+    if (removingIndex === -1)
+      return;
+
+    const types = root.activeTypes.slice();
+    const index = types.indexOf(type);
+    if (index === -1)
+      return;
+
+    types.splice(index, 1);
+    root.activeTypes = types;
+    activeTypesModel.remove(index);
+
+    const removingTypes = root.removingTypes.slice();
+    removingTypes.splice(removingIndex, 1);
+    root.removingTypes = removingTypes;
+  }
+
+  function restartTimer(type: int) {
+    switch (type) {
+    case Osd.Type.AudioSink:
+      audioSinkTimer.restart();
+      break;
+    case Osd.Type.AudioSource:
+      audioSourceTimer.restart();
+      break;
+    case Osd.Type.Brightness:
+      brightnessTimer.restart();
+      break;
+    }
+  }
+
+  function stopTimer(type: int) {
+    switch (type) {
+    case Osd.Type.AudioSink:
+      audioSinkTimer.stop();
+      break;
+    case Osd.Type.AudioSource:
+      audioSourceTimer.stop();
+      break;
+    case Osd.Type.Brightness:
+      brightnessTimer.stop();
+      break;
+    }
+  }
+
+  function setInteractionActive(type: int, active: bool) {
+    const index = root.inhibitedTypes.indexOf(type);
+
+    if (active) {
+      if (index === -1) {
+        root.inhibitedTypes = root.inhibitedTypes.concat(type);
+      }
+      root.stopTimer(type);
+    } else {
+      if (index !== -1) {
+        const types = root.inhibitedTypes.slice();
+        types.splice(index, 1);
+        root.inhibitedTypes = types;
+      }
+      root.restartTimer(type);
+    }
   }
 
   function updatePanelWindow() {
@@ -123,48 +208,99 @@ ShinyLayerAnimationHelper {
   }
 
   Timer {
-    id: timer
+    id: audioSinkTimer
     interval: Config.osd.timeout
+    onTriggered: root.hide(Osd.Type.AudioSink)
+  }
 
-    onTriggered: {
-      timer.stop();
-      root.closeLayer();
-      root.inhibitClose = false;
-    }
+  Timer {
+    id: audioSourceTimer
+    interval: Config.osd.timeout
+    onTriggered: root.hide(Osd.Type.AudioSource)
+  }
+
+  Timer {
+    id: brightnessTimer
+    interval: Config.osd.timeout
+    onTriggered: root.hide(Osd.Type.Brightness)
+  }
+
+  ListModel {
+    id: activeTypesModel
   }
 
   Loader {
     id: panelLoader
-    active: root.shown && root.currentType != -1
+    active: root.shown && root.activeTypes.length > 0
 
     sourceComponent: ShinyWindow {
       name: "osd"
       screen: root.panelWindow
       anchors.bottom: true
-      implicitWidth: panel.implicitWidth
-      implicitHeight: panel.implicitHeight + Config.appearance.spacing.sm
+      implicitWidth: panelColumn.implicitWidth
+      implicitHeight: screen.height
       exclusionMode: ExclusionMode.Ignore
       WlrLayershell.layer: WlrLayer.Overlay
 
       mask: Region {
-        item: panel
+        item: panelColumn
       }
 
-      OsdPanel {
-        id: panel
-        type: root.currentType
+      ColumnLayout {
+        id: panelColumn
         anchors.bottom: parent.bottom
         anchors.bottomMargin: -height + root.appearanceFactor * (Config.appearance.spacing.sm + height)
+        spacing: Config.appearance.spacing.xs
         opacity: root.panelOpacity
         scale: root.panelScale
 
-        onInteractionActiveChanged: {
-          root.inhibitClose = interactionActive;
+        Repeater {
+          model: activeTypesModel
 
-          if (interactionActive) {
-            timer.stop();
-          } else {
-            timer.start();
+          delegate: Item {
+            id: stackItem
+
+            required property int osdType
+            property real appearanceFactor: root.state === "opened" ? 0 : 1
+
+            Layout.alignment: Qt.AlignHCenter
+            implicitWidth: panel.implicitWidth
+            implicitHeight: panel.implicitHeight * appearanceFactor
+            opacity: appearanceFactor
+            scale: 0.85 + appearanceFactor * 0.15
+            transformOrigin: Item.Bottom
+
+            Component.onCompleted: appearanceFactor = 1
+
+            onAppearanceFactorChanged: {
+              if (appearanceFactor === 0 && root.removingTypes.includes(osdType)) {
+                root.finishHide(osdType);
+              }
+            }
+
+            Connections {
+              target: root
+
+              function onRemovingTypesChanged() {
+                stackItem.appearanceFactor = root.removingTypes.includes(stackItem.osdType) ? 0 : 1;
+              }
+            }
+
+            Behavior on appearanceFactor {
+              EffectNumberAnimation {}
+            }
+
+            OsdPanel {
+              id: panel
+
+              anchors.horizontalCenter: parent.horizontalCenter
+              anchors.bottom: parent.bottom
+              type: stackItem.osdType
+
+              onInteractionActiveChanged: {
+                root.setInteractionActive(stackItem.osdType, interactionActive);
+              }
+            }
           }
         }
       }
@@ -182,7 +318,7 @@ ShinyLayerAnimationHelper {
   }
 
   Loader {
-    active: Config.osd.audioSinkEnabled && Audio.defaultSink?.audio != null
+    active: Config.osd.audioSinkEnabled && (Audio.defaultSink?.ready ?? false) && Audio.defaultSink?.audio != null
 
     sourceComponent: Connections {
       target: Audio.defaultSink?.audio
@@ -198,7 +334,7 @@ ShinyLayerAnimationHelper {
   }
 
   Loader {
-    active: Config.osd.audioSourceEnabled && Audio.defaultSource?.audio != null
+    active: Config.osd.audioSourceEnabled && (Audio.defaultSource?.ready ?? false) && Audio.defaultSource?.audio != null
 
     sourceComponent: Connections {
       target: Audio.defaultSource?.audio
@@ -217,9 +353,22 @@ ShinyLayerAnimationHelper {
     active: Config.osd.brightnessEnabled && Brightness.isAvailable && Brightness.defaultDevice !== null
 
     sourceComponent: Connections {
-      target: Brightness.defaultDevice
+      id: brightnessConnection
+
+      property var observedDevice: Brightness.defaultDevice
+      property real lastBrightness: NaN
+
+      target: observedDevice
+
+      Component.onCompleted: lastBrightness = observedDevice?.brightness ?? NaN
+      onObservedDeviceChanged: lastBrightness = observedDevice?.brightness ?? NaN
 
       function onBrightnessChanged() {
+        const brightness = brightnessConnection.observedDevice?.brightness ?? NaN;
+        if (brightness === brightnessConnection.lastBrightness)
+          return;
+
+        brightnessConnection.lastBrightness = brightness;
         root.show(Osd.Type.Brightness);
       }
     }
