@@ -20,7 +20,6 @@ ShinyRectangle {
   required property bool hintLayers
   readonly property int pressAndHoldInterval: 500
   readonly property int pressAndHoldThreshold: 50
-  readonly property list<string> excludeLayers: ["shiny:region-selector", "shiny:inhibitor", "shiny:wallpaper", "shiny:bar", "shiny:corner-topleft", "shiny:corner-topright", "shiny:corner-bottomleft", "shiny:corner-bottomright", ...Config.regionSelector.excludeLayers]
   property bool selectionMade: false
   readonly property HyprlandMonitor hyprlandMonitor: HyprCompositor.monitorFor(screen)
   readonly property list<HyprlandToplevel> windows: hyprlandMonitor.activeWorkspace?.toplevels?.values ?? []
@@ -29,7 +28,11 @@ ShinyRectangle {
       return false;
     }
 
-    if (excludeLayers.includes(layer.namespace)) {
+    if (layer.namespace.startsWith("shiny:")) {
+      return false;
+    }
+
+    if (Config.regionSelector.excludeLayers.includes(layer.namespace)) {
       return false;
     }
 
