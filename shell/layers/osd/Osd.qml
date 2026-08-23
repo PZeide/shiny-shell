@@ -352,25 +352,26 @@ ShinyLayerAnimationHelper {
   Loader {
     active: Config.osd.brightnessEnabled && Brightness.isAvailable && Brightness.defaultDevice !== null
 
-    sourceComponent: Connections {
-      id: brightnessConnection
+    sourceComponent: QtObject {
+      id: brightnessWatcher
 
       property var observedDevice: Brightness.defaultDevice
       property real lastBrightness: NaN
+      readonly property Connections connection: Connections {
+        target: brightnessWatcher.observedDevice
 
-      target: observedDevice
+        function onBrightnessChanged() {
+          const brightness = brightnessWatcher.observedDevice?.brightness ?? NaN;
+          if (brightness === brightnessWatcher.lastBrightness)
+            return;
+
+          brightnessWatcher.lastBrightness = brightness;
+          root.show(Osd.Type.Brightness);
+        }
+      }
 
       Component.onCompleted: lastBrightness = observedDevice?.brightness ?? NaN
       onObservedDeviceChanged: lastBrightness = observedDevice?.brightness ?? NaN
-
-      function onBrightnessChanged() {
-        const brightness = brightnessConnection.observedDevice?.brightness ?? NaN;
-        if (brightness === brightnessConnection.lastBrightness)
-          return;
-
-        brightnessConnection.lastBrightness = brightness;
-        root.show(Osd.Type.Brightness);
-      }
     }
   }
 }
