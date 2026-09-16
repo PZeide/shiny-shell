@@ -22,7 +22,7 @@ ShinyRectangle {
   readonly property int pressAndHoldThreshold: 50
   property bool selectionMade: false
   readonly property HyprlandMonitor hyprlandMonitor: HyprCompositor.monitorFor(screen)
-  readonly property list<HyprlandToplevel> windows: hyprlandMonitor.activeWorkspace?.toplevels?.values ?? []
+  readonly property list<HyprlandToplevel> windows: HyprCompositor.workspaceForMonitor(hyprlandMonitor)?.toplevels ?? []
   readonly property list<HyprlandLayer> layers: HyprCompositor.layers.filter(layer => {
     if (layer.monitor !== hyprlandMonitor) {
       return false;

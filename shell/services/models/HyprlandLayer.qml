@@ -4,12 +4,15 @@ import QtQuick
 import Quickshell.Hyprland
 
 QtObject {
-  required property string namespace
+  required property var lastIpcObject
+  required property string monitorName
   required property HyprlandMonitor monitor
   required property int level
-  required property int x
-  required property int y
-  required property int width
-  required property int height
-  required property var lastIpcObject
+
+  readonly property string address: String(lastIpcObject.address)
+  readonly property string namespace: lastIpcObject.namespace ?? ""
+  readonly property int x: lastIpcObject.x ?? 0
+  readonly property int y: lastIpcObject.y ?? 0
+  readonly property int width: lastIpcObject.w ?? 0
+  readonly property int height: lastIpcObject.h ?? 0
 }

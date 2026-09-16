@@ -5,19 +5,19 @@ import QtQuick
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Io
-import qs.services.models
+import qs.services.models as Models
 
 Singleton {
   id: root
 
   readonly property var monitors: Hyprland.monitors
-  readonly property var workspaces: Hyprland.workspaces
+  property list<Models.HyprlandWorkspace> workspaces: []
   readonly property var toplevels: Hyprland.toplevels
-  property var layers: []
+  property list<Models.HyprlandLayer> layers: []
   property var options: []
 
   readonly property HyprlandMonitor activeMonitor: Hyprland.focusedMonitor
-  readonly property HyprlandWorkspace activeWorkspace: Hyprland.focusedWorkspace
+  readonly property Models.HyprlandWorkspace activeWorkspace: workspaceForMonitor(activeMonitor)
   readonly property HyprlandToplevel activeToplevel: Hyprland.activeToplevel
 
   function dispatch(request: string) {
@@ -41,7 +41,11 @@ Singleton {
   }
 
   function refreshWorkspaces() {
-    Hyprland.refreshWorkspaces();
+    workspacesProcess.exec({});
+  }
+
+  function workspaceForMonitor(monitor: HyprlandMonitor): Models.HyprlandWorkspace {
+    return root.workspaces.find(workspace => workspace.monitor === monitor && workspace.active) ?? null;
   }
 
   function refreshToplevels() {
@@ -62,36 +66,85 @@ Singleton {
     stdout: StdioCollector {
       id: layersCollector
       onStreamFinished: {
-        const data = JSON.parse(layersCollector.text);
+        const output = layersCollector.text.trim();
+        if (output === "") {
+          return;
+        }
+
+        const data = JSON.parse(output);
+        const previous = new Map(root.layers.map(layer => [layer.address, layer]));
         const layers = [];
 
         for (const monitorName of Object.keys(data)) {
-          const monitor = root.monitors.values.find(m => m.name === monitorName);
-          if (!monitor) {
-            console.warn(`Monitor ${monitorName} not found for layers`);
-            continue;
-          }
-
           const levels = data[monitorName].levels;
           for (const levelKey in levels) {
             const rawLayers = levels[levelKey];
 
             for (const rawLayer of rawLayers) {
-              layers.push(layerComponent.createObject(null, {
-                namespace: rawLayer.namespace,
-                monitor: monitor,
-                level: parseInt(levelKey),
-                x: rawLayer.x,
-                y: rawLayer.y,
-                width: rawLayer.w,
-                height: rawLayer.h,
-                lastIpcObject: rawLayer
-              }));
+              const address = String(rawLayer.address);
+              let layer = previous.get(address);
+              if (layer) {
+                previous.delete(address);
+                layer.monitorName = monitorName;
+                layer.level = Number(levelKey);
+                layer.lastIpcObject = rawLayer;
+              } else {
+                layer = layerComponent.createObject(root, {
+                  lastIpcObject: rawLayer,
+                  monitorName: monitorName,
+                  level: Number(levelKey)
+                });
+              }
+              if (layer) {
+                layers.push(layer);
+              }
             }
           }
         }
 
         root.layers = layers;
+        for (const layer of previous.values()) {
+          layer.destroy();
+        }
+      }
+    }
+  }
+
+  Process {
+    id: workspacesProcess
+    command: ["hyprctl", "workspaces", "-j"]
+    stdout: StdioCollector {
+      id: workspacesCollector
+      onStreamFinished: {
+        const output = workspacesCollector.text.trim();
+        if (output === "") {
+          return;
+        }
+
+        const data = JSON.parse(output);
+        const previous = new Map(root.workspaces.map(workspace => [workspace.address, workspace]));
+        const workspaces = [];
+
+        for (const rawWorkspace of data) {
+          const address = String(rawWorkspace.address ?? rawWorkspace.id ?? rawWorkspace.name);
+          let workspace = previous.get(address);
+          if (workspace) {
+            previous.delete(address);
+            workspace.lastIpcObject = rawWorkspace;
+          } else {
+            workspace = workspaceComponent.createObject(root, {
+              lastIpcObject: rawWorkspace
+            });
+          }
+          if (workspace) {
+            workspaces.push(workspace);
+          }
+        }
+
+        root.workspaces = workspaces;
+        for (const workspace of previous.values()) {
+          workspace.destroy();
+        }
       }
     }
   }
@@ -109,7 +162,23 @@ Singleton {
 
   Component {
     id: layerComponent
-    HyprlandLayer {}
+
+    Models.HyprlandLayer {
+      id: layer
+
+      monitor: root.monitors.values.find(monitor => monitor.name === layer.monitorName) ?? null
+    }
+  }
+
+  Component {
+    id: workspaceComponent
+
+    Models.HyprlandWorkspace {
+      id: workspace
+
+      monitor: root.monitors.values.find(monitor => monitor.name === workspace.lastIpcObject.monitor) ?? null
+      toplevels: root.toplevels.values.filter(toplevel => toplevel.lastIpcObject.workspace?.name === workspace.name)
+    }
   }
 
   Connections {
@@ -128,6 +197,7 @@ Singleton {
       case "closewindow":
       case "kill":
       case "movewindow":
+      case "fullscreen":
         root.refreshToplevels();
         root.refreshWorkspaces();
         break;
@@ -135,7 +205,6 @@ Singleton {
       /// --- Toplevels ONLY ---
       // These events only change the metadata or visual state of a specific window.
       case "activewindow":
-      case "fullscreen":
       case "changefloatingmode":
       case "pin":
       case "togglegroup":
@@ -185,6 +254,7 @@ Singleton {
 
   Component.onCompleted: {
     root.refreshLayers();
+    root.refreshWorkspaces();
     root.refreshOptions();
   }
 }

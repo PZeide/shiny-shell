@@ -4,6 +4,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Hyprland
 import qs.services
+import qs.services.models as Models
 import qs.config
 import qs.components
 import qs.utils.animations
@@ -16,35 +17,48 @@ BarModuleWrapper {
   required property ShellScreen screen
 
   readonly property HyprlandMonitor monitor: HyprCompositor.monitorFor(screen)
-  readonly property int monitorWorkspacesCount: HyprCompositor.workspaces.values.filter(w => w.monitor == monitor && w.id >= 0).length
-  readonly property int workspaceGroup: Math.floor((monitor.activeWorkspace?.id - 1 ?? 1) / monitorWorkspacesCount)
+  readonly property var monitorWorkspaces: {
+    return HyprCompositor.workspaces
+      .filter(workspace => workspace.monitor === root.monitor && workspace.type === "numbered")
+      .sort((left, right) => left.number - right.number);
+  }
+  readonly property int monitorWorkspacesCount: monitorWorkspaces.length
+  readonly property int activeWorkspaceIndex: monitorWorkspaces.findIndex(workspace => workspace.active)
 
   readonly property real workspaceImplicitWidth: width - Config.appearance.padding.xs * 2
   readonly property real workspaceImplicitHeight: workspaceImplicitWidth
   readonly property real workspaceActiveImplicitHeight: workspaceImplicitHeight * 2
+  readonly property real workspacesImplicitHeight: {
+    if (monitorWorkspacesCount === 0) {
+      return 0;
+    }
+
+    const spacingHeight = (monitorWorkspacesCount - 1) * Config.appearance.spacing.xs;
+    const activeHeight = activeWorkspaceIndex >= 0 ? workspaceActiveImplicitHeight - workspaceImplicitHeight : 0;
+    return monitorWorkspacesCount * workspaceImplicitHeight + spacingHeight + activeHeight;
+  }
 
   contentItem: Item {
     id: layout
     anchors.centerIn: parent
     implicitWidth: root.workspaceImplicitWidth
-    implicitHeight: (root.monitorWorkspacesCount - 1) * (root.workspaceImplicitHeight + Config.appearance.spacing.xs) + root.workspaceActiveImplicitHeight
+    implicitHeight: root.workspacesImplicitHeight
 
     Repeater {
-      model: root.monitorWorkspacesCount
+      model: root.monitorWorkspaces
 
       delegate: ShinyRectangle {
         id: workspaceRectangle
 
         required property int index
+        required property Models.HyprlandWorkspace modelData
 
-        readonly property int workspaceId: root.workspaceGroup * root.monitorWorkspacesCount + index + 1
-        readonly property HyprlandWorkspace maybeWorkspace: HyprCompositor.workspaces.values.find(w => w.id === workspaceId) ?? null
-        readonly property bool isOccupied: maybeWorkspace?.toplevels.values.length > 0
-        readonly property bool isActive: maybeWorkspace?.active ?? false
+        readonly property bool isOccupied: modelData.windows > 0
+        readonly property bool isActive: modelData.active
 
         property real targetCenterY: {
           const sp = Config.appearance.spacing.xs;
-          const k = (root.monitor.activeWorkspace?.id ?? 1) - root.workspaceGroup * root.monitorWorkspacesCount - 1;
+          const k = root.activeWorkspaceIndex;
           let yBefore = 0.0;
 
           for (let j = 0; j < index; j++) {
@@ -106,7 +120,7 @@ BarModuleWrapper {
           clickOpacity: 0.45
           hoverOpacity: 0.25
 
-          onPressed: workspaceRectangle.maybeWorkspace?.activate()
+          onPressed: workspaceRectangle.modelData.activate()
         }
       }
     }
