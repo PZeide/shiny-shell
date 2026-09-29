@@ -4,7 +4,6 @@ import QtQuick
 import Quickshell
 import Quickshell.Hyprland
 import qs.services
-import qs.services.models as Models
 import qs.config
 import qs.components
 import qs.utils.animations
@@ -17,13 +16,8 @@ BarModuleWrapper {
   required property ShellScreen screen
 
   readonly property HyprlandMonitor monitor: HyprCompositor.monitorFor(screen)
-  readonly property var monitorWorkspaces: {
-    return HyprCompositor.workspaces
-      .filter(workspace => workspace.monitor === root.monitor && workspace.type === "numbered")
-      .sort((left, right) => left.number - right.number);
-  }
-  readonly property int monitorWorkspacesCount: monitorWorkspaces.length
-  readonly property int activeWorkspaceIndex: monitorWorkspaces.findIndex(workspace => workspace.active)
+  readonly property int monitorWorkspacesCount: workspacesModel.values.length
+  readonly property int activeWorkspaceIndex: workspacesModel.values.findIndex(workspace => workspace.active)
 
   readonly property real workspaceImplicitWidth: width - Config.appearance.padding.xs * 2
   readonly property real workspaceImplicitHeight: workspaceImplicitWidth
@@ -38,6 +32,13 @@ BarModuleWrapper {
     return monitorWorkspacesCount * workspaceImplicitHeight + spacingHeight + activeHeight;
   }
 
+  ScriptModel {
+    id: workspacesModel
+    values: HyprCompositor.workspaces.values.filter(workspace => {
+      return workspace.monitor === root.monitor && !workspace.address.startsWith("special:");
+    }).sort((left, right) => Number(left.address) - Number(right.address))
+  }
+
   contentItem: Item {
     id: layout
     anchors.centerIn: parent
@@ -45,15 +46,15 @@ BarModuleWrapper {
     implicitHeight: root.workspacesImplicitHeight
 
     Repeater {
-      model: root.monitorWorkspaces
+      model: workspacesModel
 
       delegate: ShinyRectangle {
         id: workspaceRectangle
 
         required property int index
-        required property Models.HyprlandWorkspace modelData
+        required property HyprlandWorkspace modelData
 
-        readonly property bool isOccupied: modelData.windows > 0
+        readonly property bool isOccupied: modelData.toplevels.values.length > 0
         readonly property bool isActive: modelData.active
 
         property real targetCenterY: {

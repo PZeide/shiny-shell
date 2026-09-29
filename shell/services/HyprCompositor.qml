@@ -11,13 +11,13 @@ Singleton {
   id: root
 
   readonly property var monitors: Hyprland.monitors
-  property list<Models.HyprlandWorkspace> workspaces: []
+  readonly property var workspaces: Hyprland.workspaces
   readonly property var toplevels: Hyprland.toplevels
   property list<Models.HyprlandLayer> layers: []
   property var options: []
 
   readonly property HyprlandMonitor activeMonitor: Hyprland.focusedMonitor
-  readonly property Models.HyprlandWorkspace activeWorkspace: workspaceForMonitor(activeMonitor)
+  readonly property HyprlandWorkspace activeWorkspace: Hyprland.focusedWorkspace
   readonly property HyprlandToplevel activeToplevel: Hyprland.activeToplevel
 
   function dispatch(request: string) {
@@ -41,11 +41,7 @@ Singleton {
   }
 
   function refreshWorkspaces() {
-    workspacesProcess.exec({});
-  }
-
-  function workspaceForMonitor(monitor: HyprlandMonitor): Models.HyprlandWorkspace {
-    return root.workspaces.find(workspace => workspace.monitor === monitor && workspace.active) ?? null;
+    Hyprland.refreshWorkspaces();
   }
 
   function refreshToplevels() {
@@ -111,45 +107,6 @@ Singleton {
   }
 
   Process {
-    id: workspacesProcess
-    command: ["hyprctl", "workspaces", "-j"]
-    stdout: StdioCollector {
-      id: workspacesCollector
-      onStreamFinished: {
-        const output = workspacesCollector.text.trim();
-        if (output === "") {
-          return;
-        }
-
-        const data = JSON.parse(output);
-        const previous = new Map(root.workspaces.map(workspace => [workspace.address, workspace]));
-        const workspaces = [];
-
-        for (const rawWorkspace of data) {
-          const address = String(rawWorkspace.address ?? rawWorkspace.id ?? rawWorkspace.name);
-          let workspace = previous.get(address);
-          if (workspace) {
-            previous.delete(address);
-            workspace.lastIpcObject = rawWorkspace;
-          } else {
-            workspace = workspaceComponent.createObject(root, {
-              lastIpcObject: rawWorkspace
-            });
-          }
-          if (workspace) {
-            workspaces.push(workspace);
-          }
-        }
-
-        root.workspaces = workspaces;
-        for (const workspace of previous.values()) {
-          workspace.destroy();
-        }
-      }
-    }
-  }
-
-  Process {
     id: optionsProcess
     command: ["hyprctl", "descriptions", "-j"]
     stdout: StdioCollector {
@@ -167,17 +124,6 @@ Singleton {
       id: layer
 
       monitor: root.monitors.values.find(monitor => monitor.name === layer.monitorName) ?? null
-    }
-  }
-
-  Component {
-    id: workspaceComponent
-
-    Models.HyprlandWorkspace {
-      id: workspace
-
-      monitor: root.monitors.values.find(monitor => monitor.name === workspace.lastIpcObject.monitor) ?? null
-      toplevels: root.toplevels.values.filter(toplevel => toplevel.lastIpcObject.workspace?.name === workspace.name)
     }
   }
 
@@ -254,7 +200,6 @@ Singleton {
 
   Component.onCompleted: {
     root.refreshLayers();
-    root.refreshWorkspaces();
     root.refreshOptions();
   }
 }
